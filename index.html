@@ -33,182 +33,185 @@
             box-shadow: 0 20px 60px rgba(0, 212, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
-        /* ===== HEADER ===== */
+        /* ===== HEADER WITH ANIMATED LOGO ===== */
         .header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
         .logo {
-            font-size: 52px;
+            font-size: 48px;
             font-weight: 800;
-            background: linear-gradient(90deg, #00d4ff, #0077ff, #00d4ff);
-            background-size: 200% 200%;
+            display: inline-block;
+            background: linear-gradient(90deg, #00d4ff, #0077ff, #a855f7, #00d4ff);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: fireMove 3s ease-in-out infinite;
+            animation: gradientMove 4s ease-in-out infinite, float 3s ease-in-out infinite;
             letter-spacing: -1px;
-            text-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+            text-shadow: 0 0 60px rgba(0, 212, 255, 0.15);
         }
-        @keyframes fireMove {
+        @keyframes gradientMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+            100% { transform: translateY(0px) scale(1); }
+        }
         .subtitle {
-            color: #888;
-            font-size: 16px;
+            color: #666;
+            font-size: 14px;
             margin-top: 4px;
             letter-spacing: 2px;
         }
-        .status-badge {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 6px 20px;
-            border-radius: 30px;
-            font-size: 13px;
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 15px;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            text-align: center;
+        }
+        .tab-btn.active {
             background: rgba(0, 212, 255, 0.08);
             color: #00d4ff;
-            border: 1px solid rgba(0, 212, 255, 0.15);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
+            box-shadow: inset 0 -2px 0 #00d4ff;
         }
-        .status-badge.error {
-            color: #ff6b6b;
-            border-color: rgba(255, 107, 107, 0.2);
-            background: rgba(255, 107, 107, 0.08);
+        .tab-btn:hover:not(.active) {
+            color: #aaa;
+            background: rgba(255, 255, 255, 0.03);
         }
-        /* ===== GLASS BUTTONS ===== */
-        .glass-btn {
-            display: inline-block;
-            padding: 10px 24px;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            letter-spacing: 0.3px;
-        }
-        .glass-btn:hover {
-            background: rgba(0, 212, 255, 0.12);
-            border-color: rgba(0, 212, 255, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
-        }
-        .glass-btn:active {
-            transform: translateY(0px);
-        }
-        .glass-btn.danger:hover {
-            background: rgba(255, 107, 107, 0.12);
-            border-color: rgba(255, 107, 107, 0.3);
-            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.1);
-        }
-        /* ===== FORM ===== */
+        /* ===== PROMPT ===== */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         .form-group label {
             display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #ccc;
+            color: #aaa;
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
         }
-        .form-group textarea,
-        .form-group input[type="text"] {
+        .form-group textarea {
             width: 100%;
             padding: 16px 20px;
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 18px;
+            border-radius: 16px;
             color: #fff;
             font-size: 15px;
             transition: all 0.3s;
             resize: vertical;
             font-family: inherit;
+            min-height: 90px;
             box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-        .form-group textarea:focus,
-        .form-group input[type="text"]:focus {
+        .form-group textarea:focus {
             outline: none;
-            border-color: rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.3);
             box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.05), inset 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-        .form-group textarea {
-            min-height: 120px;
+        .form-group textarea::placeholder {
+            color: #555;
         }
-        .form-group .hint {
-            color: #666;
-            font-size: 12px;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
-        }
-        /* ===== SETTINGS ===== */
-        .settings-row {
+        /* ===== OPTIONS ROW ===== */
+        .options-row {
             display: flex;
-            gap: 30px;
+            gap: 40px;
             flex-wrap: wrap;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 18px 24px;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 24px;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .settings-row .item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .option-group {
+            flex: 1;
+            min-width: 140px;
         }
-        .settings-row .label {
+        .option-group .option-label {
+            display: block;
+            font-size: 13px;
             color: #888;
-            font-size: 14px;
-        }
-        .settings-row .value {
-            color: #fff;
             font-weight: 600;
-            font-size: 14px;
-            background: rgba(0, 212, 255, 0.08);
-            padding: 4px 14px;
+            margin-bottom: 8px;
+        }
+        .option-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .opt-btn {
+            padding: 6px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 30px;
-            border: 1px solid rgba(0, 212, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            color: #777;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .opt-btn:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ccc;
+        }
+        .opt-btn.active {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        .opt-btn .sub {
+            font-size: 10px;
+            opacity: 0.5;
+            display: block;
+            font-weight: 400;
         }
         /* ===== GENERATE BUTTON ===== */
         .generate-btn {
             width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 119, 255, 0.15));
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 119, 255, 0.12));
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 18px;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 4px 30px rgba(0, 212, 255, 0.05);
-            letter-spacing: 0.5px;
+            font-family: inherit;
+            margin-top: 8px;
         }
         .generate-btn:hover {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 119, 255, 0.25));
-            border-color: rgba(0, 212, 255, 0.4);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 119, 255, 0.2));
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.1);
         }
         .generate-btn:active {
             transform: translateY(0px);
@@ -221,8 +224,8 @@
         }
         .generate-btn .spinner {
             display: none;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border: 3px solid rgba(255, 255, 255, 0.1);
             border-top-color: #00d4ff;
             border-radius: 50%;
@@ -237,28 +240,94 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        /* ===== STATUS LOG ===== */
+        /* ===== VIDEO PLAYER WITH DOWNLOAD BUTTON ===== */
+        .video-wrapper {
+            margin-top: 24px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            position: relative;
+        }
+        .video-wrapper.show {
+            display: block;
+            animation: fadeSlide 0.5s ease-out;
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+            border-radius: 18px 18px 0 0;
+        }
+        /* ===== VIDEO CONTROLS BAR ===== */
+        .video-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .video-controls .video-label {
+            font-size: 13px;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        .video-controls .video-label span {
+            opacity: 0.5;
+            font-weight: 400;
+            color: #888;
+        }
+        .download-btn {
+            padding: 8px 22px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 119, 255, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .download-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 119, 255, 0.25));
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: scale(1.02);
+        }
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+        /* ===== LOG BOX ===== */
         .log-box {
-            margin-top: 28px;
+            margin-top: 20px;
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 18px 22px;
+            border-radius: 16px;
+            padding: 14px 20px;
             border: 1px solid rgba(255, 255, 255, 0.04);
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
         .log-box .log-entry {
             font-family: 'Consolas', monospace;
-            font-size: 13px;
-            color: #888;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 12px;
+            color: #666;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
         .log-box .log-entry .time {
-            color: #555;
-            margin-right: 12px;
+            color: #444;
+            margin-right: 10px;
         }
         .log-box .log-entry.success {
             color: #00d4ff;
@@ -267,61 +336,84 @@
             color: #ff6b6b;
         }
         .log-box .log-entry.info {
-            color: #aaddff;
+            color: #88ccff;
         }
-        /* ===== SCROLLBAR ===== */
         .log-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .log-box::-webkit-scrollbar-track {
-            background: transparent;
+            width: 4px;
         }
         .log-box::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
         }
         /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
             .container { padding: 24px; }
-            .logo { font-size: 34px; }
-            .settings-row { flex-direction: column; gap: 12px; }
-            .glass-btn { padding: 8px 16px; font-size: 13px; }
+            .logo { font-size: 32px; }
+            .options-row { flex-direction: column; gap: 16px; }
+            .tab-btn { font-size: 13px; padding: 12px 14px; }
+            .video-controls { flex-direction: column; gap: 10px; align-items: stretch; }
+            .download-btn { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
 <div class="container" id="app">
-    <!-- HEADER -->
+    <!-- HEADER with Animated Logo -->
     <div class="header">
         <div class="logo">🎬 MoUsE AI</div>
         <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
-        <div class="status-badge" id="statusBadge">🔄 جاري التحقق...</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="video">📹 Text to Video</button>
+        <button class="tab-btn" data-tab="image">🖼️ Text to Image</button>
     </div>
 
     <!-- PROMPT -->
     <div class="form-group">
-        <label for="promptInput">📝 وصف الفيديو (البرومبت)</label>
-        <textarea id="promptInput" placeholder="مثال: غروب شمس سينمائي فوق المحيط مع طيور تحلق في السماء، جودة عالية 8K UHD">غروب شمس سينمائي فوق المحيط مع طيور تحلق في السماء، جودة عالية 8K UHD</textarea>
-        <div class="hint">💡 اكتب وصفاً تفصيلياً للحصول على نتائج أفضل</div>
+        <label for="promptInput">Prompt</label>
+        <textarea id="promptInput" placeholder="Describe the video you want, e.g.: Slow motion waves crashing against rocks">Slow motion waves crashing against rocks, cinematic 4K</textarea>
     </div>
 
-    <!-- SETTINGS -->
-    <div class="form-group">
-        <label>⚙️ الإعدادات</label>
-        <div class="settings-row">
-            <div class="item"><span class="label">⏱️ المدة:</span><span class="value">10 ثواني</span></div>
-            <div class="item"><span class="label">📐 نسبة الأبعاد:</span><span class="value">16:9 (أفقي)</span></div>
+    <!-- OPTIONS: Duration + Aspect Ratio -->
+    <div class="options-row">
+        <div class="option-group">
+            <span class="option-label">⏱️ Duration</span>
+            <div class="option-buttons" id="durationGroup">
+                <button class="opt-btn" data-value="5">5 seconds</button>
+                <button class="opt-btn active" data-value="10">10 seconds</button>
+            </div>
+        </div>
+        <div class="option-group">
+            <span class="option-label">📐 Aspect Ratio</span>
+            <div class="option-buttons" id="aspectGroup">
+                <button class="opt-btn active" data-value="16:9">16:9 <span class="sub">Landscape</span></button>
+                <button class="opt-btn" data-value="9:16">9:16 <span class="sub">Portrait</span></button>
+                <button class="opt-btn" data-value="1:1">1:1 <span class="sub">Square</span></button>
+            </div>
         </div>
     </div>
 
     <!-- GENERATE BUTTON -->
     <button class="generate-btn" id="generateBtn">
-        <span class="btn-text">🚀 توليد الفيديو</span>
+        <span class="btn-text">🚀 Generate Video</span>
         <span class="spinner"></span>
     </button>
 
-    <!-- STATUS LOG -->
+    <!-- VIDEO PLAYER مع زر تحميل -->
+    <div class="video-wrapper" id="videoWrapper">
+        <video id="videoPlayer" controls autoplay loop></video>
+        <div class="video-controls">
+            <div class="video-label">✨ MoUsE AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
+            <button class="download-btn" id="downloadBtn">
+                ⬇️ تحميل الفيديو
+            </button>
+        </div>
+    </div>
+
+    <!-- LOG BOX -->
     <div class="log-box" id="logBox">
         <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في MoUsE AI!</div>
         <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
@@ -330,24 +422,32 @@
 
 <script>
     // ============================================================
-    // 🎬 MoUsE AI - واجهة ويب احترافية (الخادم مخفي)
+    // 🎬 MoUsE AI - مع مشغل فيديو + زر تحميل
     // ============================================================
 
     (function() {
         'use strict';
 
-        // ---- عناصر DOM ----
+        // ---- DOM Elements ----
         const promptInput = document.getElementById('promptInput');
         const generateBtn = document.getElementById('generateBtn');
         const logBox = document.getElementById('logBox');
-        const statusBadge = document.getElementById('statusBadge');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const durationBtns = document.querySelectorAll('#durationGroup .opt-btn');
+        const aspectBtns = document.querySelectorAll('#aspectGroup .opt-btn');
+        const videoWrapper = document.getElementById('videoWrapper');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const downloadBtn = document.getElementById('downloadBtn');
 
-        // ---- حالة التطبيق ----
+        // ---- State ----
         let isGenerating = false;
-        // الخادم مخفي هنا (غير ظاهر في الواجهة)
+        let currentTab = 'video';
+        let selectedDuration = '10';
+        let selectedAspect = '16:9';
+        let currentVideoBlobUrl = null; // لتخزين رابط الفيديو للتحميل
         const API_BASE = 'https://mouse-ai-nine.vercel.app';
 
-        // ---- دوال مساعدة ----
+        // ---- Helpers ----
         function addLog(message, type = 'info') {
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
@@ -357,43 +457,73 @@
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        function setStatus(text, isOk = true) {
-            statusBadge.textContent = text;
-            statusBadge.className = 'status-badge' + (isOk ? '' : ' error');
-        }
-
         function resetButton() {
             generateBtn.classList.remove('loading');
             generateBtn.disabled = false;
             const span = generateBtn.querySelector('.btn-text');
-            if (span) span.textContent = '🚀 توليد الفيديو';
+            if (span) span.textContent = currentTab === 'video' ? '🚀 Generate Video' : '🖼️ Generate Image';
         }
 
         function setLoading() {
             generateBtn.classList.add('loading');
             generateBtn.disabled = true;
-            const span = generateBtn.querySelector('.btn-text');
-            if (span) span.textContent = '⏳ جاري التوليد...';
         }
 
-        // ---- التحقق من حالة الخادم ----
-        async function checkServerStatus() {
-            try {
-                const response = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
-                if (response.ok) {
-                    setStatus(`✅ الخادم متصل`, true);
-                    addLog('✅ الخادم جاهز للعمل', 'success');
-                } else {
-                    setStatus('⚠️ الخادم: يستجيب ولكن مع خطأ', false);
-                    addLog('⚠️ استجابة غير متوقعة من الخادم', 'error');
-                }
-            } catch (err) {
-                setStatus('❌ الخادم: غير متاح (تحقق من اتصالك)', false);
-                addLog('❌ فشل الاتصال بالخادم: ' + err.message, 'error');
+        function showVideo(videoUrl) {
+            currentVideoBlobUrl = videoUrl;
+            videoPlayer.src = videoUrl;
+            videoWrapper.classList.add('show');
+            videoPlayer.play().catch(() => {});
+            addLog('🎬 الفيديو جاهز للمشاهدة والتحميل', 'success');
+        }
+
+        // ---- تحميل الفيديو ----
+        downloadBtn.addEventListener('click', function() {
+            if (!currentVideoBlobUrl) {
+                addLog('❌ لا يوجد فيديو للتحميل. قم بتوليد فيديو أولاً.', 'error');
+                return;
             }
-        }
+            const a = document.createElement('a');
+            a.href = currentVideoBlobUrl;
+            a.download = `MoUsE_AI_video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            addLog('⬇️ بدء تحميل الفيديو...', 'info');
+        });
 
-        // ---- توليد الفيديو ----
+        // ---- Tab Switching ----
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentTab = this.dataset.tab;
+                const btnText = generateBtn.querySelector('.btn-text');
+                btnText.textContent = currentTab === 'video' ? '🚀 Generate Video' : '🖼️ Generate Image';
+                // إخفاء الفيديو عند تبديل التبويب
+                videoWrapper.classList.remove('show');
+                videoPlayer.src = '';
+                currentVideoBlobUrl = null;
+                addLog(`🔄 التبديل إلى وضع ${currentTab === 'video' ? 'الفيديو' : 'الصورة'}`, 'info');
+            });
+        });
+
+        // ---- Option Buttons ----
+        function setupOptionButtons(buttons, stateKey) {
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    if (stateKey === 'duration') selectedDuration = this.dataset.value;
+                    if (stateKey === 'aspect') selectedAspect = this.dataset.value;
+                    addLog(`⚙️ ${stateKey === 'duration' ? 'المدة' : 'نسبة الأبعاد'}: ${this.textContent.trim()}`, 'info');
+                });
+            });
+        }
+        setupOptionButtons(durationBtns, 'duration');
+        setupOptionButtons(aspectBtns, 'aspect');
+
+        // ---- Generate ----
         generateBtn.addEventListener('click', async function() {
             if (isGenerating) return;
 
@@ -405,12 +535,18 @@
 
             isGenerating = true;
             setLoading();
-            addLog('🚀 بدء توليد الفيديو...', 'info');
+            videoWrapper.classList.remove('show');
+            videoPlayer.src = '';
+            currentVideoBlobUrl = null;
+            addLog(`🚀 بدء توليد ${currentTab === 'video' ? 'فيديو' : 'صورة'}...`, 'info');
             addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
 
             try {
                 const formData = new FormData();
                 formData.append('prompt', prompt);
+                formData.append('duration', selectedDuration);
+                formData.append('aspect', selectedAspect);
+                formData.append('mode', currentTab);
 
                 const response = await fetch(`${API_BASE}/generate`, {
                     method: 'POST',
@@ -421,14 +557,20 @@
                 if (response.ok) {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    window.URL.revokeObjectURL(url);
-                    addLog('✅ تم توليد الفيديو بنجاح! تم التحميل تلقائياً.', 'success');
+
+                    if (currentTab === 'video') {
+                        showVideo(url);
+                    } else {
+                        // للصورة: تحميل مباشر
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `MoUsE_AI_image_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        addLog('✅ تم توليد الصورة بنجاح!', 'success');
+                    }
                 } else {
                     let errorMsg = `خطأ ${response.status}`;
                     try {
@@ -443,24 +585,32 @@
                 }
             } catch (err) {
                 if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-                    addLog('❌ انتهى الوقت. قد يكون الخادم مشغولاً، حاول مرة أخرى.', 'error');
+                    addLog('❌ انتهى الوقت. الخادم قد يكون مشغولاً، حاول مرة أخرى.', 'error');
                 } else {
                     addLog(`❌ خطأ: ${err.message}`, 'error');
                 }
             } finally {
                 isGenerating = false;
                 resetButton();
-                addLog('⏳ جاهز لتوليد فيديو جديد', 'info');
+                addLog('⏳ جاهز لتوليد جديد', 'info');
             }
         });
 
-        // ---- تهيئة ----
-        addLog('', 'info');
-        addLog('⏱️ مدة الفيديو: 10 ثواني (ثابتة)', 'info');
-        checkServerStatus();
+        // ---- Init ----
+        addLog('🌐 الواجهة الاحترافية جاهزة', 'info');
+        addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
 
-        // تحديث الحالة كل 30 ثانية
-        setInterval(checkServerStatus, 30000);
+        // التحقق من الخادم
+        async function checkServer() {
+            try {
+                const res = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
+                if (res.ok) addLog('✅ الخادم متصل', 'success');
+                else addLog('⚠️ الخادم يستجيب بشكل غير متوقع', 'error');
+            } catch {
+                addLog('❌ الخادم غير متاح', 'error');
+            }
+        }
+        setTimeout(checkServer, 1000);
 
     })();
 </script>
