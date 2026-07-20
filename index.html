@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎬 MoUsE AI - توليد فيديوهات احترافية</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -20,6 +21,7 @@
             align-items: center;
             padding: 20px;
         }
+        /* ===== MAIN CARD ===== */
         .container {
             background: #121212;
             border-radius: 24px;
@@ -29,6 +31,7 @@
             box-shadow: 0 20px 60px rgba(0, 212, 255, 0.08);
             border: 1px solid #1e1e1e;
         }
+        /* ===== HEADER ===== */
         .header {
             text-align: center;
             margin-bottom: 32px;
@@ -56,7 +59,14 @@
             background: #00d4ff11;
             color: #00d4ff;
             border: 1px solid #00d4ff33;
+            transition: all 0.3s;
         }
+        .status-badge.error {
+            color: #ff6b6b;
+            border-color: #ff6b6b44;
+            background: #ff6b6b11;
+        }
+        /* ===== FORM ===== */
         .form-group {
             margin-bottom: 24px;
         }
@@ -94,6 +104,7 @@
             font-size: 12px;
             margin-top: 6px;
         }
+        /* ===== FILE UPLOAD ===== */
         .upload-area {
             display: flex;
             align-items: center;
@@ -140,6 +151,7 @@
         .remove-btn.visible {
             display: inline-block;
         }
+        /* ===== SETTINGS ===== */
         .settings-row {
             display: flex;
             gap: 30px;
@@ -163,6 +175,7 @@
             font-weight: 600;
             font-size: 14px;
         }
+        /* ===== GENERATE BUTTON ===== */
         .generate-btn {
             width: 100%;
             padding: 18px;
@@ -208,6 +221,7 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        /* ===== STATUS LOG ===== */
         .log-box {
             margin-top: 24px;
             background: #0f0f0f;
@@ -237,217 +251,250 @@
         .log-box .log-entry.info {
             color: #aaddff;
         }
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
-            .container {
-                padding: 24px;
-            }
-            .logo {
-                font-size: 34px;
-            }
-            .settings-row {
-                flex-direction: column;
-                gap: 10px;
-            }
+            .container { padding: 24px; }
+            .logo { font-size: 34px; }
+            .settings-row { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="app">
-        <div class="header">
-            <div class="logo">🎬 MoUsE AI</div>
-            <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
-            <div class="status-badge" id="statusBadge">🔄 جاري التحقق...</div>
+
+<div class="container" id="app">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">🎬 MoUsE AI</div>
+        <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
+        <div class="status-badge" id="statusBadge">🔄 جاري التحقق...</div>
+    </div>
+
+    <!-- PROMPT -->
+    <div class="form-group">
+        <label for="promptInput">📝 وصف الفيديو (البرومبت)</label>
+        <textarea id="promptInput" placeholder="مثال: غروب شمس سينمائي فوق المحيط مع طيور تحلق في السماء، جودة عالية 8K UHD">غروب شمس سينمائي فوق المحيط مع طيور تحلق في السماء، جودة عالية 8K UHD</textarea>
+        <div class="hint">💡 اكتب وصفاً تفصيلياً للحصول على نتائج أفضل</div>
+    </div>
+
+    <!-- IMAGE UPLOAD -->
+    <div class="form-group">
+        <label>🖼️ صورة مرجعية (اختياري)</label>
+        <div class="upload-area">
+            <button class="upload-btn" id="uploadBtn">📤 رفع صورة</button>
+            <span class="file-name" id="fileName">لا توجد صورة مرفوعة</span>
+            <button class="remove-btn" id="removeBtn">✕</button>
+            <input type="file" id="fileInput" accept="image/*" style="display:none">
         </div>
-        <div class="form-group">
-            <label for="promptInput">📝 وصف الفيديو (البرومبت)</label>
-            <textarea id="promptInput" placeholder="مثال: غروب شمس سينمائي فوق المحيط مع طيور تحلق في السماء، جودة عالية 8K UHD">غروب شمس سينمائي فوق المحيط مع طيور تحلق في السماء، جودة عالية 8K UHD</textarea>
-            <div class="hint">💡 اكتب وصفاً تفصيلياً للحصول على نتائج أفضل</div>
-        </div>
-        <div class="form-group">
-            <label>🖼️ صورة مرجعية (اختياري)</label>
-            <div class="upload-area">
-                <button class="upload-btn" id="uploadBtn">📤 رفع صورة</button>
-                <span class="file-name" id="fileName">لا توجد صورة مرفوعة</span>
-                <button class="remove-btn" id="removeBtn">✕</button>
-                <input type="file" id="fileInput" accept="image/*" style="display:none">
-            </div>
-            <div class="hint">📌 الصيغ المدعومة: JPG, PNG, GIF, BMP, WEBP | الحد الأقصى: 10 ميجابايت</div>
-        </div>
-        <div class="form-group">
-            <label>⚙️ الإعدادات</label>
-            <div class="settings-row">
-                <div class="item"><span class="label">⏱️ المدة:</span><span class="value">ثابت (5 ثواني)</span></div>
-                <div class="item"><span class="label">📐 نسبة الأبعاد:</span><span class="value">16:9 (أفقي)</span></div>
-            </div>
-        </div>
-        <button class="generate-btn" id="generateBtn">
-            <span class="btn-text">🚀 توليد الفيديو</span>
-            <span class="spinner"></span>
-        </button>
-        <div class="log-box" id="logBox">
-            <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في MoUsE AI!</div>
-            <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
+        <div class="hint">📌 الصيغ المدعومة: JPG, PNG, GIF, BMP, WEBP | الحد الأقصى: 10 ميجابايت</div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="form-group">
+        <label>⚙️ الإعدادات</label>
+        <div class="settings-row">
+            <div class="item"><span class="label">⏱️ المدة:</span><span class="value">ثابت (5 ثواني)</span></div>
+            <div class="item"><span class="label">📐 نسبة الأبعاد:</span><span class="value">16:9 (أفقي)</span></div>
         </div>
     </div>
-    <script>
-        (function() {
-            'use strict';
-            const promptInput = document.getElementById('promptInput');
-            const fileInput = document.getElementById('fileInput');
-            const uploadBtn = document.getElementById('uploadBtn');
-            const fileName = document.getElementById('fileName');
-            const removeBtn = document.getElementById('removeBtn');
-            const generateBtn = document.getElementById('generateBtn');
-            const logBox = document.getElementById('logBox');
-            const statusBadge = document.getElementById('statusBadge');
-            let selectedFile = null;
-            let isGenerating = false;
-            const API_BASE = 'https://mouse-ai-nine.vercel.app';
 
-            function addLog(message, type = 'info') {
-                const entry = document.createElement('div');
-                entry.className = `log-entry ${type}`;
-                const time = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
-                logBox.appendChild(entry);
-                logBox.scrollTop = logBox.scrollHeight;
-            }
+    <!-- GENERATE BUTTON -->
+    <button class="generate-btn" id="generateBtn">
+        <span class="btn-text">🚀 توليد الفيديو</span>
+        <span class="spinner"></span>
+    </button>
 
-            function setStatus(text, isOk = true) {
-                statusBadge.textContent = text;
-                statusBadge.style.color = isOk ? '#00d4ff' : '#ff6b6b';
-                statusBadge.style.borderColor = isOk ? '#00d4ff33' : '#ff6b6b44';
-                statusBadge.style.background = isOk ? '#00d4ff11' : '#ff6b6b11';
-            }
+    <!-- STATUS LOG -->
+    <div class="log-box" id="logBox">
+        <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في MoUsE AI!</div>
+        <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
+    </div>
+</div>
 
-            function resetButton() {
-                generateBtn.classList.remove('loading');
-                generateBtn.disabled = false;
-                const span = generateBtn.querySelector('.btn-text');
-                if (span) span.textContent = '🚀 توليد الفيديو';
-            }
+<script>
+    // ============================================================
+    // 🎬 MoUsE AI - واجهة ويب احترافية
+    //    تتصل بالخادم: https://mouse-ai-nine.vercel.app
+    // ============================================================
 
-            function setLoading() {
-                generateBtn.classList.add('loading');
-                generateBtn.disabled = true;
-                const span = generateBtn.querySelector('.btn-text');
-                if (span) span.textContent = '⏳ جاري التوليد...';
-            }
+    (function() {
+        'use strict';
 
-            async function checkServerStatus() {
-                try {
-                    const response = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
-                    if (response.ok) {
-                        const data = await response.json();
-                        setStatus(`✅ الخادم: نشط | النموذج: ${data.model || 'agnes-video-v2.0'}`, true);
-                        addLog('✅ الخادم جاهز للعمل', 'success');
-                    } else {
-                        setStatus('⚠️ الخادم: يستجيب ولكن مع خطأ', false);
-                        addLog('⚠️ استجابة غير متوقعة من الخادم', 'error');
-                    }
-                } catch (err) {
-                    setStatus('❌ الخادم: غير متاح (تحقق من اتصالك)', false);
-                    addLog('❌ فشل الاتصال بالخادم: ' + err.message, 'error');
-                }
-            }
+        // ---- عناصر DOM ----
+        const promptInput = document.getElementById('promptInput');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileName = document.getElementById('fileName');
+        const removeBtn = document.getElementById('removeBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const logBox = document.getElementById('logBox');
+        const statusBadge = document.getElementById('statusBadge');
 
-            uploadBtn.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', function(e) {
-                const file = this.files[0];
-                if (!file) return;
-                if (file.size > 10 * 1024 * 1024) {
-                    addLog('❌ الصورة كبيرة جداً (الحد الأقصى 10 ميجابايت)', 'error');
-                    this.value = '';
-                    return;
-                }
-                const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
-                if (!validTypes.includes(file.type)) {
-                    addLog('❌ صيغة غير مدعومة. استخدم JPG, PNG, GIF, BMP, WEBP', 'error');
-                    this.value = '';
-                    return;
-                }
-                selectedFile = file;
-                fileName.textContent = `✅ ${file.name}`;
-                fileName.className = 'file-name has-file';
-                removeBtn.classList.add('visible');
-                addLog(`🖼️ تم رفع الصورة: ${file.name}`, 'info');
-            });
-            removeBtn.addEventListener('click', function() {
-                selectedFile = null;
-                fileInput.value = '';
-                fileName.textContent = 'لا توجد صورة مرفوعة';
-                fileName.className = 'file-name';
-                this.classList.remove('visible');
-                addLog('🗑️ تم إزالة الصورة', 'info');
-            });
+        // ---- حالة التطبيق ----
+        let selectedFile = null;
+        let isGenerating = false;
+        const API_BASE = 'https://mouse-ai-nine.vercel.app';
 
-            generateBtn.addEventListener('click', async function() {
-                if (isGenerating) return;
-                const prompt = promptInput.value.trim();
-                if (!prompt || prompt.length < 5) {
-                    addLog('❌ الرجاء إدخال وصف للفيديو (5 أحرف على الأقل)', 'error');
-                    return;
-                }
-                isGenerating = true;
-                setLoading();
-                addLog('🚀 بدء توليد الفيديو...', 'info');
-                addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
-                if (selectedFile) {
-                    addLog(`🖼️ باستخدام الصورة: ${selectedFile.name}`, 'info');
+        // ---- دوال مساعدة ----
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function setStatus(text, isOk = true) {
+            statusBadge.textContent = text;
+            statusBadge.className = 'status-badge' + (isOk ? '' : ' error');
+        }
+
+        function resetButton() {
+            generateBtn.classList.remove('loading');
+            generateBtn.disabled = false;
+            const span = generateBtn.querySelector('.btn-text');
+            if (span) span.textContent = '🚀 توليد الفيديو';
+        }
+
+        function setLoading() {
+            generateBtn.classList.add('loading');
+            generateBtn.disabled = true;
+            const span = generateBtn.querySelector('.btn-text');
+            if (span) span.textContent = '⏳ جاري التوليد...';
+        }
+
+        // ---- التحقق من حالة الخادم ----
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
+                if (response.ok) {
+                    setStatus(`✅ الخادم متصل`, true);
+                    addLog('✅ الخادم جاهز للعمل', 'success');
                 } else {
-                    addLog('🖼️ توليد من النص فقط', 'info');
+                    setStatus('⚠️ الخادم: يستجيب ولكن مع خطأ', false);
+                    addLog('⚠️ استجابة غير متوقعة من الخادم', 'error');
                 }
-                try {
-                    const formData = new FormData();
-                    formData.append('prompt', prompt);
-                    if (selectedFile) {
-                        formData.append('image', selectedFile);
-                    }
-                    const response = await fetch(`${API_BASE}/generate`, {
-                        method: 'POST',
-                        body: formData,
-                        signal: AbortSignal.timeout(310000)
-                    });
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `video_${new Date().toISOString().slice(0, 19).replace(/[:-]/g, '')}.mp4`;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        window.URL.revokeObjectURL(url);
-                        addLog('✅ تم توليد الفيديو بنجاح! تم التحميل تلقائياً.', 'success');
-                    } else {
-                        let errorMsg = `خطأ ${response.status}`;
-                        try {
-                            const errData = await response.json();
-                            if (errData.detail) errorMsg += `: ${errData.detail}`;
-                            else if (errData.message) errorMsg += `: ${errData.message}`;
-                        } catch (e) {
-                            const text = await response.text();
-                            if (text) errorMsg += `: ${text.substring(0, 100)}`;
-                        }
-                        addLog(`❌ فشل التوليد: ${errorMsg}`, 'error');
-                    }
-                } catch (err) {
-                    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-                        addLog('❌ انتهى الوقت. قد يكون الخادم مشغولاً، حاول مرة أخرى.', 'error');
-                    } else {
-                        addLog(`❌ خطأ: ${err.message}`, 'error');
-                    }
-                } finally {
-                    isGenerating = false;
-                    resetButton();
-                    addLog('⏳ جاهز لتوليد فيديو جديد', 'info');
+            } catch (err) {
+                setStatus('❌ الخادم: غير متاح (تحقق من اتصالك)', false);
+                addLog('❌ فشل الاتصال بالخادم: ' + err.message, 'error');
+            }
+        }
+
+        // ---- رفع الصورة ----
+        uploadBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+
+            if (file.size > 10 * 1024 * 1024) {
+                addLog('❌ الصورة كبيرة جداً (الحد الأقصى 10 ميجابايت)', 'error');
+                this.value = '';
+                return;
+            }
+
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                addLog('❌ صيغة غير مدعومة. استخدم JPG, PNG, GIF, BMP, WEBP', 'error');
+                this.value = '';
+                return;
+            }
+
+            selectedFile = file;
+            fileName.textContent = `✅ ${file.name}`;
+            fileName.className = 'file-name has-file';
+            removeBtn.classList.add('visible');
+            addLog(`🖼️ تم رفع الصورة: ${file.name}`, 'info');
+        });
+
+        removeBtn.addEventListener('click', function() {
+            selectedFile = null;
+            fileInput.value = '';
+            fileName.textContent = 'لا توجد صورة مرفوعة';
+            fileName.className = 'file-name';
+            this.classList.remove('visible');
+            addLog('🗑️ تم إزالة الصورة', 'info');
+        });
+
+        // ---- توليد الفيديو ----
+        generateBtn.addEventListener('click', async function() {
+            if (isGenerating) return;
+
+            const prompt = promptInput.value.trim();
+            if (!prompt || prompt.length < 5) {
+                addLog('❌ الرجاء إدخال وصف للفيديو (5 أحرف على الأقل)', 'error');
+                return;
+            }
+
+            isGenerating = true;
+            setLoading();
+            addLog('🚀 بدء توليد الفيديو...', 'info');
+            addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
+            if (selectedFile) {
+                addLog(`🖼️ باستخدام الصورة: ${selectedFile.name}`, 'info');
+            } else {
+                addLog('🖼️ توليد من النص فقط', 'info');
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('prompt', prompt);
+                if (selectedFile) {
+                    formData.append('image', selectedFile);
                 }
-            });
-            addLog('🌐 واجهة الويب الاحترافية جاهزة', 'info');
-            addLog('🔗 متصلة بالخادم: ' + API_BASE, 'info');
-            checkServerStatus();
-            setInterval(checkServerStatus, 30000);
-        })();
-    </script>
+
+                const response = await fetch(`${API_BASE}/generate`, {
+                    method: 'POST',
+                    body: formData,
+                    signal: AbortSignal.timeout(310000)
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    addLog('✅ تم توليد الفيديو بنجاح! تم التحميل تلقائياً.', 'success');
+                } else {
+                    let errorMsg = `خطأ ${response.status}`;
+                    try {
+                        const errData = await response.json();
+                        if (errData.detail) errorMsg += `: ${errData.detail}`;
+                        else if (errData.message) errorMsg += `: ${errData.message}`;
+                    } catch (e) {
+                        const text = await response.text();
+                        if (text) errorMsg += `: ${text.substring(0, 100)}`;
+                    }
+                    addLog(`❌ فشل التوليد: ${errorMsg}`, 'error');
+                }
+            } catch (err) {
+                if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+                    addLog('❌ انتهى الوقت. قد يكون الخادم مشغولاً، حاول مرة أخرى.', 'error');
+                } else {
+                    addLog(`❌ خطأ: ${err.message}`, 'error');
+                }
+            } finally {
+                isGenerating = false;
+                resetButton();
+                addLog('⏳ جاهز لتوليد فيديو جديد', 'info');
+            }
+        });
+
+        // ---- تهيئة ----
+        addLog('🌐 واجهة الويب الاحترافية جاهزة', 'info');
+        addLog('🔗 متصلة بالخادم: ' + API_BASE, 'info');
+        checkServerStatus();
+
+        // تحديث الحالة كل 30 ثانية
+        setInterval(checkServerStatus, 30000);
+
+    })();
+</script>
+
 </body>
 </html>
