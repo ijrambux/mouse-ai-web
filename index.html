@@ -133,64 +133,6 @@
         .form-group textarea::placeholder {
             color: #555;
         }
-        /* ===== REFERENCE IMAGE UPLOAD ===== */
-        .ref-image-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .ref-image-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.02);
-            color: #999;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-        .ref-image-btn:hover {
-            border-color: rgba(0, 212, 255, 0.3);
-            color: #00d4ff;
-            background: rgba(0, 212, 255, 0.05);
-        }
-        .ref-image-preview-wrap {
-            display: none;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .ref-image-preview-wrap.show {
-            display: block;
-        }
-        .ref-image-preview-wrap img {
-            width: 64px;
-            height: 64px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: block;
-        }
-        .ref-image-remove {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 20px;
-            height: 20px;
-            border: none;
-            border-radius: 50%;
-            background: #ff6b6b;
-            color: #fff;
-            font-size: 11px;
-            line-height: 1;
-            cursor: pointer;
-        }
         /* ===== OPTIONS ROW ===== */
         .options-row {
             display: flex;
@@ -298,7 +240,7 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        /* ===== RESULT WRAPPER (video or image) WITH DOWNLOAD BUTTON ===== */
+        /* ===== VIDEO PLAYER WITH DOWNLOAD BUTTON ===== */
         .video-wrapper {
             margin-top: 24px;
             border-radius: 18px;
@@ -316,13 +258,12 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .video-wrapper video,
-        .video-wrapper img {
+        .video-wrapper video {
             width: 100%;
             display: block;
             border-radius: 18px 18px 0 0;
         }
-        /* ===== VIDEO/IMAGE CONTROLS BAR ===== */
+        /* ===== VIDEO CONTROLS BAR ===== */
         .video-controls {
             display: flex;
             justify-content: space-between;
@@ -436,19 +377,6 @@
         <textarea id="promptInput" placeholder="Describe the video you want, e.g.: Slow motion waves crashing against rocks">Slow motion waves crashing against rocks, cinematic 4K</textarea>
     </div>
 
-    <!-- REFERENCE IMAGE UPLOAD (new feature) -->
-    <div class="form-group">
-        <label>🖼️ صورة مرجعية مع البرومبت (اختياري)</label>
-        <div class="ref-image-row">
-            <input type="file" id="refImageInput" accept="image/*" style="display:none;">
-            <button type="button" class="ref-image-btn" id="refImageBtn">📎 اضغط لإضافة صورة</button>
-            <div class="ref-image-preview-wrap" id="refImagePreviewWrap">
-                <img id="refImagePreview" alt="preview">
-                <button type="button" class="ref-image-remove" id="refImageRemove">✕</button>
-            </div>
-        </div>
-    </div>
-
     <!-- OPTIONS: Duration + Aspect Ratio -->
     <div class="options-row">
         <div class="option-group">
@@ -485,17 +413,6 @@
         </div>
     </div>
 
-    <!-- IMAGE RESULT مع زر تحميل (fix: كانت الصورة تُحمَّل مباشرة بدون عرض) -->
-    <div class="video-wrapper" id="imageWrapper">
-        <img id="imageResult" alt="generated image">
-        <div class="video-controls">
-            <div class="video-label">✨ MoUsE AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
-            <button class="download-btn" id="downloadImageBtn">
-                ⬇️ تحميل الصورة
-            </button>
-        </div>
-    </div>
-
     <!-- LOG BOX -->
     <div class="log-box" id="logBox">
         <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في MoUsE AI!</div>
@@ -505,7 +422,7 @@
 
 <script>
     // ============================================================
-    // 🎬 MoUsE AI - مع مشغل فيديو/صورة + زر تحميل + صورة مرجعية
+    // 🎬 MoUsE AI - مع مشغل فيديو + زر تحميل
     // ============================================================
 
     (function() {
@@ -518,29 +435,16 @@
         const tabBtns = document.querySelectorAll('.tab-btn');
         const durationBtns = document.querySelectorAll('#durationGroup .opt-btn');
         const aspectBtns = document.querySelectorAll('#aspectGroup .opt-btn');
-
         const videoWrapper = document.getElementById('videoWrapper');
         const videoPlayer = document.getElementById('videoPlayer');
         const downloadBtn = document.getElementById('downloadBtn');
-
-        const imageWrapper = document.getElementById('imageWrapper');
-        const imageResult = document.getElementById('imageResult');
-        const downloadImageBtn = document.getElementById('downloadImageBtn');
-
-        const refImageInput = document.getElementById('refImageInput');
-        const refImageBtn = document.getElementById('refImageBtn');
-        const refImagePreviewWrap = document.getElementById('refImagePreviewWrap');
-        const refImagePreview = document.getElementById('refImagePreview');
-        const refImageRemove = document.getElementById('refImageRemove');
 
         // ---- State ----
         let isGenerating = false;
         let currentTab = 'video';
         let selectedDuration = '10';
         let selectedAspect = '16:9';
-        let currentVideoBlobUrl = null;
-        let currentImageBlobUrl = null;
-        let selectedRefImageFile = null; // الصورة المرجعية المرفقة مع البرومبت
+        let currentVideoBlobUrl = null; // لتخزين رابط الفيديو للتحميل
         const API_BASE = 'https://mouse-ai-nine.vercel.app';
 
         // ---- Helpers ----
@@ -565,32 +469,12 @@
             generateBtn.disabled = true;
         }
 
-        function clearResults() {
-            videoWrapper.classList.remove('show');
-            videoPlayer.pause();
-            videoPlayer.src = '';
-            currentVideoBlobUrl = null;
-
-            imageWrapper.classList.remove('show');
-            imageResult.src = '';
-            currentImageBlobUrl = null;
-        }
-
         function showVideo(videoUrl) {
             currentVideoBlobUrl = videoUrl;
             videoPlayer.src = videoUrl;
             videoWrapper.classList.add('show');
             videoPlayer.play().catch(() => {});
             addLog('🎬 الفيديو جاهز للمشاهدة والتحميل', 'success');
-        }
-
-        // FIX: كانت الصورة الناتجة تُحمَّل تلقائياً بدون أي عرض، وهذا كان يبدو كأن
-        // "الميزة لا تعمل". الآن يتم عرضها في الواجهة مع زر تحميل منفصل، بنفس أسلوب الفيديو.
-        function showImage(imageUrl) {
-            currentImageBlobUrl = imageUrl;
-            imageResult.src = imageUrl;
-            imageWrapper.classList.add('show');
-            addLog('🖼️ الصورة جاهزة للمشاهدة والتحميل', 'success');
         }
 
         // ---- تحميل الفيديو ----
@@ -608,48 +492,6 @@
             addLog('⬇️ بدء تحميل الفيديو...', 'info');
         });
 
-        // ---- تحميل الصورة ----
-        downloadImageBtn.addEventListener('click', function() {
-            if (!currentImageBlobUrl) {
-                addLog('❌ لا توجد صورة للتحميل. قم بتوليد صورة أولاً.', 'error');
-                return;
-            }
-            const a = document.createElement('a');
-            a.href = currentImageBlobUrl;
-            a.download = `MoUsE_AI_image_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.png`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            addLog('⬇️ بدء تحميل الصورة...', 'info');
-        });
-
-        // ---- صورة مرجعية (ميزة جديدة) ----
-        refImageBtn.addEventListener('click', function() {
-            refImageInput.click();
-        });
-
-        refImageInput.addEventListener('change', function() {
-            const file = this.files && this.files[0];
-            if (!file) return;
-            if (!file.type.startsWith('image/')) {
-                addLog('❌ الملف المختار ليس صورة صالحة', 'error');
-                return;
-            }
-            selectedRefImageFile = file;
-            const previewUrl = URL.createObjectURL(file);
-            refImagePreview.src = previewUrl;
-            refImagePreviewWrap.classList.add('show');
-            addLog(`📎 تم إرفاق صورة مرجعية: ${file.name}`, 'info');
-        });
-
-        refImageRemove.addEventListener('click', function() {
-            selectedRefImageFile = null;
-            refImageInput.value = '';
-            refImagePreview.src = '';
-            refImagePreviewWrap.classList.remove('show');
-            addLog('🗑️ تم إزالة الصورة المرجعية', 'info');
-        });
-
         // ---- Tab Switching ----
         tabBtns.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -658,8 +500,10 @@
                 currentTab = this.dataset.tab;
                 const btnText = generateBtn.querySelector('.btn-text');
                 btnText.textContent = currentTab === 'video' ? '🚀 Generate Video' : '🖼️ Generate Image';
-                // إخفاء نتائج التبويب السابق عند التبديل
-                clearResults();
+                // إخفاء الفيديو عند تبديل التبويب
+                videoWrapper.classList.remove('show');
+                videoPlayer.src = '';
+                currentVideoBlobUrl = null;
                 addLog(`🔄 التبديل إلى وضع ${currentTab === 'video' ? 'الفيديو' : 'الصورة'}`, 'info');
             });
         });
@@ -691,12 +535,11 @@
 
             isGenerating = true;
             setLoading();
-            clearResults();
+            videoWrapper.classList.remove('show');
+            videoPlayer.src = '';
+            currentVideoBlobUrl = null;
             addLog(`🚀 بدء توليد ${currentTab === 'video' ? 'فيديو' : 'صورة'}...`, 'info');
             addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
-            if (selectedRefImageFile) {
-                addLog(`📎 سيتم إرسال الصورة المرجعية: ${selectedRefImageFile.name}`, 'info');
-            }
 
             try {
                 const formData = new FormData();
@@ -704,12 +547,6 @@
                 formData.append('duration', selectedDuration);
                 formData.append('aspect', selectedAspect);
                 formData.append('mode', currentTab);
-                if (selectedRefImageFile) {
-                    // ملاحظة: اسم الحقل "image" هو الأكثر شيوعاً، لكن يجب التأكد أن
-                    // الخادم (Backend) يتوقع نفس الاسم. إن لم يعمل، غيّر 'image' هنا
-                    // ليطابق ما يستقبله الخادم فعلياً.
-                    formData.append('image', selectedRefImageFile);
-                }
 
                 const response = await fetch(`${API_BASE}/generate`, {
                     method: 'POST',
@@ -724,7 +561,15 @@
                     if (currentTab === 'video') {
                         showVideo(url);
                     } else {
-                        showImage(url);
+                        // للصورة: تحميل مباشر
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `MoUsE_AI_image_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        addLog('✅ تم توليد الصورة بنجاح!', 'success');
                     }
                 } else {
                     let errorMsg = `خطأ ${response.status}`;
