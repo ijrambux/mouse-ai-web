@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐭м𝓞𝓊ŜⒺ AI - توليد فيديوهات احترافية</title>
+    <title>🐭м𝓞𝓊ŜⒺ AI - توليد فيديوهات وصور احترافية</title>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -21,19 +21,17 @@
             align-items: center;
             padding: 20px;
         }
-        /* ===== MAIN CARD ===== */
         .container {
             background: rgba(18, 18, 18, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 30px;
             padding: 45px;
-            max-width: 820px;
+            max-width: 900px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 212, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
-        /* ===== HEADER WITH ANIMATED LOGO ===== */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -75,6 +73,7 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             overflow: hidden;
             margin-bottom: 24px;
+            flex-wrap: wrap;
         }
         .tab-btn {
             flex: 1;
@@ -88,6 +87,7 @@
             transition: all 0.3s;
             font-family: inherit;
             text-align: center;
+            min-width: 100px;
         }
         .tab-btn.active {
             background: rgba(0, 212, 255, 0.08);
@@ -98,7 +98,7 @@
             color: #aaa;
             background: rgba(255, 255, 255, 0.03);
         }
-        /* ===== PROMPT ===== */
+        /* ===== FORM ===== */
         .form-group {
             margin-bottom: 20px;
         }
@@ -122,7 +122,7 @@
             transition: all 0.3s;
             resize: vertical;
             font-family: inherit;
-            min-height: 90px;
+            min-height: 80px;
             box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
         }
         .form-group textarea:focus {
@@ -133,10 +133,75 @@
         .form-group textarea::placeholder {
             color: #555;
         }
-        /* ===== OPTIONS ROW ===== */
+        /* ===== IMAGE UPLOAD ===== */
+        .image-upload-area {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.02);
+            display: none;
+        }
+        .image-upload-area:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.02);
+        }
+        .image-upload-area.dragover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.05);
+        }
+        .image-upload-area .upload-icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .image-upload-area .upload-text {
+            color: #888;
+            font-size: 14px;
+        }
+        .image-upload-area .upload-text strong {
+            color: #00d4ff;
+        }
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+            position: relative;
+            max-width: 100%;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .image-preview .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #ff6b6b;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .image-preview .remove-image:hover {
+            background: rgba(255, 0, 0, 0.3);
+            transform: scale(1.1);
+        }
+        /* ===== OPTIONS ===== */
         .options-row {
             display: flex;
-            gap: 40px;
+            gap: 20px;
             flex-wrap: wrap;
             margin-bottom: 24px;
             padding: 16px 0;
@@ -145,7 +210,7 @@
         }
         .option-group {
             flex: 1;
-            min-width: 140px;
+            min-width: 130px;
         }
         .option-group .option-label {
             display: block;
@@ -160,7 +225,7 @@
             flex-wrap: wrap;
         }
         .opt-btn {
-            padding: 6px 18px;
+            padding: 6px 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.02);
@@ -240,8 +305,8 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        /* ===== VIDEO PLAYER WITH DOWNLOAD BUTTON ===== */
-        .video-wrapper {
+        /* ===== VIDEO / IMAGE RESULT ===== */
+        .result-wrapper {
             margin-top: 24px;
             border-radius: 18px;
             overflow: hidden;
@@ -250,7 +315,7 @@
             display: none;
             position: relative;
         }
-        .video-wrapper.show {
+        .result-wrapper.show {
             display: block;
             animation: fadeSlide 0.5s ease-out;
         }
@@ -258,13 +323,17 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .video-wrapper video {
+        .result-wrapper video {
             width: 100%;
             display: block;
             border-radius: 18px 18px 0 0;
         }
-        /* ===== VIDEO CONTROLS BAR ===== */
-        .video-controls {
+        .result-wrapper img {
+            width: 100%;
+            display: block;
+            border-radius: 18px 18px 0 0;
+        }
+        .result-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -272,13 +341,15 @@
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .video-controls .video-label {
+        .result-controls .result-label {
             font-size: 13px;
             color: #00d4ff;
             font-weight: 600;
         }
-        .video-controls .video-label span {
+        .result-controls .result-label span {
             opacity: 0.5;
             font-weight: 400;
             color: #888;
@@ -306,7 +377,17 @@
         .download-btn:active {
             transform: scale(0.98);
         }
-        /* ===== LOG BOX ===== */
+        /* ===== IMAGE SIZE OPTIONS ===== */
+        .size-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .size-options .opt-btn {
+            padding: 4px 14px;
+            font-size: 12px;
+        }
+        /* ===== LOG ===== */
         .log-box {
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.02);
@@ -350,8 +431,8 @@
             .container { padding: 24px; }
             .logo { font-size: 32px; }
             .options-row { flex-direction: column; gap: 16px; }
-            .tab-btn { font-size: 13px; padding: 12px 14px; }
-            .video-controls { flex-direction: column; gap: 10px; align-items: stretch; }
+            .tab-btn { font-size: 13px; padding: 12px 10px; }
+            .result-controls { flex-direction: column; align-items: stretch; }
             .download-btn { justify-content: center; }
         }
     </style>
@@ -359,61 +440,88 @@
 <body>
 
 <div class="container" id="app">
-    <!-- HEADER with Animated Logo -->
+    <!-- HEADER -->
     <div class="header">
         <div class="logo">🐭м𝓞𝓊ŜⒺ AI</div>
-        <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
+        <div class="subtitle">توليد فيديوهات وصور احترافية بالذكاء الاصطناعي</div>
     </div>
 
     <!-- TABS -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="video">📹 Text to Video</button>
-        <button class="tab-btn" data-tab="image">🖼️ Text to Image</button>
+        <button class="tab-btn active" data-tab="video">📹 فيديو من نص</button>
+        <button class="tab-btn" data-tab="image">🖼️ فيديو من صورة</button>
+        <button class="tab-btn" data-tab="imagegen">🎨 توليد صورة</button>
     </div>
 
     <!-- PROMPT -->
     <div class="form-group">
-        <label for="promptInput">Prompt</label>
-        <textarea id="promptInput" placeholder="Describe the video you want, e.g.: Slow motion waves crashing against rocks">Slow motion waves crashing against rocks, cinematic 4K</textarea>
+        <label for="promptInput">📝 الوصف (Prompt)</label>
+        <textarea id="promptInput" placeholder="اكتب وصفاً تفصيلياً، مثلاً: منظر غروب شمس فوق جبال، سينمائي بدقة عالية">Slow motion waves crashing against rocks, cinematic 4K</textarea>
     </div>
 
-    <!-- OPTIONS: Duration + Aspect Ratio -->
+    <!-- IMAGE UPLOAD (للصورة إلى فيديو) -->
+    <div id="imageUploadArea" class="image-upload-area">
+        <span class="upload-icon">🖼️</span>
+        <div class="upload-text">
+            <strong>انقر أو اسحب</strong> صورة هنا لرفعها<br>
+            <span style="font-size: 12px; color: #555;">يدعم JPG, PNG, WEBP (حتى 10 ميجابايت)</span>
+        </div>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <div class="image-preview" id="imagePreview">
+            <img id="previewImg" src="#" alt="معاينة الصورة">
+            <button class="remove-image" id="removeImageBtn">✕</button>
+        </div>
+    </div>
+
+    <!-- OPTIONS -->
     <div class="options-row">
-        <div class="option-group">
-            <span class="option-label">⏱️ Duration</span>
+        <!-- خيارات المدة (للفيديو) -->
+        <div class="option-group" id="durationGroupWrapper">
+            <span class="option-label">⏱️ المدة</span>
             <div class="option-buttons" id="durationGroup">
-                <button class="opt-btn" data-value="5">5 seconds</button>
-                <button class="opt-btn active" data-value="10">10 seconds</button>
+                <button class="opt-btn" data-value="5">5 ثوان</button>
+                <button class="opt-btn active" data-value="10">10 ثوان</button>
             </div>
         </div>
+        <!-- خيارات نسبة الأبعاد (للفيديو والصورة) -->
         <div class="option-group">
-            <span class="option-label">📐 Aspect Ratio</span>
+            <span class="option-label">📐 نسبة الأبعاد</span>
             <div class="option-buttons" id="aspectGroup">
-                <button class="opt-btn active" data-value="16:9">16:9 <span class="sub">Landscape</span></button>
-                <button class="opt-btn" data-value="9:16">9:16 <span class="sub">Portrait</span></button>
-                <button class="opt-btn" data-value="1:1">1:1 <span class="sub">Square</span></button>
+                <button class="opt-btn active" data-value="16:9">16:9 <span class="sub">أفقي</span></button>
+                <button class="opt-btn" data-value="9:16">9:16 <span class="sub">عمودي</span></button>
+                <button class="opt-btn" data-value="1:1">1:1 <span class="sub">مربع</span></button>
+            </div>
+        </div>
+        <!-- خيارات حجم الصورة (لـ Image Generation) -->
+        <div class="option-group" id="sizeGroupWrapper" style="display: none;">
+            <span class="option-label">📏 حجم الصورة</span>
+            <div class="size-options" id="sizeGroup">
+                <button class="opt-btn" data-value="256x256">256×256</button>
+                <button class="opt-btn active" data-value="512x512">512×512</button>
+                <button class="opt-btn" data-value="1024x1024">1024×1024</button>
+                <button class="opt-btn" data-value="1024x1792">1024×1792</button>
+                <button class="opt-btn" data-value="1792x1024">1792×1024</button>
             </div>
         </div>
     </div>
 
     <!-- GENERATE BUTTON -->
     <button class="generate-btn" id="generateBtn">
-        <span class="btn-text">🚀 Generate Video</span>
+        <span class="btn-text">🚀 توليد</span>
         <span class="spinner"></span>
     </button>
 
-    <!-- VIDEO PLAYER مع زر تحميل -->
-    <div class="video-wrapper" id="videoWrapper">
-        <video id="videoPlayer" controls autoplay loop></video>
-        <div class="video-controls">
-            <div class="video-label">✨ 🐭м𝓞𝓊ŜⒺ AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
-            <button class="download-btn" id="downloadBtn">
-                ⬇️ تحميل الفيديو
-            </button>
+    <!-- RESULT (فيديو أو صورة) -->
+    <div class="result-wrapper" id="resultWrapper">
+        <video id="videoPlayer" controls autoplay loop style="display: none;"></video>
+        <img id="imageResult" src="#" alt="النتيجة" style="display: none; width: 100%;">
+        <div class="result-controls">
+            <div class="result-label">✨ 🐭м𝓞𝓊ŜⒺ AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
+            <button class="download-btn" id="downloadBtn">⬇️ تحميل</button>
         </div>
     </div>
 
-    <!-- LOG BOX -->
+    <!-- LOG -->
     <div class="log-box" id="logBox">
         <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في 🐭м𝓞𝓊ŜⒺ AI!</div>
         <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
@@ -421,10 +529,6 @@
 </div>
 
 <script>
-    // ============================================================
-    // 🐭м𝓞𝓊ŜⒺ AI - مع مشغل فيديو + زر تحميل
-    // ============================================================
-
     (function() {
         'use strict';
 
@@ -435,16 +539,29 @@
         const tabBtns = document.querySelectorAll('.tab-btn');
         const durationBtns = document.querySelectorAll('#durationGroup .opt-btn');
         const aspectBtns = document.querySelectorAll('#aspectGroup .opt-btn');
-        const videoWrapper = document.getElementById('videoWrapper');
+        const sizeBtns = document.querySelectorAll('#sizeGroup .opt-btn');
+        const resultWrapper = document.getElementById('resultWrapper');
         const videoPlayer = document.getElementById('videoPlayer');
+        const imageResult = document.getElementById('imageResult');
         const downloadBtn = document.getElementById('downloadBtn');
+        const imageUploadArea = document.getElementById('imageUploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removeImageBtn = document.getElementById('removeImageBtn');
+        const durationGroupWrapper = document.getElementById('durationGroupWrapper');
+        const sizeGroupWrapper = document.getElementById('sizeGroupWrapper');
 
         // ---- State ----
         let isGenerating = false;
         let currentTab = 'video';
         let selectedDuration = '10';
         let selectedAspect = '16:9';
-        let currentVideoBlobUrl = null; // لتخزين رابط الفيديو للتحميل
+        let selectedSize = '512x512';
+        let currentResultBlobUrl = null;
+        let currentResultType = 'video'; // 'video' or 'image'
+        let uploadedImageData = null;
+
         const API_BASE = 'https://mouse-ai-nine.vercel.app';
 
         // ---- Helpers ----
@@ -461,7 +578,12 @@
             generateBtn.classList.remove('loading');
             generateBtn.disabled = false;
             const span = generateBtn.querySelector('.btn-text');
-            if (span) span.textContent = currentTab === 'video' ? '🚀 Generate Video' : '🖼️ Generate Image';
+            const labels = {
+                'video': '🚀 توليد فيديو',
+                'image': '🖼️ توليد فيديو من صورة',
+                'imagegen': '🎨 توليد صورة'
+            };
+            span.textContent = labels[currentTab] || '🚀 توليد';
         }
 
         function setLoading() {
@@ -469,27 +591,93 @@
             generateBtn.disabled = true;
         }
 
-        function showVideo(videoUrl) {
-            currentVideoBlobUrl = videoUrl;
-            videoPlayer.src = videoUrl;
-            videoWrapper.classList.add('show');
-            videoPlayer.play().catch(() => {});
-            addLog('🎬 الفيديو جاهز للمشاهدة والتحميل', 'success');
+        function showResult(url, type = 'video') {
+            currentResultBlobUrl = url;
+            currentResultType = type;
+            
+            if (type === 'video') {
+                videoPlayer.style.display = 'block';
+                imageResult.style.display = 'none';
+                videoPlayer.src = url;
+                videoPlayer.play().catch(() => {});
+            } else {
+                videoPlayer.style.display = 'none';
+                imageResult.style.display = 'block';
+                imageResult.src = url;
+            }
+            
+            resultWrapper.classList.add('show');
+            addLog(`✅ ${type === 'video' ? 'الفيديو' : 'الصورة'} جاهز للمشاهدة والتحميل`, 'success');
         }
 
-        // ---- تحميل الفيديو ----
+        // ---- تحميل النتيجة ----
         downloadBtn.addEventListener('click', function() {
-            if (!currentVideoBlobUrl) {
-                addLog('❌ لا يوجد فيديو للتحميل. قم بتوليد فيديو أولاً.', 'error');
+            if (!currentResultBlobUrl) {
+                addLog('❌ لا يوجد نتيجة للتحميل. قم بالتوليد أولاً.', 'error');
                 return;
             }
             const a = document.createElement('a');
-            a.href = currentVideoBlobUrl;
-            a.download = `MoUsE_AI_video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
+            a.href = currentResultBlobUrl;
+            const ext = currentResultType === 'video' ? 'mp4' : 'png';
+            a.download = `MoUsE_AI_${currentResultType}_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.${ext}`;
             document.body.appendChild(a);
             a.click();
             a.remove();
-            addLog('⬇️ بدء تحميل الفيديو...', 'info');
+            addLog(`⬇️ بدء تحميل ${currentResultType === 'video' ? 'الفيديو' : 'الصورة'}...`, 'info');
+        });
+
+        // ---- رفع الصورة ----
+        function handleImageUpload(file) {
+            if (!file) return;
+            if (file.size > 10 * 1024 * 1024) {
+                addLog('❌ حجم الصورة كبير جداً (الحد الأقصى 10 ميجابايت)', 'error');
+                return;
+            }
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                addLog('❌ نوع الصورة غير مدعوم (JPG, PNG, WEBP فقط)', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageData = e.target.result;
+                previewImg.src = uploadedImageData;
+                imagePreview.style.display = 'block';
+                imageUploadArea.querySelector('.upload-text').style.display = 'none';
+                imageUploadArea.querySelector('.upload-icon').style.display = 'none';
+                addLog(`✅ تم رفع الصورة: ${file.name} (${(file.size / 1024).toFixed(1)} كيلوبايت)`, 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        imageUploadArea.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) handleImageUpload(this.files[0]);
+        });
+
+        imageUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageUploadArea.classList.add('dragover');
+        });
+        imageUploadArea.addEventListener('dragleave', () => {
+            imageUploadArea.classList.remove('dragover');
+        });
+        imageUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageUploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleImageUpload(e.dataTransfer.files[0]);
+            }
+        });
+
+        removeImageBtn.addEventListener('click', function() {
+            uploadedImageData = null;
+            imagePreview.style.display = 'none';
+            imageUploadArea.querySelector('.upload-text').style.display = 'block';
+            imageUploadArea.querySelector('.upload-icon').style.display = 'block';
+            imageInput.value = '';
+            addLog('🔄 تم إزالة الصورة', 'info');
         });
 
         // ---- Tab Switching ----
@@ -498,13 +686,36 @@
                 tabBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 currentTab = this.dataset.tab;
-                const btnText = generateBtn.querySelector('.btn-text');
-                btnText.textContent = currentTab === 'video' ? '🚀 Generate Video' : '🖼️ Generate Image';
-                // إخفاء الفيديو عند تبديل التبويب
-                videoWrapper.classList.remove('show');
+                
+                // إخفاء كل العناصر الخاصة
+                imageUploadArea.style.display = 'none';
+                durationGroupWrapper.style.display = 'block';
+                sizeGroupWrapper.style.display = 'none';
+                
+                // إظهار العناصر حسب التبويب
+                if (currentTab === 'image') {
+                    imageUploadArea.style.display = 'block';
+                    if (!uploadedImageData) {
+                        addLog('📷 يرجى رفع صورة لتوليد فيديو منها', 'info');
+                    }
+                } else if (currentTab === 'imagegen') {
+                    durationGroupWrapper.style.display = 'none';
+                    sizeGroupWrapper.style.display = 'block';
+                }
+                
+                // إعادة تعيين النتيجة
+                resultWrapper.classList.remove('show');
                 videoPlayer.src = '';
-                currentVideoBlobUrl = null;
-                addLog(`🔄 التبديل إلى وضع ${currentTab === 'video' ? 'الفيديو' : 'الصورة'}`, 'info');
+                imageResult.src = '';
+                currentResultBlobUrl = null;
+                
+                const labels = {
+                    'video': '🚀 توليد فيديو',
+                    'image': '🖼️ توليد فيديو من صورة',
+                    'imagegen': '🎨 توليد صورة'
+                };
+                generateBtn.querySelector('.btn-text').textContent = labels[currentTab];
+                addLog(`🔄 التبديل إلى: ${labels[currentTab]}`, 'info');
             });
         });
 
@@ -515,13 +726,15 @@
                     buttons.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     if (stateKey === 'duration') selectedDuration = this.dataset.value;
-                    if (stateKey === 'aspect') selectedAspect = this.dataset.value;
-                    addLog(`⚙️ ${stateKey === 'duration' ? 'المدة' : 'نسبة الأبعاد'}: ${this.textContent.trim()}`, 'info');
+                    else if (stateKey === 'aspect') selectedAspect = this.dataset.value;
+                    else if (stateKey === 'size') selectedSize = this.dataset.value;
+                    addLog(`⚙️ ${stateKey}: ${this.textContent.trim()}`, 'info');
                 });
             });
         }
         setupOptionButtons(durationBtns, 'duration');
         setupOptionButtons(aspectBtns, 'aspect');
+        setupOptionButtons(sizeBtns, 'size');
 
         // ---- Generate ----
         generateBtn.addEventListener('click', async function() {
@@ -529,24 +742,49 @@
 
             const prompt = promptInput.value.trim();
             if (!prompt || prompt.length < 5) {
-                addLog('❌ الرجاء إدخال وصف للفيديو (5 أحرف على الأقل)', 'error');
+                addLog('❌ الرجاء إدخال وصف (5 أحرف على الأقل)', 'error');
+                return;
+            }
+
+            if (currentTab === 'image' && !uploadedImageData) {
+                addLog('❌ يرجى رفع صورة أولاً', 'error');
                 return;
             }
 
             isGenerating = true;
             setLoading();
-            videoWrapper.classList.remove('show');
+            resultWrapper.classList.remove('show');
             videoPlayer.src = '';
-            currentVideoBlobUrl = null;
-            addLog(`🚀 بدء توليد ${currentTab === 'video' ? 'فيديو' : 'صورة'}...`, 'info');
+            imageResult.src = '';
+            currentResultBlobUrl = null;
+
+            const modeNames = {
+                'video': 'فيديو من نص',
+                'image': 'فيديو من صورة',
+                'imagegen': 'صورة'
+            };
+            addLog(`🚀 بدء توليد ${modeNames[currentTab]}...`, 'info');
             addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
 
             try {
                 const formData = new FormData();
                 formData.append('prompt', prompt);
-                formData.append('duration', selectedDuration);
-                formData.append('aspect', selectedAspect);
                 formData.append('mode', currentTab);
+                formData.append('aspect', selectedAspect);
+                
+                if (currentTab === 'video' || currentTab === 'image') {
+                    formData.append('duration', selectedDuration);
+                }
+                
+                if (currentTab === 'imagegen') {
+                    formData.append('size', selectedSize);
+                }
+                
+                if (uploadedImageData) {
+                    const response = await fetch(uploadedImageData);
+                    const blob = await response.blob();
+                    formData.append('image', blob, 'uploaded_image.jpg');
+                }
 
                 const response = await fetch(`${API_BASE}/generate`, {
                     method: 'POST',
@@ -557,20 +795,8 @@
                 if (response.ok) {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
-
-                    if (currentTab === 'video') {
-                        showVideo(url);
-                    } else {
-                        // للصورة: تحميل مباشر
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `MoUsE_AI_image_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.png`;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        window.URL.revokeObjectURL(url);
-                        addLog('✅ تم توليد الصورة بنجاح!', 'success');
-                    }
+                    const type = currentTab === 'imagegen' ? 'image' : 'video';
+                    showResult(url, type);
                 } else {
                     let errorMsg = `خطأ ${response.status}`;
                     try {
@@ -585,7 +811,7 @@
                 }
             } catch (err) {
                 if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-                    addLog('❌ انتهى الوقت. الخادم قد يكون مشغولاً، حاول مرة أخرى.', 'error');
+                    addLog('❌ انتهى الوقت. الخادم مشغول، حاول مرة أخرى.', 'error');
                 } else {
                     addLog(`❌ خطأ: ${err.message}`, 'error');
                 }
@@ -596,11 +822,7 @@
             }
         });
 
-        // ---- Init ----
-        addLog('', 'info');
-        addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
-
-        // التحقق من الخادم
+        // ---- Check Server ----
         async function checkServer() {
             try {
                 const res = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
@@ -611,6 +833,10 @@
             }
         }
         setTimeout(checkServer, 1000);
+
+        // ---- Init ----
+        addLog('', 'info');
+        addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
 
     })();
 </script>
