@@ -11,59 +11,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
-        /* ===== FALLING STARS ANIMATION ===== */
-        @keyframes fall {
-            0% {
-                top: -10px;
-                opacity: 1;
-            }
-            100% {
-                top: 100vh;
-                opacity: 0;
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% {
-                text-shadow: 0 0 5px #00d4ff, 0 0 10px #0077ff, 0 0 20px #a855f7;
-                filter: brightness(1);
-            }
-            50% {
-                text-shadow: 0 0 15px #00d4ff, 0 0 25px #0077ff, 0 0 40px #a855f7, 0 0 60px rgba(0, 212, 255, 0.6);
-                filter: brightness(1.3);
-            }
-        }
-
-        .stars-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .falling-star {
-            position: absolute;
-            font-size: 24px;
-            color: #00d4ff;
-            animation-duration: 3s;
-            animation-timing-function: linear;
-            animation-fill-mode: forwards;
-            text-shadow: 0 0 8px #0077ff, 0 0 15px #a855f7;
-        }
-
-        .falling-star.animate {
-            animation-name: fall;
-        }
-
-        .falling-star.glow {
-            animation: glow 1.5s ease-in-out infinite;
-        }
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #0a0a0a;
@@ -73,22 +20,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
-            overflow: hidden;
         }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
         .container {
             background: rgba(18, 18, 18, 0.85);
             backdrop-filter: blur(20px);
@@ -99,8 +31,6 @@
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 212, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            position: relative;
-            z-index: 1;
         }
         .header {
             text-align: center;
@@ -445,9 +375,6 @@
 </head>
 <body>
 
-<!-- FALLING STARS BACKGROUND -->
-<div class="stars-background" id="starsBackground"></div>
-
 <div class="container" id="app">
     <!-- HEADER -->
     <div class="header">
@@ -516,39 +443,6 @@
 <script>
     (function() {
         'use strict';
-
-        // ---- FALLING STARS ANIMATION ----
-        const starsBackground = document.getElementById('starsBackground');
-        const starSymbols = ['✦', '✧', '⭐', '✨', '★', '✡', '❄'];
-
-        function createFallingStar() {
-            const star = document.createElement('div');
-            star.className = 'falling-star animate glow';
-            star.textContent = starSymbols[Math.floor(Math.random() * starSymbols.length)];
-            
-            const startX = Math.random() * window.innerWidth;
-            const duration = 3 + Math.random() * 2;
-            const rotation = Math.random() * 360;
-            
-            star.style.left = startX + 'px';
-            star.style.animationDuration = duration + 's';
-            star.style.transform = `rotate(${rotation}deg)`;
-            star.style.opacity = '0.7';
-            
-            starsBackground.appendChild(star);
-            
-            setTimeout(() => {
-                star.remove();
-            }, duration * 1000);
-        }
-
-        // Create stars periodically
-        setInterval(createFallingStar, 300);
-
-        // Initial burst of stars
-        for (let i = 0; i < 8; i++) {
-            setTimeout(createFallingStar, i * 150);
-        }
 
         // ---- DOM Elements ----
         const promptInput = document.getElementById('promptInput');
