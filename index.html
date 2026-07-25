@@ -11,6 +11,59 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* ===== FALLING STARS ANIMATION ===== */
+        @keyframes fall {
+            0% {
+                top: -10px;
+                opacity: 1;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 5px #00d4ff, 0 0 10px #0077ff, 0 0 20px #a855f7;
+                filter: brightness(1);
+            }
+            50% {
+                text-shadow: 0 0 15px #00d4ff, 0 0 25px #0077ff, 0 0 40px #a855f7, 0 0 60px rgba(0, 212, 255, 0.6);
+                filter: brightness(1.3);
+            }
+        }
+
+        .stars-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .falling-star {
+            position: absolute;
+            font-size: 24px;
+            color: #00d4ff;
+            animation-duration: 3s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+            text-shadow: 0 0 8px #0077ff, 0 0 15px #a855f7;
+        }
+
+        .falling-star.animate {
+            animation-name: fall;
+        }
+
+        .falling-star.glow {
+            animation: glow 1.5s ease-in-out infinite;
+        }
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #0a0a0a;
@@ -20,132 +73,22 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overflow-x: hidden;
             position: relative;
+            overflow: hidden;
         }
 
-        /* ===== خلفية النجوم المتساقطة ===== */
-        #stars-canvas {
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
             pointer-events: none;
+            z-index: -1;
         }
 
-        /* ===== تأثير النار الأزرق الملتهب حول الشعار ===== */
-        .logo-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .logo {
-            font-size: 48px;
-            font-weight: 800;
-            display: inline-block;
-            background: linear-gradient(90deg, #00d4ff, #0077ff, #a855f7, #00d4ff);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientMove 4s ease-in-out infinite, float 3s ease-in-out infinite;
-            letter-spacing: -1px;
-            text-shadow: 0 0 60px rgba(0, 212, 255, 0.15);
-            position: relative;
-            z-index: 2;
-        }
-
-        /* ===== نار أزرق ملتهب ===== */
-        .fire-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            z-index: 1;
-            pointer-events: none;
-            filter: blur(2px);
-        }
-
-        .fire-particle {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 180, 255, 0.8), rgba(0, 100, 255, 0.2));
-            animation: fireRise 1.5s ease-out infinite;
-            opacity: 0;
-        }
-
-        .fire-particle:nth-child(1) { width: 30px; height: 30px; left: 30%; animation-delay: 0s; }
-        .fire-particle:nth-child(2) { width: 20px; height: 20px; left: 50%; animation-delay: 0.3s; }
-        .fire-particle:nth-child(3) { width: 25px; height: 25px; left: 70%; animation-delay: 0.6s; }
-        .fire-particle:nth-child(4) { width: 15px; height: 15px; left: 20%; animation-delay: 0.9s; }
-        .fire-particle:nth-child(5) { width: 35px; height: 35px; left: 60%; animation-delay: 0.2s; }
-        .fire-particle:nth-child(6) { width: 18px; height: 18px; left: 40%; animation-delay: 0.7s; }
-        .fire-particle:nth-child(7) { width: 28px; height: 28px; left: 80%; animation-delay: 0.4s; }
-        .fire-particle:nth-child(8) { width: 22px; height: 22px; left: 10%; animation-delay: 0.8s; }
-        .fire-particle:nth-child(9) { width: 32px; height: 32px; left: 90%; animation-delay: 0.1s; }
-        .fire-particle:nth-child(10) { width: 16px; height: 16px; left: 45%; animation-delay: 0.5s; }
-
-        @keyframes fireRise {
-            0% {
-                transform: translateY(20px) scale(0.3) rotate(0deg);
-                opacity: 0;
-            }
-            30% {
-                opacity: 0.9;
-                transform: translateY(-20px) scale(1.2) rotate(20deg);
-            }
-            60% {
-                opacity: 0.6;
-                transform: translateY(-60px) scale(0.8) rotate(-10deg);
-            }
-            100% {
-                transform: translateY(-120px) scale(0) rotate(30deg);
-                opacity: 0;
-            }
-        }
-
-        /* ===== وهج إضافي ===== */
-        .glow-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 150, 255, 0.15), transparent 70%);
-            animation: pulseGlow 2s ease-in-out infinite;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.5;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.3);
-                opacity: 1;
-            }
-        }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-8px) scale(1.02); }
-            100% { transform: translateY(0px) scale(1); }
-        }
-
-        /* ===== باقي التنسيقات ===== */
         .container {
             background: rgba(18, 18, 18, 0.85);
             backdrop-filter: blur(20px);
@@ -159,19 +102,38 @@
             position: relative;
             z-index: 1;
         }
-
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
-
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            display: inline-block;
+            background: linear-gradient(90deg, #00d4ff, #0077ff, #a855f7, #00d4ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 4s ease-in-out infinite, float 3s ease-in-out infinite;
+            letter-spacing: -1px;
+            text-shadow: 0 0 60px rgba(0, 212, 255, 0.15);
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+            100% { transform: translateY(0px) scale(1); }
+        }
         .subtitle {
             color: #666;
             font-size: 14px;
             margin-top: 4px;
             letter-spacing: 2px;
         }
-
         /* ===== FORM ===== */
         .form-group {
             margin-bottom: 20px;
@@ -261,7 +223,6 @@
             display: block;
             font-weight: 400;
         }
-
         /* ===== GENERATE BUTTON ===== */
         .generate-btn {
             width: 100%;
@@ -316,7 +277,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
         /* ===== VIDEO RESULT ===== */
         .result-wrapper {
             margin-top: 24px;
@@ -480,381 +440,278 @@
             .result-controls { flex-direction: column; align-items: stretch; }
             .download-btn { justify-content: center; }
             .footer { flex-direction: column; gap: 12px; }
-            .fire-container { width: 150px; height: 150px; }
-            .glow-ring { width: 140px; height: 140px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== خلفية النجوم ===== -->
-    <canvas id="stars-canvas"></canvas>
+<!-- FALLING STARS BACKGROUND -->
+<div class="stars-background" id="starsBackground"></div>
 
-    <div class="container" id="app">
-        <!-- HEADER -->
-        <div class="header">
-            <div class="logo-wrapper">
-                <div class="glow-ring"></div>
-                <div class="fire-container">
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                    <div class="fire-particle"></div>
-                </div>
-                <div class="logo">🐭м𝓞𝓊ŜⒺ AI</div>
-            </div>
-            <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
-        </div>
+<div class="container" id="app">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">🐭м𝓞𝓊ŜⒺ AI</div>
+        <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
+    </div>
 
-        <!-- PROMPT -->
-        <div class="form-group">
-            <label for="promptInput">📝 الوصف (Prompt)</label>
-            <textarea id="promptInput" placeholder="اكتب وصفاً تفصيلياً للفيديو، مثلاً: منظر غروب شمس فوق جبال، سينمائي بدقة عالية">Slow motion waves crashing against rocks, cinematic 4K</textarea>
-        </div>
+    <!-- PROMPT -->
+    <div class="form-group">
+        <label for="promptInput">📝 الوصف (Prompt)</label>
+        <textarea id="promptInput" placeholder="اكتب وصفاً تفصيلياً للفيديو، مثلاً: منظر غروب شمس فوق جبال، سينمائي بدقة عالية">Slow motion waves crashing against rocks, cinematic 4K</textarea>
+    </div>
 
-        <!-- OPTIONS -->
-        <div class="options-row">
-            <div class="option-group">
-                <span class="option-label">⏱️ المدة</span>
-                <div class="option-buttons" id="durationGroup">
-                    <button class="opt-btn" data-value="5">5 ثوان</button>
-                    <button class="opt-btn active" data-value="10">10 ثوان</button>
-                </div>
-            </div>
-            <div class="option-group">
-                <span class="option-label">📐 نسبة الأبعاد</span>
-                <div class="option-buttons" id="aspectGroup">
-                    <button class="opt-btn active" data-value="16:9">16:9 <span class="sub">أفقي</span></button>
-                    <button class="opt-btn" data-value="9:16">9:16 <span class="sub">عمودي</span></button>
-                    <button class="opt-btn" data-value="1:1">1:1 <span class="sub">مربع</span></button>
-                </div>
+    <!-- OPTIONS -->
+    <div class="options-row">
+        <div class="option-group">
+            <span class="option-label">⏱️ المدة</span>
+            <div class="option-buttons" id="durationGroup">
+                <button class="opt-btn" data-value="5">5 ثوان</button>
+                <button class="opt-btn active" data-value="10">10 ثوان</button>
             </div>
         </div>
-
-        <!-- GENERATE BUTTON -->
-        <button class="generate-btn" id="generateBtn">
-            <span class="btn-text">🚀 توليد الفيديو</span>
-            <span class="spinner"></span>
-        </button>
-
-        <!-- RESULT -->
-        <div class="result-wrapper" id="resultWrapper">
-            <video id="videoPlayer" controls autoplay loop></video>
-            <div class="result-controls">
-                <div class="result-label">✨ 🐭м𝓞𝓊ŜⒺ AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
-                <button class="download-btn" id="downloadBtn">⬇️ تحميل</button>
+        <div class="option-group">
+            <span class="option-label">📐 نسبة الأبعاد</span>
+            <div class="option-buttons" id="aspectGroup">
+                <button class="opt-btn active" data-value="16:9">16:9 <span class="sub">أفقي</span></button>
+                <button class="opt-btn" data-value="9:16">9:16 <span class="sub">عمودي</span></button>
+                <button class="opt-btn" data-value="1:1">1:1 <span class="sub">مربع</span></button>
             </div>
-        </div>
-
-        <!-- LOG -->
-        <div class="log-box" id="logBox">
-            <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في 🐭м𝓞𝓊ŜⒺ AI!</div>
-            <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer">
-            <span class="copyright">© 2026 🐭м𝓞𝓊ŜⒺ AI</span>
-            <a href="https://x.com/mouse0000000" target="_blank" class="social-link" title="تواصل معي على X">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-                <span>تواصل معي</span>
-            </a>
         </div>
     </div>
 
-    <script>
-        // ============================================================
-        //  ⭐ خلفية النجوم المتساقطة
-        // ============================================================
-        (function() {
-            const canvas = document.getElementById('stars-canvas');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let stars = [];
-            const NUM_STARS = 150;
-            const MAX_SPEED = 2;
+    <!-- GENERATE BUTTON -->
+    <button class="generate-btn" id="generateBtn">
+        <span class="btn-text">🚀 توليد الفيديو</span>
+        <span class="spinner"></span>
+    </button>
 
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
+    <!-- RESULT -->
+    <div class="result-wrapper" id="resultWrapper">
+        <video id="videoPlayer" controls autoplay loop></video>
+        <div class="result-controls">
+            <div class="result-label">✨ 🐭м𝓞𝓊ŜⒺ AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
+            <button class="download-btn" id="downloadBtn">⬇️ تحميل</button>
+        </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="log-box" id="logBox">
+        <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في 🐭м𝓞𝓊ŜⒺ AI!</div>
+        <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <span class="copyright">© 2026 🐭м𝓞𝓊ŜⒺ AI</span>
+        <a href="https://x.com/mouse0000000" target="_blank" class="social-link" title="تواصل معي على X">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span>تواصل معي</span>
+        </a>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ---- FALLING STARS ANIMATION ----
+        const starsBackground = document.getElementById('starsBackground');
+        const starSymbols = ['✦', '✧', '⭐', '✨', '★', '✡', '❄'];
+
+        function createFallingStar() {
+            const star = document.createElement('div');
+            star.className = 'falling-star animate glow';
+            star.textContent = starSymbols[Math.floor(Math.random() * starSymbols.length)];
+            
+            const startX = Math.random() * window.innerWidth;
+            const duration = 3 + Math.random() * 2;
+            const rotation = Math.random() * 360;
+            
+            star.style.left = startX + 'px';
+            star.style.animationDuration = duration + 's';
+            star.style.transform = `rotate(${rotation}deg)`;
+            star.style.opacity = '0.7';
+            
+            starsBackground.appendChild(star);
+            
+            setTimeout(() => {
+                star.remove();
+            }, duration * 1000);
+        }
+
+        // Create stars periodically
+        setInterval(createFallingStar, 300);
+
+        // Initial burst of stars
+        for (let i = 0; i < 8; i++) {
+            setTimeout(createFallingStar, i * 150);
+        }
+
+        // ---- DOM Elements ----
+        const promptInput = document.getElementById('promptInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const logBox = document.getElementById('logBox');
+        const durationBtns = document.querySelectorAll('#durationGroup .opt-btn');
+        const aspectBtns = document.querySelectorAll('#aspectGroup .opt-btn');
+        const resultWrapper = document.getElementById('resultWrapper');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // ---- State ----
+        let isGenerating = false;
+        let selectedDuration = '10';
+        let selectedAspect = '16:9';
+        let currentResultBlobUrl = null;
+
+        const API_BASE = 'https://mouse-ai-nine.vercel.app';
+
+        // ---- Helpers ----
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function resetButton() {
+            generateBtn.classList.remove('loading');
+            generateBtn.disabled = false;
+            generateBtn.querySelector('.btn-text').textContent = '🚀 توليد الفيديو';
+        }
+
+        function setLoading() {
+            generateBtn.classList.add('loading');
+            generateBtn.disabled = true;
+        }
+
+        function showResult(url) {
+            currentResultBlobUrl = url;
+            videoPlayer.src = url;
+            resultWrapper.classList.add('show');
+            videoPlayer.play().catch(() => {});
+            addLog('✅ الفيديو جاهز للمشاهدة والتحميل', 'success');
+        }
+
+        // ---- تحميل النتيجة ----
+        downloadBtn.addEventListener('click', function() {
+            if (!currentResultBlobUrl) {
+                addLog('❌ لا يوجد فيديو للتحميل. قم بالتوليد أولاً.', 'error');
+                return;
             }
-            window.addEventListener('resize', resize);
-            resize();
+            const a = document.createElement('a');
+            a.href = currentResultBlobUrl;
+            a.download = `MoUsE_AI_video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            addLog('⬇️ بدء تحميل الفيديو...', 'info');
+        });
 
-            // تهيئة النجوم
-            class Star {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height;
-                    this.size = Math.random() * 2.5 + 0.5;
-                    this.speed = Math.random() * MAX_SPEED + 0.3;
-                    this.opacity = Math.random() * 0.8 + 0.2;
-                    this.trail = [];
-                    this.maxTrail = 5 + Math.floor(Math.random() * 8);
-                    this.hue = 200 + Math.random() * 40; // أزرق إلى أزرق فاتح
-                    this.pulse = Math.random() * Math.PI * 2;
-                    this.pulseSpeed = 0.02 + Math.random() * 0.03;
-                }
-                update() {
-                    this.y += this.speed;
-                    this.pulse += this.pulseSpeed;
+        // ---- Option Buttons ----
+        function setupOptionButtons(buttons, callback) {
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    callback(this.dataset.value);
+                });
+            });
+        }
 
-                    // إضافة أثر (ذيل)
-                    this.trail.push({ x: this.x, y: this.y });
-                    if (this.trail.length > this.maxTrail) {
-                        this.trail.shift();
-                    }
+        setupOptionButtons(durationBtns, (value) => {
+            selectedDuration = value;
+            addLog(`⚙️ المدة: ${value} ثوان`, 'info');
+        });
 
-                    // إعادة تعيين عند الخروج
-                    if (this.y > height + 20) {
-                        this.reset();
-                        this.y = -10;
-                        this.x = Math.random() * width;
-                    }
-                }
-                draw() {
-                    // رسم الذيل
-                    for (let i = 0; i < this.trail.length; i++) {
-                        const t = this.trail[i];
-                        const alpha = (i / this.trail.length) * this.opacity * 0.5;
-                        const size = (i / this.trail.length) * this.size * 0.6;
-                        ctx.beginPath();
-                        ctx.arc(t.x, t.y, size, 0, Math.PI * 2);
-                        ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${alpha})`;
-                        ctx.fill();
-                    }
+        setupOptionButtons(aspectBtns, (value) => {
+            selectedAspect = value;
+            addLog(`⚙️ نسبة الأبعاد: ${value}`, 'info');
+        });
 
-                    // رسم النجمة الأساسية مع وميض
-                    const glow = 0.6 + 0.4 * Math.sin(this.pulse);
-                    const radius = this.size * glow;
+        // ---- Generate ----
+        generateBtn.addEventListener('click', async function() {
+            if (isGenerating) return;
 
-                    // توهج خارجي
-                    const gradient = ctx.createRadialGradient(
-                        this.x, this.y, 0,
-                        this.x, this.y, radius * 6
-                    );
-                    gradient.addColorStop(0, `hsla(${this.hue}, 100%, 80%, ${this.opacity * 0.8})`);
-                    gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 60%, ${this.opacity * 0.3})`);
-                    gradient.addColorStop(1, `hsla(${this.hue}, 100%, 50%, 0)`);
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, radius * 6, 0, Math.PI * 2);
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-
-                    // النواة
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsla(${this.hue}, 100%, 90%, ${this.opacity})`;
-                    ctx.fill();
-
-                    // توهج أبيض في المركز
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, radius * 0.3, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.6})`;
-                    ctx.fill();
-                }
+            const prompt = promptInput.value.trim();
+            if (!prompt || prompt.length < 5) {
+                addLog('❌ الرجاء إدخال وصف (5 أحرف على الأقل)', 'error');
+                return;
             }
 
-            // إنشاء النجوم
-            for (let i = 0; i < NUM_STARS; i++) {
-                stars.push(new Star());
-            }
+            isGenerating = true;
+            setLoading();
+            resultWrapper.classList.remove('show');
+            videoPlayer.src = '';
+            currentResultBlobUrl = null;
 
-            // حلقة الرسم
-            function animate() {
-                ctx.clearRect(0, 0, width, height);
+            addLog(`🚀 بدء توليد فيديو من نص...`, 'info');
+            addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
 
-                // خلفية سوداء شفافة للتأثيرات
-                ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
-                ctx.fillRect(0, 0, width, height);
+            try {
+                const formData = new FormData();
+                formData.append('prompt', prompt);
+                formData.append('mode', 'video');
+                formData.append('duration', selectedDuration);
+                formData.append('aspect', selectedAspect);
 
-                stars.forEach(star => {
-                    star.update();
-                    star.draw();
+                const response = await fetch(`${API_BASE}/generate`, {
+                    method: 'POST',
+                    body: formData,
+                    signal: AbortSignal.timeout(310000)
                 });
 
-                requestAnimationFrame(animate);
-            }
-
-            animate();
-
-            // إعادة تعيين النجوم عند تغيير الحجم
-            window.addEventListener('resize', () => {
-                stars.forEach(star => {
-                    star.x = Math.random() * width;
-                    star.y = Math.random() * height;
-                });
-            });
-        })();
-
-        // ============================================================
-        //  🎬 باقي الكود (توليد الفيديو)
-        // ============================================================
-        (function() {
-            'use strict';
-
-            const promptInput = document.getElementById('promptInput');
-            const generateBtn = document.getElementById('generateBtn');
-            const logBox = document.getElementById('logBox');
-            const durationBtns = document.querySelectorAll('#durationGroup .opt-btn');
-            const aspectBtns = document.querySelectorAll('#aspectGroup .opt-btn');
-            const resultWrapper = document.getElementById('resultWrapper');
-            const videoPlayer = document.getElementById('videoPlayer');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            let isGenerating = false;
-            let selectedDuration = '10';
-            let selectedAspect = '16:9';
-            let currentResultBlobUrl = null;
-            const API_BASE = 'https://mouse-ai-nine.vercel.app';
-
-            function addLog(message, type = 'info') {
-                const entry = document.createElement('div');
-                entry.className = `log-entry ${type}`;
-                const time = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
-                logBox.appendChild(entry);
-                logBox.scrollTop = logBox.scrollHeight;
-            }
-
-            function resetButton() {
-                generateBtn.classList.remove('loading');
-                generateBtn.disabled = false;
-                generateBtn.querySelector('.btn-text').textContent = '🚀 توليد الفيديو';
-            }
-
-            function setLoading() {
-                generateBtn.classList.add('loading');
-                generateBtn.disabled = true;
-            }
-
-            function showResult(url) {
-                currentResultBlobUrl = url;
-                videoPlayer.src = url;
-                resultWrapper.classList.add('show');
-                videoPlayer.play().catch(() => {});
-                addLog('✅ الفيديو جاهز للمشاهدة والتحميل', 'success');
-            }
-
-            downloadBtn.addEventListener('click', function() {
-                if (!currentResultBlobUrl) {
-                    addLog('❌ لا يوجد فيديو للتحميل. قم بالتوليد أولاً.', 'error');
-                    return;
-                }
-                const a = document.createElement('a');
-                a.href = currentResultBlobUrl;
-                a.download = `MoUsE_AI_video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                addLog('⬇️ بدء تحميل الفيديو...', 'info');
-            });
-
-            function setupOptionButtons(buttons, callback) {
-                buttons.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        buttons.forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        callback(this.dataset.value);
-                    });
-                });
-            }
-
-            setupOptionButtons(durationBtns, (value) => {
-                selectedDuration = value;
-                addLog(`⚙️ المدة: ${value} ثوان`, 'info');
-            });
-
-            setupOptionButtons(aspectBtns, (value) => {
-                selectedAspect = value;
-                addLog(`⚙️ نسبة الأبعاد: ${value}`, 'info');
-            });
-
-            generateBtn.addEventListener('click', async function() {
-                if (isGenerating) return;
-
-                const prompt = promptInput.value.trim();
-                if (!prompt || prompt.length < 5) {
-                    addLog('❌ الرجاء إدخال وصف (5 أحرف على الأقل)', 'error');
-                    return;
-                }
-
-                isGenerating = true;
-                setLoading();
-                resultWrapper.classList.remove('show');
-                videoPlayer.src = '';
-                currentResultBlobUrl = null;
-
-                addLog(`🚀 بدء توليد فيديو من نص...`, 'info');
-                addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
-
-                try {
-                    const formData = new FormData();
-                    formData.append('prompt', prompt);
-                    formData.append('mode', 'video');
-                    formData.append('duration', selectedDuration);
-                    formData.append('aspect', selectedAspect);
-
-                    const response = await fetch(`${API_BASE}/generate`, {
-                        method: 'POST',
-                        body: formData,
-                        signal: AbortSignal.timeout(310000)
-                    });
-
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        showResult(url);
-                    } else {
-                        let errorMsg = `خطأ ${response.status}`;
-                        try {
-                            const errData = await response.json();
-                            if (errData.detail) errorMsg += `: ${errData.detail}`;
-                            else if (errData.message) errorMsg += `: ${errData.message}`;
-                        } catch (e) {
-                            const text = await response.text();
-                            if (text) errorMsg += `: ${text.substring(0, 100)}`;
-                        }
-                        addLog(`❌ فشل التوليد: ${errorMsg}`, 'error');
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    showResult(url);
+                } else {
+                    let errorMsg = `خطأ ${response.status}`;
+                    try {
+                        const errData = await response.json();
+                        if (errData.detail) errorMsg += `: ${errData.detail}`;
+                        else if (errData.message) errorMsg += `: ${errData.message}`;
+                    } catch (e) {
+                        const text = await response.text();
+                        if (text) errorMsg += `: ${text.substring(0, 100)}`;
                     }
-                } catch (err) {
-                    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-                        addLog('❌ انتهى الوقت. الخادم مشغول، حاول مرة أخرى.', 'error');
-                    } else {
-                        addLog(`❌ خطأ: ${err.message}`, 'error');
-                    }
-                } finally {
-                    isGenerating = false;
-                    resetButton();
-                    addLog('⏳ جاهز لتوليد جديد', 'info');
+                    addLog(`❌ فشل التوليد: ${errorMsg}`, 'error');
                 }
-            });
-
-            async function checkServer() {
-                try {
-                    const res = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
-                    if (res.ok) addLog('✅ الخادم متصل', 'success');
-                    else addLog('⚠️ الخادم يستجيب بشكل غير متوقع', 'error');
-                } catch {
-                    addLog('❌ الخادم غير متاح', 'error');
+            } catch (err) {
+                if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+                    addLog('❌ انتهى الوقت. الخادم مشغول، حاول مرة أخرى.', 'error');
+                } else {
+                    addLog(`❌ خطأ: ${err.message}`, 'error');
                 }
+            } finally {
+                isGenerating = false;
+                resetButton();
+                addLog('⏳ جاهز لتوليد جديد', 'info');
             }
-            setTimeout(checkServer, 1000);
+        });
 
-            addLog('', 'info');
-            addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
-        })();
-    </script>
+        // ---- Check Server ----
+        async function checkServer() {
+            try {
+                const res = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
+                if (res.ok) addLog('✅ الخادم متصل', 'success');
+                else addLog('⚠️ الخادم يستجيب بشكل غير متوقع', 'error');
+            } catch {
+                addLog('❌ الخادم غير متاح', 'error');
+            }
+        }
+        setTimeout(checkServer, 1000);
+
+        // ---- Init ----
+        addLog('', 'info');
+        addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
+
+    })();
+</script>
+
 </body>
 </html>
