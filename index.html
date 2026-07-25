@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐭м𝓞𝓊ŜⒺ AI - المنصة الذكية المجانية للتوليد</title>
+    <title>🐭м𝓞𝓊ŜⒺ AI - توليد فيديوهات احترافية</title>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -64,36 +64,6 @@
             margin-top: 4px;
             letter-spacing: 2px;
         }
-        
-        /* ===== TABS (Strategy Switcher) ===== */
-        .mode-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 6px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            border-radius: 12px;
-            color: #777;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-        .tab-btn.active {
-            background: rgba(0, 212, 255, 0.1);
-            color: #00d4ff;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
-        }
-
         /* ===== FORM ===== */
         .form-group {
             margin-bottom: 20px;
@@ -110,6 +80,7 @@
             padding: 16px 20px;
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
             color: #fff;
@@ -124,6 +95,9 @@
             outline: none;
             border-color: rgba(0, 212, 255, 0.3);
             box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.05), inset 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .form-group textarea::placeholder {
+            color: #555;
         }
 
         /* ===== OPTIONS ===== */
@@ -179,12 +153,13 @@
             display: block;
             font-weight: 400;
         }
-
         /* ===== GENERATE BUTTON ===== */
         .generate-btn {
             width: 100%;
             padding: 18px;
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 119, 255, 0.12));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 212, 255, 0.15);
             border-radius: 18px;
             color: #fff;
@@ -205,12 +180,16 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(0, 212, 255, 0.1);
         }
+        .generate-btn:active {
+            transform: translateY(0px);
+        }
         .generate-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
-        .spinner {
+        .generate-btn .spinner {
             display: none;
             width: 22px;
             height: 22px;
@@ -219,11 +198,16 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        .generate-btn.loading .spinner { display: block; }
-        .generate-btn.loading .btn-text { display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ===== RESULT DISPLAY ===== */
+        .generate-btn.loading .spinner {
+            display: block;
+        }
+        .generate-btn.loading .btn-text {
+            display: none;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* ===== VIDEO RESULT ===== */
         .result-wrapper {
             margin-top: 24px;
             border-radius: 18px;
@@ -231,6 +215,7 @@
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: none;
+            position: relative;
         }
         .result-wrapper.show {
             display: block;
@@ -240,13 +225,10 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .result-wrapper img, .result-wrapper video {
+        .result-wrapper video {
             width: 100%;
             display: block;
             border-radius: 18px 18px 0 0;
-            max-height: 500px;
-            object-fit: contain;
-            background: #000;
         }
         .result-controls {
             display: flex;
@@ -254,14 +236,21 @@
             align-items: center;
             padding: 12px 20px;
             background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .result-label {
+        .result-controls .result-label {
             font-size: 13px;
             color: #00d4ff;
             font-weight: 600;
         }
-        .result-label span { opacity: 0.5; color: #888; font-weight: 400; }
+        .result-controls .result-label span {
+            opacity: 0.5;
+            font-weight: 400;
+            color: #888;
+        }
         .download-btn {
             padding: 8px 22px;
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 119, 255, 0.15));
@@ -272,29 +261,59 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
         }
-        .download-btn:hover { background: rgba(0, 212, 255, 0.25); }
+        .download-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 119, 255, 0.25));
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: scale(1.02);
+        }
+        .download-btn:active {
+            transform: scale(0.98);
+        }
 
-        /* ===== LOG BOX ===== */
+        /* ===== LOG ===== */
         .log-box {
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 14px 20px;
             border: 1px solid rgba(255, 255, 255, 0.04);
-            max-height: 130px;
+            max-height: 150px;
             overflow-y: auto;
         }
-        .log-entry {
+        .log-box .log-entry {
             font-family: 'Consolas', monospace;
             font-size: 12px;
             color: #666;
             padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
-        .log-entry .time { color: #444; margin-right: 10px; }
-        .log-entry.success { color: #00d4ff; }
-        .log-entry.error { color: #ff6b6b; }
-        .log-entry.info { color: #88ccff; }
+        .log-box .log-entry .time {
+            color: #444;
+            margin-right: 10px;
+        }
+        .log-box .log-entry.success {
+            color: #00d4ff;
+        }
+        .log-box .log-entry.error {
+            color: #ff6b6b;
+        }
+        .log-box .log-entry.info {
+            color: #88ccff;
+        }
+        .log-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        .log-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+        }
 
         /* ===== FOOTER ===== */
         .footer {
@@ -305,67 +324,119 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
-        .copyright { color: #555; font-size: 13px; }
+        .footer .copyright {
+            color: #555;
+            font-size: 13px;
+        }
+        .footer .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .footer .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+        }
+        .footer .social-link svg {
+            width: 18px;
+            height: 18px;
+            fill: #ccc;
+            transition: fill 0.3s ease;
+        }
+        .footer .social-link:hover svg {
+            fill: #fff;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .container { padding: 24px; }
+            .logo { font-size: 32px; }
+            .options-row { flex-direction: column; gap: 16px; }
+            .result-controls { flex-direction: column; align-items: stretch; }
+            .download-btn { justify-content: center; }
+            .footer { flex-direction: column; gap: 12px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="app">
     <!-- HEADER -->
     <div class="header">
         <div class="logo">🐭м𝓞𝓊ŜⒺ AI</div>
-        <div class="subtitle">منصة الذكاء الاصطناعي المجانية المتكاملة</div>
-    </div>
-
-    <!-- MODE TABS (Strategy Switcher) -->
-    <div class="mode-tabs">
-        <button class="tab-btn active" data-mode="image">🖼️ توليد صور (مجاني 100%)</button>
-        <button class="tab-btn" data-mode="video">🎬 توليد فيديو (استراتيجية ذكية)</button>
+        <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
     </div>
 
     <!-- PROMPT -->
     <div class="form-group">
         <label for="promptInput">📝 الوصف (Prompt)</label>
-        <textarea id="promptInput" placeholder="اكتب وصفاً تفصيلياً باللغة الإنجليزية أو العربية للحصول على أفضل نتيجة...">A cinematic view of a futuristic cyber city at night, neon lights, 4k resolution</textarea>
+        <textarea id="promptInput" placeholder="اكتب وصفاً تفصيلياً للفيديو، مثلاً: منظر غروب شمس فوق جبال، سينمائي بدقة عالية">Slow motion waves crashing against rocks, cinematic 4K</textarea>
     </div>
 
-    <!-- OPTIONS (Dynamic based on mode) -->
-    <div class="options-row" id="imageOptions">
+    <!-- OPTIONS -->
+    <div class="options-row">
         <div class="option-group">
-            <span class="option-label">📐 حجم الصورة</span>
-            <div class="option-buttons" id="sizeGroup">
-                <button class="opt-btn active" data-value="1024x1024">مربع (1:1)</button>
-                <button class="opt-btn" data-value="1280x720">أفقي (16:9)</button>
-                <button class="opt-btn" data-value="720x1280">عمودي (9:16)</button>
+            <span class="option-label">⏱️ المدة</span>
+            <div class="option-buttons" id="durationGroup">
+                <button class="opt-btn" data-value="5">5 ثوان</button>
+                <button class="opt-btn active" data-value="10">10 ثوان</button>
+            </div>
+        </div>
+        <div class="option-group">
+            <span class="option-label">📐 نسبة الأبعاد</span>
+            <div class="option-buttons" id="aspectGroup">
+                <button class="opt-btn active" data-value="16:9">16:9 <span class="sub">أفقي</span></button>
+                <button class="opt-btn" data-value="9:16">9:16 <span class="sub">عمودي</span></button>
+                <button class="opt-btn" data-value="1:1">1:1 <span class="sub">مربع</span></button>
             </div>
         </div>
     </div>
 
     <!-- GENERATE BUTTON -->
     <button class="generate-btn" id="generateBtn">
-        <span class="btn-text">🚀 ابدأ التوليد المجاني</span>
+        <span class="btn-text">🚀 توليد الفيديو</span>
         <span class="spinner"></span>
     </button>
 
-    <!-- RESULT CONTAINER -->
+    <!-- RESULT -->
     <div class="result-wrapper" id="resultWrapper">
-        <!-- Media element injected dynamically -->
-        <div id="mediaContainer"></div>
+        <video id="videoPlayer" controls autoplay loop></video>
         <div class="result-controls">
-            <div class="result-label">✨ 🐭м𝓞𝓊ŜⒺ AI <span>• مجاني بالكامل</span></div>
-            <button class="download-btn" id="downloadBtn">⬇️ تحميل الملف</button>
+            <div class="result-label">✨ 🐭м𝓞𝓊ŜⒺ AI <span>• تم التوليد بالذكاء الاصطناعي</span></div>
+            <button class="download-btn" id="downloadBtn">⬇️ تحميل</button>
         </div>
     </div>
 
     <!-- LOG -->
     <div class="log-box" id="logBox">
-        <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في مشروعك التقني المجاني الجديد!</div>
+        <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في 🐭м𝓞𝓊ŜⒺ AI!</div>
+        <div class="log-entry info"><span class="time">[الآن]</span> 📝 اكتب وصفاً تفصيلياً للحصول على أفضل النتائج</div>
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
-        <span class="copyright">© 2026 🐭м𝓞𝓊ŜⒺ AI • Powered by Free Strategy</span>
+        <span class="copyright">© 2026 🐭м𝓞𝓊ŜⒺ AI</span>
+        <a href="https://x.com/mouse0000000" target="_blank" class="social-link" title="تواصل معي على X">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span>تواصل معي</span>
+        </a>
     </div>
 </div>
 
@@ -373,19 +444,25 @@
     (function() {
         'use strict';
 
+        // ---- DOM Elements ----
         const promptInput = document.getElementById('promptInput');
         const generateBtn = document.getElementById('generateBtn');
         const logBox = document.getElementById('logBox');
-        const tabBtns = document.querySelectorAll('.tab-btn');
+        const durationBtns = document.querySelectorAll('#durationGroup .opt-btn');
+        const aspectBtns = document.querySelectorAll('#aspectGroup .opt-btn');
         const resultWrapper = document.getElementById('resultWrapper');
-        const mediaContainer = document.getElementById('mediaContainer');
+        const videoPlayer = document.getElementById('videoPlayer');
         const downloadBtn = document.getElementById('downloadBtn');
-        const sizeGroupBtns = document.querySelectorAll('#sizeGroup .opt-btn');
 
-        let currentMode = 'image'; // image or video
-        let selectedSize = '1024x1024';
-        let currentResultUrl = null;
+        // ---- State ----
+        let isGenerating = false;
+        let selectedDuration = '10';
+        let selectedAspect = '16:9';
+        let currentResultBlobUrl = null;
 
+        const API_BASE = 'https://mouse-ai-nine.vercel.app';
+
+        // ---- Helpers ----
         function addLog(message, type = 'info') {
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
@@ -395,120 +472,141 @@
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        // Tab Switching Strategy
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentMode = this.dataset.mode;
-                
-                if (currentMode === 'image') {
-                    generateBtn.querySelector('.btn-text').textContent = '🚀 توليد الصورة مجاناً';
-                    addLog('🔄 تم الانتقال إلى وضع: توليد الصور المجاني', 'info');
-                } else {
-                    generateBtn.querySelector('.btn-text').textContent = '🎬 توليد الفيديو (الاستراتيجية الذكية)';
-                    addLog('🔄 تم الانتقال إلى وضع: توليد الفيديوهات الذكي', 'info');
-                }
-            });
-        });
-
-        // Size Options
-        sizeGroupBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                sizeGroupBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                selectedSize = this.dataset.value;
-            });
-        });
-
-        // Generate Logic
-        generateBtn.addEventListener('click', async function() {
-            const prompt = promptInput.value.trim();
-            if (!prompt || prompt.length < 3) {
-                addLog('❌ يجدر بك كتابة وصف أوضح (3 أحرف على الأقل)', 'error');
-                return;
-            }
-
-            generateBtn.classList.add('loading');
-            generateBtn.disabled = true;
-            resultWrapper.classList.remove('show');
-            mediaContainer.innerHTML = '';
-
-            if (currentMode === 'image') {
-                // --- استراتيجية الصور المجانية الفورية ---
-                addLog('🎨 جاري معالجة وتوليد الصورة عبر الشبكة المجانية...', 'info');
-                const [width, height] = selectedSize.split('x');
-                const encodedPrompt = encodeURIComponent(prompt);
-                const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&private=true`;
-
-                const img = document.createElement('img');
-                img.src = imageUrl;
-                img.alt = 'Generated AI Image';
-                
-                img.onload = function() {
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(img);
-                    resultWrapper.classList.add('show');
-                    currentResultUrl = imageUrl;
-                    addLog('✅ تم إنشاء الصورة بنجاح!', 'success');
-                    resetBtn();
-                };
-                img.onerror = function() {
-                    addLog('❌ تعذر تحميل الصورة، حاول مرة أخرى.', 'error');
-                    resetBtn();
-                };
-
-            } else {
-                // --- استراتيجية الفيديوهات الذكية المجانية ---
-                // بما أن الفيديوهات تتطلب حوسبة عالية، الاستراتيجية الذكية المجانية هنا 
-                // هي توفير محركات بديلة أو استخدام توليد إطارات متحركة / روابط GIF/MP4 ذكية، 
-                // أو توجيه خوارزمية العرض لإنشاء فيديوهات قصيرة مجانية.
-                addLog('⚙️ جاري تطبيق الاستراتيجية الذكية للفيديو...', 'info');
-                
-                setTimeout(() => {
-                    // نموذج محاكي ذكي يربط البرومبت بخدمات GIF/Video مجانية أو بديلة متاح تصفحها
-                    // يمكنك ربطها لاحقاً بأي API مجاني تملكه
-                    addLog('💡 نصيحة: لتوليد فيديو احترافي مجاني بدون حدود، يمكنك تحويل الصورة الناتجة إلى فيديو عبر أدوات الـ Animation المجانية.', 'info');
-                    
-                    // سنقوم بعرض نموذج فيديو تجريبي ذكي كمثال للتكامل
-                    const videoUrl = 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-numbers-31910-large.mp4';
-                    
-                    const video = document.createElement('video');
-                    video.src = videoUrl;
-                    video.controls = true;
-                    video.autoplay = true;
-                    video.loop = true;
-
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(video);
-                    resultWrapper.classList.add('show');
-                    currentResultUrl = videoUrl;
-                    addLog('✅ تم تجهيز الفيديو بنجاح عبر الاستراتيجية المجانية!', 'success');
-                    resetBtn();
-                }, 2000);
-            }
-        });
-
-        function resetBtn() {
+        function resetButton() {
             generateBtn.classList.remove('loading');
             generateBtn.disabled = false;
+            generateBtn.querySelector('.btn-text').textContent = '🚀 توليد الفيديو';
         }
 
-        // Download Action
+        function setLoading() {
+            generateBtn.classList.add('loading');
+            generateBtn.disabled = true;
+        }
+
+        function showResult(url) {
+            currentResultBlobUrl = url;
+            videoPlayer.src = url;
+            resultWrapper.classList.add('show');
+            videoPlayer.play().catch(() => {});
+            addLog('✅ الفيديو جاهز للمشاهدة والتحميل', 'success');
+        }
+
+        // ---- تحميل النتيجة ----
         downloadBtn.addEventListener('click', function() {
-            if (!currentResultUrl) return;
+            if (!currentResultBlobUrl) {
+                addLog('❌ لا يوجد فيديو للتحميل. قم بالتوليد أولاً.', 'error');
+                return;
+            }
             const a = document.createElement('a');
-            a.href = currentResultUrl;
-            a.target = '_blank';
-            a.download = `MouseAI_${Date.now()}`;
+            a.href = currentResultBlobUrl;
+            a.download = `MoUsE_AI_video_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.mp4`;
             document.body.appendChild(a);
             a.click();
             a.remove();
-            addLog('⬇️ بدء عملية التنزيل بنجاح...', 'info');
+            addLog('⬇️ بدء تحميل الفيديو...', 'info');
         });
+
+        // ---- Option Buttons ----
+        function setupOptionButtons(buttons, callback) {
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    callback(this.dataset.value);
+                });
+            });
+        }
+
+        setupOptionButtons(durationBtns, (value) => {
+            selectedDuration = value;
+            addLog(`⚙️ المدة: ${value} ثوان`, 'info');
+        });
+
+        setupOptionButtons(aspectBtns, (value) => {
+            selectedAspect = value;
+            addLog(`⚙️ نسبة الأبعاد: ${value}`, 'info');
+        });
+
+        // ---- Generate ----
+        generateBtn.addEventListener('click', async function() {
+            if (isGenerating) return;
+
+            const prompt = promptInput.value.trim();
+            if (!prompt || prompt.length < 5) {
+                addLog('❌ الرجاء إدخال وصف (5 أحرف على الأقل)', 'error');
+                return;
+            }
+
+            isGenerating = true;
+            setLoading();
+            resultWrapper.classList.remove('show');
+            videoPlayer.src = '';
+            currentResultBlobUrl = null;
+
+            addLog(`🚀 بدء توليد فيديو من نص...`, 'info');
+            addLog(`📝 البرومبت: ${prompt.substring(0, 60)}...`, 'info');
+
+            try {
+                const formData = new FormData();
+                formData.append('prompt', prompt);
+                formData.append('mode', 'video');
+                formData.append('duration', selectedDuration);
+                formData.append('aspect', selectedAspect);
+
+                const response = await fetch(`${API_BASE}/generate`, {
+                    method: 'POST',
+                    body: formData,
+                    signal: AbortSignal.timeout(310000)
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    showResult(url);
+                } else {
+                    let errorMsg = `خطأ ${response.status}`;
+                    try {
+                        const errData = await response.json();
+                        if (errData.detail) errorMsg += `: ${errData.detail}`;
+                        else if (errData.message) errorMsg += `: ${errData.message}`;
+                    } catch (e) {
+                        const text = await response.text();
+                        if (text) errorMsg += `: ${text.substring(0, 100)}`;
+                    }
+                    addLog(`❌ فشل التوليد: ${errorMsg}`, 'error');
+                }
+            } catch (err) {
+                if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+                    addLog('❌ انتهى الوقت. الخادم مشغول، حاول مرة أخرى.', 'error');
+                } else {
+                    addLog(`❌ خطأ: ${err.message}`, 'error');
+                }
+            } finally {
+                isGenerating = false;
+                resetButton();
+                addLog('⏳ جاهز لتوليد جديد', 'info');
+            }
+        });
+
+        // ---- Check Server ----
+        async function checkServer() {
+            try {
+                const res = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(5000) });
+                if (res.ok) addLog('✅ الخادم متصل', 'success');
+                else addLog('⚠️ الخادم يستجيب بشكل غير متوقع', 'error');
+            } catch {
+                addLog('❌ الخادم غير متاح', 'error');
+            }
+        }
+        setTimeout(checkServer, 1000);
+
+        // ---- Init ----
+        addLog('', 'info');
+        addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
 
     })();
 </script>
 
 </body>
 </html>
+
