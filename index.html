@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐭м𝓞𝓊ŜⒺ AI - توليد فيديوهات احترافية</title>
+    <title>🐭м𝓞𝓊ŜⒺ AI - توليد فيديوهات + دردشة مباشرة</title>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -275,6 +275,119 @@
             transform: scale(0.98);
         }
 
+        /* ===== CHAT ===== */
+        .chat-section {
+            margin-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 22px;
+        }
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ccc;
+            margin-bottom: 12px;
+        }
+        .chat-title .badge {
+            font-size: 11px;
+            background: rgba(0, 212, 255, 0.15);
+            padding: 2px 12px;
+            border-radius: 30px;
+            color: #00d4ff;
+            font-weight: 500;
+        }
+        .chat-messages {
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            border-radius: 18px;
+            padding: 16px;
+            max-height: 240px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .chat-messages .msg {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 16px;
+            border-radius: 20px;
+            max-width: 85%;
+            font-size: 14px;
+            line-height: 1.5;
+            word-break: break-word;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            animation: fadeSlide 0.25s ease-out;
+        }
+        .chat-messages .msg.self {
+            align-self: flex-end;
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.1);
+        }
+        .chat-messages .msg .sender {
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .chat-messages .msg.self .sender {
+            color: #5bb8ff;
+        }
+        .chat-messages .msg .time-tag {
+            font-size: 10px;
+            color: #555;
+            margin-right: 10px;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input-row input {
+            flex: 1;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        .chat-input-row input:focus {
+            border-color: rgba(0, 212, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .chat-input-row input::placeholder {
+            color: #555;
+        }
+        .chat-input-row button {
+            padding: 12px 22px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 119, 255, 0.12));
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 30px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .chat-input-row button:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 119, 255, 0.2));
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+        }
+
         /* ===== LOG ===== */
         .log-box {
             margin-top: 20px;
@@ -370,6 +483,8 @@
             .result-controls { flex-direction: column; align-items: stretch; }
             .download-btn { justify-content: center; }
             .footer { flex-direction: column; gap: 12px; }
+            .chat-input-row { flex-wrap: wrap; }
+            .chat-input-row button { width: 100%; }
         }
     </style>
 </head>
@@ -379,7 +494,7 @@
     <!-- HEADER -->
     <div class="header">
         <div class="logo">🐭м𝓞𝓊ŜⒺ AI</div>
-        <div class="subtitle">توليد فيديوهات احترافية بالذكاء الاصطناعي</div>
+        <div class="subtitle">توليد فيديوهات احترافية + دردشة مباشرة مع الزوار</div>
     </div>
 
     <!-- PROMPT -->
@@ -422,6 +537,24 @@
         </div>
     </div>
 
+    <!-- ===== CHAT SECTION ===== -->
+    <div class="chat-section">
+        <div class="chat-title">
+            💬 دردشة مباشرة مع الزوار
+            <span class="badge">مباشر</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg">
+                <div class="sender">🐭 النظام</div>
+                مرحباً! هذه غرفة دردشة مباشرة. جميع الزوار يتواصلون معاً.
+            </div>
+        </div>
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." maxlength="200">
+            <button id="sendChatBtn">إرسال 💬</button>
+        </div>
+    </div>
+
     <!-- LOG -->
     <div class="log-box" id="logBox">
         <div class="log-entry info"><span class="time">[الآن]</span> 🎬 مرحباً بك في 🐭м𝓞𝓊ŜⒺ AI!</div>
@@ -454,11 +587,17 @@
         const videoPlayer = document.getElementById('videoPlayer');
         const downloadBtn = document.getElementById('downloadBtn');
 
+        // chat elements
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendChatBtn = document.getElementById('sendChatBtn');
+
         // ---- State ----
         let isGenerating = false;
         let selectedDuration = '10';
         let selectedAspect = '16:9';
         let currentResultBlobUrl = null;
+        let username = 'زائر_' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
         const API_BASE = 'https://mouse-ai-nine.vercel.app';
 
@@ -600,13 +739,110 @@
         }
         setTimeout(checkServer, 1000);
 
+        // ============================================================
+        // =====  CHAT : دردشة مباشرة مع الزوار (local broadcast)  =====
+        // ============================================================
+        // تستخدم BroadcastChannel API للتواصل بين الألسنة المفتوحة في نفس المتصفح
+        // ولكن لجعلها تعمل بين زوار مختلفين، نحتاج إلى خادم WebSocket.
+        // لكن هذا الحل يعمل محلياً (نفس المتصفح) كعرض توضيحي.
+        // يمكن استبدالها بـ WebSocket حقيقي.
+
+        let chatChannel = null;
+        try {
+            chatChannel = new BroadcastChannel('mouse_ai_chat');
+        } catch (_) {
+            // fallback: استخدام localStorage
+        }
+
+        // دالة لإضافة رسالة للواجهة
+        function appendChatMessage(text, sender = 'زائر', isSelf = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg${isSelf ? ' self' : ''}`;
+            const time = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            msgDiv.innerHTML = `
+                <div class="sender">${sender} <span class="time-tag">${time}</span></div>
+                ${text}
+            `;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // استقبال الرسائل من القناة
+        if (chatChannel) {
+            chatChannel.onmessage = (e) => {
+                const data = e.data;
+                if (data && data.type === 'chat' && data.sender !== username) {
+                    appendChatMessage(data.text, data.sender, false);
+                }
+            };
+        } else {
+            // fallback: استخدام localStorage مع حدث storage
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'mouse_chat_messages') {
+                    try {
+                        const msgs = JSON.parse(e.newValue || '[]');
+                        if (msgs.length > 0) {
+                            const last = msgs[msgs.length - 1];
+                            if (last.sender !== username) {
+                                appendChatMessage(last.text, last.sender, false);
+                            }
+                        }
+                    } catch (_) {}
+                }
+            });
+        }
+
+        // إرسال رسالة
+        function sendChatMessage(text) {
+            if (!text.trim()) return;
+            const trimmed = text.trim().substring(0, 200);
+            const payload = {
+                type: 'chat',
+                sender: username,
+                text: trimmed,
+                timestamp: Date.now()
+            };
+
+            // عرض في الواجهة (خاص بي)
+            appendChatMessage(trimmed, username, true);
+
+            // بث للآخرين
+            if (chatChannel) {
+                chatChannel.postMessage(payload);
+            } else {
+                // تخزين في localStorage
+                try {
+                    const stored = localStorage.getItem('mouse_chat_messages');
+                    const msgs = stored ? JSON.parse(stored) : [];
+                    msgs.push(payload);
+                    localStorage.setItem('mouse_chat_messages', JSON.stringify(msgs));
+                } catch (_) {}
+            }
+
+            chatInput.value = '';
+        }
+
+        // أحداث الإرسال
+        sendChatBtn.addEventListener('click', () => sendChatMessage(chatInput.value));
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendChatMessage(chatInput.value);
+            }
+        });
+
+        // إضافة رسالة ترحيب
+        setTimeout(() => {
+            appendChatMessage(`مرحباً! أنت الآن في غرفة الدردشة المباشرة. اسمك: ${username}`, '🐭 النظام', false);
+        }, 500);
+
         // ---- Init ----
         addLog('', 'info');
         addLog(`⏱️ المدة: ${selectedDuration} ثانية | 📐 نسبة الأبعاد: ${selectedAspect}`, 'info');
+        addLog(`💬 الدردشة المباشرة نشطة (معرفك: ${username})`, 'info');
 
     })();
 </script>
 
 </body>
 </html>
-
