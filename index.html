@@ -90,12 +90,10 @@
 
     <div class="action-bar">
         <h2>📰 آخر المقالات</h2>
-        <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">جاري التحميل...</span>
+        <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">0 مقال</span>
     </div>
 
-    <div class="posts-grid" id="postsGrid">
-        <div class="loading"><div class="spinner"></div><p>جاري تحميل المقالات...</p></div>
-    </div>
+    <div class="posts-grid" id="postsGrid"></div>
 
     <div class="footer"><p>🐭 MOUSE AI • 2026 • جميع الحقوق محفوظة</p></div>
 </div>
@@ -149,13 +147,6 @@ function loadData() {
         updateCount();
     } catch (error) {
         console.error(error);
-        document.getElementById('postsGrid').innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">⚠️</div>
-                <h3>فشل في تحميل البيانات</h3>
-                <button class="btn btn-warning" onclick="refreshPosts()" style="margin-top:15px;">🔄 إعادة المحاولة</button>
-            </div>
-        `;
     }
 }
 
