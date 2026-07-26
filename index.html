@@ -438,6 +438,28 @@
             fill: #010612;
         }
 
+        /* === زر الإدارة المخفي === */
+        .admin-secret-link {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            opacity: 0.03;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 50;
+            background: transparent;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .admin-secret-link:hover {
+            opacity: 0.5;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
             .header {
@@ -493,7 +515,6 @@
         <header class="header">
             <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
             <div class="header-actions">
-                <a href="admin.html" class="btn btn-primary" target="_blank">🔑 لوحة الإدارة</a>
                 <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')">
                     <span class="x-icon-small">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -514,6 +535,9 @@
         </div>
     </div>
 
+    <!-- ===== الرابط السري للإدارة (مخفي تماماً) ===== -->
+    <button class="admin-secret-link" onclick="goToAdmin()">⚙️</button>
+
     <!-- ===== Modal ===== -->
     <div class="modal-overlay" id="postModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -526,6 +550,9 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // ===== الرابط السري للإدارة (غيّره إلى ما تريد) =====
+        const SECRET_ADMIN_PATH = 'admin-mouse-2026-secret';
+
         // ===== توليد النجوم =====
         const starsContainer = document.getElementById('stars');
         for (let i = 0; i < 150; i++) {
@@ -616,7 +643,6 @@
             const post = posts[index];
             if (!post) return;
 
-            // زيادة المشاهدات
             post.views = (post.views || 0) + 1;
             saveData();
 
@@ -707,6 +733,12 @@
             if (e && e.target !== e.currentTarget) return;
             document.getElementById('postModal').classList.remove('active');
             document.body.style.overflow = 'auto';
+        }
+
+        // ===== الانتقال إلى لوحة الإدارة (الرابط السري) =====
+        function goToAdmin() {
+            // فقط إذا كان المستخدم يعرف الرابط السري
+            window.location.href = SECRET_ADMIN_PATH + '.html';
         }
 
         // ===== Toast =====
