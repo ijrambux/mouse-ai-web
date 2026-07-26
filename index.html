@@ -3,9 +3,9 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>MoUsE AI</title>
+<title>🐭м𝓞𝓊ŜⒺ AI</title>
 
 <style>
 
@@ -13,63 +13,146 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:"Tahoma",sans-serif;
+font-family:Tahoma,Arial,sans-serif;
 }
 
 body{
 
-background:#020814;
-color:white;
+background:
+radial-gradient(circle at top,#05315c,#010612 70%);
+
+overflow-x:hidden;
+
+color:#fff;
+
 display:flex;
+
 flex-direction:column;
+
 align-items:center;
+
 padding:40px;
 
-background-image:
-radial-gradient(circle at top,#06345f,#020814 70%);
+min-height:100vh;
+
 }
 
-/*======================
+/*=====================
+FALLING STARS
+======================*/
+
+#stars{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+pointer-events:none;
+
+overflow:hidden;
+
+z-index:0;
+
+}
+
+.star{
+
+position:absolute;
+
+background:#fff;
+
+border-radius:50%;
+
+box-shadow:
+
+0 0 6px #fff,
+0 0 15px #00cfff,
+0 0 30px #00cfff;
+
+animation:fall linear infinite;
+
+}
+
+@keyframes fall{
+
+0%{
+
+transform:
+translateY(-100px)
+translateX(0);
+
+opacity:1;
+
+}
+
+100%{
+
+transform:
+translateY(110vh)
+translateX(-250px);
+
+opacity:0;
+
+}
+
+}
+
+/*=====================
 LOGO
-=======================*/
+======================*/
 
 .logo{
 
-font-size:55px;
-font-weight:bold;
-letter-spacing:4px;
-color:#8fd6ff;
-
-text-shadow:
-0 0 10px #00bfff,
-0 0 20px #00bfff,
-0 0 40px #008cff,
-0 0 60px #008cff;
-
 position:relative;
 
+font-size:60px;
+
+font-weight:bold;
+
+letter-spacing:3px;
+
+color:#9fe9ff;
+
 margin-bottom:70px;
+
+z-index:2;
+
+text-shadow:
+
+0 0 10px #00bfff,
+0 0 25px #00bfff,
+0 0 50px #00cfff,
+0 0 90px #008cff;
 
 animation:glow 2s infinite alternate;
 
 }
 
-.logo:before{
+.logo::before{
 
 content:"🔥";
 
 position:absolute;
 
-top:-45px;
+top:-55px;
+
 left:50%;
 
 transform:translateX(-50%);
 
-font-size:42px;
+font-size:45px;
 
-filter:hue-rotate(170deg)
-drop-shadow(0 0 10px #00c3ff)
-drop-shadow(0 0 25px #00c3ff);
+filter:
+
+hue-rotate(180deg)
+
+drop-shadow(0 0 12px #00cfff)
+
+drop-shadow(0 0 35px #00cfff);
 
 animation:fire 1s infinite;
 
@@ -80,18 +163,21 @@ animation:fire 1s infinite;
 from{
 
 text-shadow:
+
 0 0 10px #00bfff,
 0 0 20px #00bfff,
-0 0 30px #00bfff;
+0 0 40px #00bfff;
 
 }
 
 to{
 
 text-shadow:
+
 0 0 20px #00ffff,
-0 0 40px #00bfff,
-0 0 70px #00bfff;
+0 0 40px #00d9ff,
+0 0 80px #00bfff,
+0 0 120px #00bfff;
 
 }
 
@@ -99,21 +185,45 @@ text-shadow:
 
 @keyframes fire{
 
-0%{transform:translateX(-50%) translateY(0);}
-50%{transform:translateX(-50%) translateY(-8px);}
-100%{transform:translateX(-50%) translateY(0);}
+0%{
+
+transform:
+translateX(-50%)
+translateY(0);
 
 }
 
+50%{
 
-/*======================
-FRAME
-=======================*/
+transform:
+translateX(-50%)
+translateY(-10px);
+
+}
+
+100%{
+
+transform:
+translateX(-50%)
+translateY(0);
+
+}
+
+}
+
+/*=====================
+ARTICLE
+======================*/
 
 .article{
 
+position:relative;
+
+z-index:2;
+
 width:90%;
-max-width:900px;
+
+max-width:950px;
 
 padding:40px;
 
@@ -121,96 +231,109 @@ background:rgba(255,255,255,.05);
 
 border:2px solid #00bfff;
 
-border-radius:18px;
+border-radius:20px;
+
+backdrop-filter:blur(8px);
 
 box-shadow:
 
-0 0 20px #00aaff55,
-inset 0 0 20px #00aaff22;
+0 0 30px #00bfff55,
 
-position:relative;
+inset 0 0 20px #00bfff22;
 
-line-height:2.3;
+line-height:2.2;
 
-font-size:22px;
+font-size:23px;
 
 }
 
-
-/* زوايا الإطار */
-
-.article:before,
-.article:after{
+.article::before{
 
 content:"";
 
 position:absolute;
 
+top:-3px;
+right:-3px;
+
 width:80px;
 height:80px;
 
-border-color:#00d9ff;
+border-top:5px solid #00d9ff;
+border-right:5px solid #00d9ff;
 
 }
 
-.article:before{
+.article::after{
 
-top:-2px;
-right:-2px;
+content:"";
 
-border-top:5px solid;
-border-right:5px solid;
+position:absolute;
+
+bottom:-3px;
+left:-3px;
+
+width:80px;
+height:80px;
+
+border-bottom:5px solid #00d9ff;
+border-left:5px solid #00d9ff;
 
 }
 
-.article:after{
+.article h2{
 
-bottom:-2px;
-left:-2px;
+margin:25px 0;
 
-border-bottom:5px solid;
-border-left:5px solid;
+text-align:center;
+
+color:#00e1ff;
+
+font-size:35px;
+
+text-shadow:
+
+0 0 12px #00cfff;
 
 }
 
 .author{
 
-margin-top:25px;
-
-font-size:24px;
-
-font-weight:bold;
+margin-top:35px;
 
 text-align:left;
 
-color:#7fdfff;
+font-size:25px;
+
+font-weight:bold;
+
+color:#8de9ff;
 
 }
-
-
-/*======================
-BUTTON
-=======================*/
 
 .share{
 
 margin-top:35px;
 
-background:#000;
+padding:15px 40px;
 
-border:2px solid #00c3ff;
+font-size:22px;
 
-color:white;
-
-padding:15px 35px;
-
-font-size:20px;
+border:none;
 
 border-radius:12px;
 
+background:#000;
+
+color:white;
+
 cursor:pointer;
 
+border:2px solid #00cfff;
+
 transition:.4s;
+
+z-index:2;
 
 }
 
@@ -218,9 +341,11 @@ transition:.4s;
 
 background:#00bfff;
 
-color:#000;
+color:black;
 
-box-shadow:0 0 20px #00bfff;
+box-shadow:
+
+0 0 25px #00bfff;
 
 }
 
@@ -230,37 +355,41 @@ box-shadow:0 0 20px #00bfff;
 
 <body>
 
+<div id="stars"></div>
+
 <div class="logo">
-MoUsE AI
+
+🐭м𝓞𝓊ŜⒺ AI
+
 </div>
 
 <div class="article">
 
 <p>
 
-سنتطور مع أول إرهاصات التوقف عن الشيتة، وتضخيم التفاهات، وتدشين المشاريع الصغيرة على أنها إنجازات تاريخية، وتحويل كل حدث عادي إلى ملحمة إعلامية، والتوقف عن صناعة الأبطال من الفراغ، وعن قياس النجاح بعدد التصفيقات وعدد المنشورات.
+سنتطور مع أول إرهاصات التوقف عن الشيتة، وتضخيم التفاهات، وتدشين المشاريع الصغيرة على أنها إنجازات تاريخية، وتحويل كل حدث عادي إلى ملحمة إعلامية.
 
-سنتطور عندما يصبح العمل أهم من الضجيج، والنتائج أهم من الشعارات، والإنتاج أهم من المظاهر، والنقد البناء أهم من المجاملة.
+سنتطور عندما يصبح العمل أهم من التصفيق، والنتائج أهم من الشعارات، والإبداع أهم من الضجيج، والكفاءة أهم من العلاقات.
 
-سنتطور عندما نحترم الوقت، ونقدّر العلم، وندعم أصحاب الكفاءة بدل أصحاب العلاقات، ونمنح الفرصة لمن يستحقها لا لمن يجيد التملق.
+سنتطور عندما يصبح احترام الوقت ثقافة، واحترام المواطن واجبًا، واحترام العقل أولوية.
 
-سنتطور عندما تصبح المشاريع الصغيرة نواة لاقتصاد حقيقي، لا مجرد صور تذكارية ومناسبات لقص الشريط الأحمر.
+سنتطور عندما تُقاس الإنجازات بالأرقام والحقائق، لا بعدد المنشورات ولا بعدد الصور التذكارية.
 
-سنتطور عندما نتوقف عن تضخيم كل خطوة بسيطة وكأنها فتحٌ حضاري، بينما الأمم الأخرى تمضي بصمت نحو المستقبل.
+سنتطور عندما يصبح المشروع الصغير بداية اقتصاد حقيقي، وليس مناسبة لالتقاط الصور ونشرها على أنها حدث القرن.
 
 أما قبل ذلك...
 
-فسيظل شعار المرحلة...
-
-<h2 style="text-align:center;color:#00d9ff;margin-top:25px;">
-بعاد... بعاد... بعاد
-</h2>
-
 </p>
+
+<h2>
+
+بعاد... بعاد... بعاد
+
+</h2>
 
 <div class="author">
 
-✍ الكاتب : MoUsE AI
+✍ الكاتب : 🐭м𝓞𝓊ŜⒺ AI
 
 </div>
 
@@ -273,6 +402,35 @@ MoUsE AI
 </button>
 
 <script>
+
+/* النجوم */
+
+const stars=document.getElementById("stars");
+
+for(let i=0;i<160;i++){
+
+let star=document.createElement("div");
+
+star.className="star";
+
+let size=Math.random()*3+1;
+
+star.style.width=size+"px";
+star.style.height=size+"px";
+
+star.style.left=Math.random()*100+"%";
+
+star.style.top=Math.random()*-1200+"px";
+
+star.style.animationDuration=(Math.random()*6+4)+"s";
+
+star.style.animationDelay=Math.random()*8+"s";
+
+stars.appendChild(star);
+
+}
+
+/* مشاركة X */
 
 function shareX(){
 
