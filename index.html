@@ -22,7 +22,6 @@
             padding: 20px;
         }
 
-        /* === خلفية النجوم === */
         #stars {
             position: fixed;
             inset: 0;
@@ -57,7 +56,6 @@
             margin: 0 auto;
         }
 
-        /* === الهيدر === */
         .header {
             display: flex;
             justify-content: space-between;
@@ -130,7 +128,6 @@
             box-shadow: 0 0 40px rgba(0, 191, 255, 0.4);
         }
 
-        /* === عرض المقالات === */
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -199,7 +196,6 @@
             font-size: 12px;
         }
 
-        /* === Modal === */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -349,7 +345,6 @@
             font-weight: 600;
         }
 
-        /* === Empty State === */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -368,7 +363,6 @@
             margin-bottom: 10px;
         }
 
-        /* === Footer === */
         .footer {
             text-align: center;
             padding: 30px 0 10px;
@@ -378,7 +372,6 @@
             font-size: 14px;
         }
 
-        /* === Toast === */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -421,7 +414,6 @@
             }
         }
 
-        /* === X Icon === */
         .x-icon-small {
             display: inline-flex;
             align-items: center;
@@ -438,7 +430,6 @@
             fill: #010612;
         }
 
-        /* === زر الإدارة المخفي === */
         .admin-secret-link {
             position: fixed;
             bottom: 10px;
@@ -460,7 +451,6 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* === RESPONSIVE === */
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -505,13 +495,10 @@
 </head>
 <body>
 
-    <!-- ===== النجوم ===== -->
     <div id="stars"></div>
 
-    <!-- ===== الحاوية الرئيسية ===== -->
     <div class="container">
 
-        <!-- ===== الهيدر ===== -->
         <header class="header">
             <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
             <div class="header-actions">
@@ -526,19 +513,15 @@
             </div>
         </header>
 
-        <!-- ===== عرض المقالات ===== -->
         <div class="posts-grid" id="postsGrid"></div>
 
-        <!-- ===== التذييل ===== -->
         <div class="footer">
             <p>🐭 MOUSE AI • 2026 • جميع الحقوق محفوظة</p>
         </div>
     </div>
 
-    <!-- ===== الرابط السري للإدارة (مخفي تماماً) ===== -->
     <button class="admin-secret-link" onclick="goToAdmin()">⚙️</button>
 
-    <!-- ===== Modal ===== -->
     <div class="modal-overlay" id="postModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-modal" onclick="closeModal()">✕</button>
@@ -546,14 +529,11 @@
         </div>
     </div>
 
-    <!-- ===== Toast ===== -->
     <div class="toast" id="toast"></div>
 
     <script>
-        // ===== الرابط السري للإدارة (غيّره إلى ما تريد) =====
         const SECRET_ADMIN_PATH = 'admin-mouse-2026-secret';
 
-        // ===== توليد النجوم =====
         const starsContainer = document.getElementById('stars');
         for (let i = 0; i < 150; i++) {
             const star = document.createElement('div');
@@ -569,11 +549,9 @@
             starsContainer.appendChild(star);
         }
 
-        // ===== البيانات =====
         let posts = [];
         let comments = [];
 
-        // ===== تحميل البيانات =====
         function loadData() {
             try {
                 const p = localStorage.getItem('mouse_posts');
@@ -588,13 +566,11 @@
             renderPosts();
         }
 
-        // ===== حفظ البيانات =====
         function saveData() {
             localStorage.setItem('mouse_posts', JSON.stringify(posts));
             localStorage.setItem('mouse_comments', JSON.stringify(comments));
         }
 
-        // ===== عرض المقالات =====
         function renderPosts() {
             const grid = document.getElementById('postsGrid');
             if (posts.length === 0) {
@@ -609,7 +585,11 @@
             }
 
             grid.innerHTML = posts.map((post, index) => {
-                const mediaHtml = post.mediaType === 'image' && post.mediaUrl ?
+                const mediaHtml = post.mediaType === 'image' && post.mediaData ?
+                    `<img src="${post.mediaData}" alt="${post.title}" class="post-media" loading="lazy" />` :
+                    post.mediaType === 'video' && post.mediaData ?
+                    `<video class="post-media" controls><source src="${post.mediaData}" /></video>` :
+                    post.mediaType === 'image' && post.mediaUrl ?
                     `<img src="${post.mediaUrl}" alt="${post.title}" class="post-media" loading="lazy" />` :
                     post.mediaType === 'video' && post.mediaUrl ?
                     `<video class="post-media" controls><source src="${post.mediaUrl}" /></video>` :
@@ -638,7 +618,6 @@
             }).join('');
         }
 
-        // ===== عرض مقال في Modal =====
         function viewPost(index) {
             const post = posts[index];
             if (!post) return;
@@ -649,7 +628,11 @@
             const modal = document.getElementById('postModal');
             const content = document.getElementById('modalContent');
 
-            const mediaHtml = post.mediaType === 'image' && post.mediaUrl ?
+            const mediaHtml = post.mediaType === 'image' && post.mediaData ?
+                `<img src="${post.mediaData}" alt="${post.title}" class="modal-media" />` :
+                post.mediaType === 'video' && post.mediaData ?
+                `<video class="modal-media" controls autoplay><source src="${post.mediaData}" /></video>` :
+                post.mediaType === 'image' && post.mediaUrl ?
                 `<img src="${post.mediaUrl}" alt="${post.title}" class="modal-media" />` :
                 post.mediaType === 'video' && post.mediaUrl ?
                 `<video class="modal-media" controls autoplay><source src="${post.mediaUrl}" /></video>` :
@@ -702,7 +685,6 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // ===== إرسال تعليق =====
         function submitComment(index) {
             const textarea = document.getElementById('commentText');
             const body = textarea.value.trim();
@@ -728,20 +710,16 @@
             showToast('✅ تم إرسال التعليق');
         }
 
-        // ===== إغلاق Modal =====
         function closeModal(e) {
             if (e && e.target !== e.currentTarget) return;
             document.getElementById('postModal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
-        // ===== الانتقال إلى لوحة الإدارة (الرابط السري) =====
         function goToAdmin() {
-            // فقط إذا كان المستخدم يعرف الرابط السري
             window.location.href = SECRET_ADMIN_PATH + '.html';
         }
 
-        // ===== Toast =====
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -752,15 +730,12 @@
             }, 3000);
         }
 
-        // ===== تحميل البيانات =====
         loadData();
 
-        // ===== إغلاق Modal بالـ Escape =====
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
 
-        // ===== إضافة مقالات تجريبية =====
         if (posts.length === 0) {
             const samplePosts = [{
                 id: 1,
@@ -768,6 +743,7 @@
                 body: 'الذكاء الاصطناعي يغير العالم بسرعة مذهلة. من المساعدات الصوتية إلى السيارات ذاتية القيادة، أصبح الذكاء الاصطناعي جزءًا لا يتجزأ من حياتنا اليومية.\n\nولكن ما هي الخطوة التالية؟ وكيف يمكننا الاستفادة القصوى من هذه التقنيات دون التأثير على خصوصيتنا وأمننا؟\n\nفي هذا المقال، سنستكشف أحدث التطورات في مجال الذكاء الاصطناعي وتأثيرها على مختلف المجالات.',
                 mediaType: 'image',
                 mediaUrl: 'https://picsum.photos/seed/ai/800/400',
+                mediaData: '',
                 tags: 'تقنية, ذكاء اصطناعي, مستقبل',
                 date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }),
                 views: 0
@@ -777,6 +753,7 @@
                 body: 'التصميم الجيد ليس مجرد جمالية، بل هو أداة قوية للتواصل. في عالم مليء بالمحتوى، التصميم هو ما يميز المحتوى الجيد عن المتوسط.\n\nتعلم أساسيات التصميم يمكن أن يغير طريقة تفكيرك ويحسن من جودة مشاريعك بشكل كبير. سواء كنت مصممًا محترفًا أو مبتدئًا، هناك دائمًا مجال للتطور.',
                 mediaType: 'image',
                 mediaUrl: 'https://picsum.photos/seed/design/800/400',
+                mediaData: '',
                 tags: 'تصميم, إبداع, UI/UX',
                 date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }),
                 views: 0
