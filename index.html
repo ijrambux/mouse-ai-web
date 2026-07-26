@@ -475,6 +475,29 @@
             font-size: 20px;
         }
 
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .loading .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #00d9ff;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -546,10 +569,15 @@
 
         <div class="action-bar">
             <h2>📰 آخر المقالات</h2>
-            <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">0 مقال</span>
+            <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">جاري التحميل...</span>
         </div>
 
-        <div class="posts-grid" id="postsGrid"></div>
+        <div class="posts-grid" id="postsGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>جاري تحميل المقالات...</p>
+            </div>
+        </div>
 
         <div class="footer">
             <p>🐭 MOUSE AI • 2026 • جميع الحقوق محفوظة</p>
@@ -568,8 +596,18 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // =====================================================
+        // 🔑 بيانات JSONBin.io الخاصة بك
+        // =====================================================
+        const JSONBIN_CONFIG = {
+            binId: 'YOUR_BIN_ID',        // 👈 ضع Bin ID هنا
+            apiKey: '$2a$10$SV1PMDoUcp5HAEGEg7B.Ler/jzRGURfweE4BxJxGYWQZw.jGvolmy'
+        };
+        // =====================================================
+
         const SECRET_ADMIN_PATH = 'admin-mouse-2026-secret';
 
+        // ===== توليد النجوم =====
         const starsContainer = document.getElementById('stars');
         for (let i = 0; i < 150; i++) {
             const star = document.createElement('div');
@@ -588,27 +626,77 @@
         let posts = [];
         let comments = [];
 
-        // ===== تحميل البيانات من localStorage =====
-        function loadData() {
+        // ===== تحميل البيانات من JSONBin =====
+        async function loadData() {
             try {
-                const p = localStorage.getItem('mouse_posts');
-                posts = p ? JSON.parse(p) : [];
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
+                    headers: {
+                        'X-Master-Key': JSONBIN_CONFIG.apiKey
+                    }
+                });
 
-                const c = localStorage.getItem('mouse_comments');
-                comments = c ? JSON.parse(c) : [];
-            } catch (e) {
-                posts = [];
-                comments = [];
+                if (!response.ok) {
+                    throw new Error('فشل في تحميل البيانات');
+                }
+
+                const data = await response.json();
+                const record = data.record;
+
+                posts = record.posts || [];
+                comments = record.comments || [];
+
+                // ترتيب المقالات من الأحدث للأقدم
+                posts.sort((a, b) => b.id - a.id);
+
+                renderPosts();
+                updateCount();
+
+            } catch (error) {
+                console.error('❌ خطأ في التحميل:', error);
+                document.getElementById('postsGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <h3>فشل في تحميل البيانات</h3>
+                        <p style="color: rgba(255,255,255,0.2);">تأكد من إعدادات JSONBin بشكل صحيح</p>
+                        <button class="btn btn-warning" onclick="refreshPosts()" style="margin-top:15px;">🔄 إعادة المحاولة</button>
+                    </div>
+                `;
             }
-            console.log('📊 تم تحميل:', posts.length, 'مقالات,', comments.length, 'تعليقات');
+        }
+
+        // ===== حفظ البيانات في JSONBin =====
+        async function saveData() {
+            try {
+                const data = {
+                    posts: posts,
+                    comments: comments
+                };
+
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_CONFIG.apiKey
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('فشل في حفظ البيانات');
+                }
+
+                return true;
+
+            } catch (error) {
+                console.error('❌ خطأ في الحفظ:', error);
+                showToast('⚠️ فشل في حفظ البيانات');
+                return false;
+            }
         }
 
         // ===== عرض المقالات =====
         function renderPosts() {
             const grid = document.getElementById('postsGrid');
-            const count = document.getElementById('postCount');
-
-            count.textContent = posts.length + ' مقال';
 
             if (posts.length === 0) {
                 grid.innerHTML = `
@@ -655,11 +743,15 @@
             }).join('');
         }
 
-        // ===== تحديث الصفحة =====
+        // ===== تحديث العداد =====
+        function updateCount() {
+            document.getElementById('postCount').textContent = posts.length + ' مقال';
+        }
+
+        // ===== تحديث المقالات =====
         function refreshPosts() {
+            showToast('🔄 جاري تحديث المقالات...');
             loadData();
-            renderPosts();
-            showToast('🔄 تم تحديث المقالات (' + posts.length + ' مقال)');
         }
 
         // ===== عرض مقال في Modal =====
@@ -670,8 +762,11 @@
                 return;
             }
 
+            // زيادة المشاهدات
             post.views = (post.views || 0) + 1;
-            saveData();
+            saveData().then(() => {
+                renderPosts();
+            });
 
             const modal = document.getElementById('postModal');
             const content = document.getElementById('modalContent');
@@ -734,7 +829,7 @@
         }
 
         // ===== إرسال تعليق =====
-        function submitComment(index) {
+        async function submitComment(index) {
             const textarea = document.getElementById('commentText');
             const body = textarea.value.trim();
             if (!body) {
@@ -758,19 +853,11 @@
             };
 
             comments.push(comment);
-            saveData();
-            textarea.value = '';
-            viewPost(index);
-            showToast('✅ تم إرسال التعليق');
-        }
-
-        // ===== حفظ البيانات =====
-        function saveData() {
-            try {
-                localStorage.setItem('mouse_posts', JSON.stringify(posts));
-                localStorage.setItem('mouse_comments', JSON.stringify(comments));
-            } catch (e) {
-                console.error('❌ خطأ في حفظ البيانات:', e);
+            const success = await saveData();
+            if (success) {
+                textarea.value = '';
+                showToast('✅ تم إرسال التعليق');
+                setTimeout(() => viewPost(index), 500);
             }
         }
 
@@ -797,22 +884,14 @@
             }, 3000);
         }
 
-        // ===== تحميل البيانات عند بدء التشغيل =====
+        // ===== تحميل البيانات =====
         loadData();
-        renderPosts();
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
 
-        // ===== تحديث تلقائي كل 30 ثانية =====
-        setInterval(() => {
-            loadData();
-            renderPosts();
-            console.log('🔄 تحديث تلقائي:', posts.length, 'مقالات');
-        }, 30000);
-
-        console.log('🚀 المدونة جاهزة - ' + posts.length + ' مقالات');
+        console.log('🚀 المدونة جاهزة مع JSONBin.io!');
     </script>
 
 </body>
