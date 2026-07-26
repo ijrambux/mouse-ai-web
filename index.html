@@ -5,894 +5,305 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MOUSE AI - المدونة</title>
     <style>
-        /* === RESET & BASE === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: radial-gradient(circle at 30% 10%, #05315c, #010612 75%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #fff;
-            position: relative;
-            overflow-x: hidden;
-            padding: 20px;
-        }
-
-        #stars {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 6px #fff, 0 0 15px #00cfff, 0 0 30px #00cfff;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100px) translateX(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-200px, 110vh);
-                opacity: 0;
-            }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .logo {
-            font-size: clamp(28px, 5vw, 48px);
-            font-weight: 900;
-            color: transparent;
-            background: linear-gradient(90deg, #fff, #bff8ff, #00d9ff, #fff);
-            background-size: 300% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: water 5s linear infinite;
-            filter: drop-shadow(0 0 15px #00cfff);
-            user-select: none;
-            cursor: pointer;
-        }
-
-        @keyframes water {
-            to {
-                background-position: 300% 0;
-            }
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 24px;
-            border: 2px solid rgba(0, 191, 255, 0.4);
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background: #00bfff;
-            border-color: #00bfff;
-            color: #010612;
-            box-shadow: 0 0 30px rgba(0, 191, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #00bfff, #008cff);
-            border-color: transparent;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #00d9ff, #00bfff);
-            box-shadow: 0 0 40px rgba(0, 191, 255, 0.4);
-        }
-
-        .btn-warning {
-            border-color: rgba(255, 165, 0, 0.4);
-        }
-
-        .btn-warning:hover {
-            background: #ff9900;
-            border-color: #ff9900;
-            color: #010612;
-        }
-
-        .posts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .post-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 191, 255, 0.15);
-            border-radius: 20px;
-            overflow: hidden;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .post-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 191, 255, 0.4);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .post-card .post-media {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: rgba(0, 191, 255, 0.1);
-        }
-
-        .post-card .post-content {
-            padding: 20px;
-        }
-
-        .post-card .post-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .post-card .post-excerpt {
-            color: #aac8e0;
-            font-size: 15px;
-            line-height: 1.8;
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .post-card .post-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .post-card .post-tags {
-            color: #00d9ff;
-            font-size: 12px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: radial-gradient(circle at top, #05315c, #010612 70%);
-            border: 2px solid rgba(0, 191, 255, 0.3);
-            border-radius: 24px;
-            max-width: 800px;
-            width: 100%;
-            padding: 40px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .modal-content .close-modal {
-            position: sticky;
-            top: 0;
-            float: left;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #fff;
-            font-size: 28px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content .close-modal:hover {
-            background: #ff3333;
-            transform: rotate(90deg);
-        }
-
-        .modal-content .modal-media {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin: 15px 0;
-        }
-
-        .modal-content .modal-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 15px 0 10px;
-            color: #00d9ff;
-        }
-
-        .modal-content .modal-body {
-            font-size: 18px;
-            line-height: 2.2;
-            color: #e8f4ff;
-            white-space: pre-wrap;
-        }
-
-        .modal-content .modal-comments {
-            margin-top: 25px;
-            border-top: 1px solid rgba(0, 191, 255, 0.2);
-            padding-top: 20px;
-        }
-
-        .modal-content .modal-comments h3 {
-            color: #00d9ff;
-            margin-bottom: 15px;
-        }
-
-        .modal-content .modal-comments .comment-form textarea {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            border-radius: 12px;
-            color: #fff;
-            resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-            margin-bottom: 10px;
-        }
-
-        .modal-content .modal-comments .comment-form textarea:focus {
-            outline: none;
-            border-color: #00d9ff;
-        }
-
-        .comment-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 191, 255, 0.1);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 12px;
-        }
-
-        .comment-item .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .comment-item .comment-author {
-            font-weight: 700;
-            color: #00d9ff;
-        }
-
-        .comment-item .comment-date {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .comment-item .comment-body {
-            color: #e8f4ff;
-            line-height: 1.8;
-        }
-
-        .comment-item .comment-reply {
-            background: rgba(0, 191, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 10px;
-            border-right: 3px solid #00d9ff;
-        }
-
-        .comment-item .comment-reply .reply-author {
-            color: #00d9ff;
-            font-weight: 600;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.3);
-            grid-column: 1/-1;
-        }
-
-        .empty-state .empty-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 10px;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 30px 0 10px;
-            border-top: 1px solid rgba(0, 191, 255, 0.1);
-            margin-top: 40px;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 14px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 15px 30px;
-            background: rgba(0, 191, 255, 0.2);
-            border: 1px solid #00bfff;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            color: #fff;
-            font-weight: 500;
-            z-index: 2000;
-            animation: slideUp 0.5s ease;
-            display: none;
-        }
-
-        .toast.show {
-            display: block;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .x-icon-small {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border-radius: 50%;
-        }
-
-        .x-icon-small svg {
-            width: 14px;
-            height: 14px;
-            fill: #010612;
-        }
-
-        .admin-secret-link {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            opacity: 0.03;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            z-index: 50;
-            background: transparent;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .admin-secret-link:hover {
-            opacity: 0.5;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .action-bar h2 {
-            color: #00d9ff;
-            font-size: 20px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .loading .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: #00d9ff;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            .header-actions {
-                justify-content: center;
-            }
-            .posts-grid {
-                grid-template-columns: 1fr;
-            }
-            .modal-content {
-                padding: 25px;
-            }
-            .modal-content .modal-title {
-                font-size: 22px;
-            }
-            .action-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .btn {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #00bfff, #008cff);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00d9ff;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:radial-gradient(circle at 30% 10%,#05315c,#010612 75%);min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#fff;position:relative;overflow-x:hidden;padding:20px}
+        #stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+        .star{position:absolute;background:#fff;border-radius:50%;box-shadow:0 0 6px #fff,0 0 15px #00cfff,0 0 30px #00cfff;animation:fall linear infinite}
+        @keyframes fall{0%{transform:translateY(-100px) translateX(0);opacity:1}100%{transform:translate(-200px,110vh);opacity:0}}
+        .container{position:relative;z-index:1;max-width:1200px;margin:0 auto}
+        .header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid rgba(0,191,255,0.2);margin-bottom:30px;flex-wrap:wrap;gap:15px}
+        .logo{font-size:clamp(28px,5vw,48px);font-weight:900;color:transparent;background:linear-gradient(90deg,#fff,#bff8ff,#00d9ff,#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;animation:water 5s linear infinite;filter:drop-shadow(0 0 15px #00cfff);user-select:none;cursor:pointer}
+        @keyframes water{to{background-position:300% 0}}
+        .header-actions{display:flex;gap:12px;flex-wrap:wrap}
+        .btn{padding:10px 24px;border:2px solid rgba(0,191,255,0.4);background:rgba(255,255,255,0.05);color:#fff;border-radius:30px;cursor:pointer;font-size:15px;font-weight:600;transition:all .3s ease;backdrop-filter:blur(8px);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+        .btn:hover{background:#00bfff;border-color:#00bfff;color:#010612;box-shadow:0 0 30px rgba(0,191,255,0.3);transform:translateY(-2px)}
+        .btn-warning{border-color:rgba(255,165,0,0.4)}.btn-warning:hover{background:#ff9900;border-color:#ff9900;color:#010612}
+        .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:25px;margin-top:20px}
+        .post-card{background:rgba(255,255,255,0.05);border:1px solid rgba(0,191,255,0.15);border-radius:20px;overflow:hidden;backdrop-filter:blur(8px);transition:all .3s ease;cursor:pointer}
+        .post-card:hover{transform:translateY(-5px);border-color:rgba(0,191,255,0.4);box-shadow:0 10px 40px rgba(0,0,0,0.4)}
+        .post-card .post-media{width:100%;height:200px;object-fit:cover;background:rgba(0,191,255,0.1)}
+        .post-card .post-content{padding:20px}
+        .post-card .post-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4}
+        .post-card .post-excerpt{color:#aac8e0;font-size:15px;line-height:1.8;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+        .post-card .post-meta{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(255,255,255,0.4)}
+        .post-card .post-tags{color:#00d9ff;font-size:12px}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(15px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+        .modal-overlay.active{display:flex;animation:fadeIn .3s ease}
+        .modal-content{background:radial-gradient(circle at top,#05315c,#010612 70%);border:2px solid rgba(0,191,255,0.3);border-radius:24px;max-width:800px;width:100%;padding:40px;max-height:90vh;overflow-y:auto;position:relative}
+        .modal-content .close-modal{position:sticky;top:0;float:left;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;border-radius:50%;transition:all .3s ease;display:flex;align-items:center;justify-content:center}
+        .modal-content .close-modal:hover{background:#ff3333;transform:rotate(90deg)}
+        .modal-content .modal-media{width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin:15px 0}
+        .modal-content .modal-title{font-size:28px;font-weight:700;margin:15px 0 10px;color:#00d9ff}
+        .modal-content .modal-body{font-size:18px;line-height:2.2;color:#e8f4ff;white-space:pre-wrap}
+        .modal-content .modal-comments{margin-top:25px;border-top:1px solid rgba(0,191,255,0.2);padding-top:20px}
+        .modal-content .modal-comments h3{color:#00d9ff;margin-bottom:15px}
+        .modal-content .modal-comments .comment-form textarea{width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,191,255,0.2);border-radius:12px;color:#fff;resize:vertical;min-height:80px;font-family:inherit;margin-bottom:10px}
+        .modal-content .modal-comments .comment-form textarea:focus{outline:none;border-color:#00d9ff}
+        .comment-item{background:rgba(255,255,255,0.05);border:1px solid rgba(0,191,255,0.1);border-radius:16px;padding:18px;margin-bottom:12px}
+        .comment-item .comment-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:5px}
+        .comment-item .comment-author{font-weight:700;color:#00d9ff}
+        .comment-item .comment-date{font-size:12px;color:rgba(255,255,255,0.3)}
+        .comment-item .comment-body{color:#e8f4ff;line-height:1.8}
+        .comment-item .comment-reply{background:rgba(0,191,255,0.05);border-radius:12px;padding:12px;margin-top:10px;border-right:3px solid #00d9ff}
+        .comment-item .comment-reply .reply-author{color:#00d9ff;font-weight:600}
+        .empty-state{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.3);grid-column:1/-1}
+        .empty-state .empty-icon{font-size:64px;margin-bottom:20px;opacity:0.5}
+        .empty-state h3{color:rgba(255,255,255,0.5);margin-bottom:10px}
+        .footer{text-align:center;padding:30px 0 10px;border-top:1px solid rgba(0,191,255,0.1);margin-top:40px;color:rgba(255,255,255,0.2);font-size:14px}
+        .toast{position:fixed;bottom:30px;right:30px;padding:15px 30px;background:rgba(0,191,255,0.2);border:1px solid #00bfff;border-radius:12px;backdrop-filter:blur(10px);color:#fff;font-weight:500;z-index:2000;animation:slideUp .5s ease;display:none}
+        .toast.show{display:block}
+        .toast.error{border-color:#ff4444;background:rgba(255,50,50,0.2)}
+        .toast.success{border-color:#00ff66;background:rgba(0,255,100,0.2)}
+        @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .x-icon-small{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#fff;border-radius:50%}
+        .x-icon-small svg{width:14px;height:14px;fill:#010612}
+        .admin-secret-link{position:fixed;bottom:10px;left:10px;opacity:0.03;font-size:10px;color:rgba(255,255,255,0.1);transition:all .3s ease;cursor:pointer;z-index:50;background:transparent;border:none;padding:4px 8px;border-radius:4px}
+        .admin-secret-link:hover{opacity:0.5;background:rgba(255,255,255,0.05)}
+        .action-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px}
+        .action-bar h2{color:#00d9ff;font-size:20px}
+        .loading{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.5)}
+        .loading .spinner{display:inline-block;width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-radius:50%;border-top-color:#00d9ff;animation:spin 1s ease-in-out infinite;margin-bottom:15px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @media(max-width:768px){.header{flex-direction:column;align-items:stretch;text-align:center}.header-actions{justify-content:center}.posts-grid{grid-template-columns:1fr}.modal-content{padding:25px}.modal-content .modal-title{font-size:22px}.action-bar{flex-direction:column;align-items:stretch}}
+        @media(max-width:480px){.btn{padding:8px 16px;font-size:13px}}
+        ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.05)}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00bfff,#008cff);border-radius:10px}::-webkit-scrollbar-thumb:hover{background:#00d9ff}
     </style>
 </head>
 <body>
 
-    <div id="stars"></div>
+<div id="stars"></div>
 
-    <div class="container">
-
-        <header class="header">
-            <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
-            <div class="header-actions">
-                <button class="btn btn-warning" onclick="refreshPosts()" title="تحديث المقالات">
-                    🔄 تحديث
-                </button>
-                <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')">
-                    <span class="x-icon-small">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                    </span>
-                    X
-                </button>
-            </div>
-        </header>
-
-        <div class="action-bar">
-            <h2>📰 آخر المقالات</h2>
-            <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">جاري التحميل...</span>
+<div class="container">
+    <header class="header">
+        <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
+        <div class="header-actions">
+            <button class="btn btn-warning" onclick="refreshPosts()">🔄 تحديث</button>
+            <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')">
+                <span class="x-icon-small">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </span>
+                X
+            </button>
         </div>
+    </header>
 
-        <div class="posts-grid" id="postsGrid">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>جاري تحميل المقالات...</p>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>🐭 MOUSE AI • 2026 • جميع الحقوق محفوظة</p>
-        </div>
+    <div class="action-bar">
+        <h2>📰 آخر المقالات</h2>
+        <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">جاري التحميل...</span>
     </div>
 
-    <button class="admin-secret-link" onclick="goToAdmin()">⚙️</button>
-
-    <div class="modal-overlay" id="postModal" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-modal" onclick="closeModal()">✕</button>
-            <div id="modalContent"></div>
-        </div>
+    <div class="posts-grid" id="postsGrid">
+        <div class="loading"><div class="spinner"></div><p>جاري تحميل المقالات...</p></div>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="footer"><p>🐭 MOUSE AI • 2026 • جميع الحقوق محفوظة</p></div>
+</div>
 
-    <script>
-        // =====================================================
-        // 🔑 بيانات JSONBin.io الخاصة بك
-        // =====================================================
-        const JSONBIN_CONFIG = {
-            binId: 'YOUR_BIN_ID',        // 👈 ضع Bin ID هنا
-            apiKey: '$2a$10$SV1PMDoUcp5HAEGEg7B.Ler/jzRGURfweE4BxJxGYWQZw.jGvolmy'
-        };
-        // =====================================================
+<button class="admin-secret-link" onclick="goToAdmin()">⚙️</button>
 
-        const SECRET_ADMIN_PATH = 'admin-mouse-2026-secret';
+<div class="modal-overlay" id="postModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeModal()">✕</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
 
-        // ===== توليد النجوم =====
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 150; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 3.5 + 1.5;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = (Math.random() * -1000) + 'px';
-            star.style.animationDuration = (5 + Math.random() * 7) + 's';
-            star.style.animationDelay = (Math.random() * 10) + 's';
-            star.style.opacity = 0.4 + Math.random() * 0.6;
-            starsContainer.appendChild(star);
-        }
+<div class="toast" id="toast"></div>
 
-        let posts = [];
-        let comments = [];
+<script>
+// ============================================================
+// 🔑 بيانات JSONBin.io (ضعها هنا)
+// ============================================================
+const JSONBIN_CONFIG = {
+    binId: '6a66016bda38895dfe91d5be',
+    apiKey: '$2a$10$SV1PMDoUcp5HAEGEg7B.Ler/jzRGURfweE4BxJxGYWQZw.jGvolmy'
+};
+// ============================================================
 
-        // ===== تحميل البيانات من JSONBin =====
-        async function loadData() {
-            try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
-                    headers: {
-                        'X-Master-Key': JSONBIN_CONFIG.apiKey
-                    }
-                });
+const SECRET_ADMIN_PATH = 'admin-mouse-2026-secret';
 
-                if (!response.ok) {
-                    throw new Error('فشل في تحميل البيانات');
-                }
+// نجوم
+const starsContainer = document.getElementById('stars');
+for (let i = 0; i < 150; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3.5 + 1.5;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = (Math.random() * -1000) + 'px';
+    star.style.animationDuration = (5 + Math.random() * 7) + 's';
+    star.style.animationDelay = (Math.random() * 10) + 's';
+    star.style.opacity = 0.4 + Math.random() * 0.6;
+    starsContainer.appendChild(star);
+}
 
-                const data = await response.json();
-                const record = data.record;
+let posts = [];
+let comments = [];
 
-                posts = record.posts || [];
-                comments = record.comments || [];
-
-                // ترتيب المقالات من الأحدث للأقدم
-                posts.sort((a, b) => b.id - a.id);
-
-                renderPosts();
-                updateCount();
-
-            } catch (error) {
-                console.error('❌ خطأ في التحميل:', error);
-                document.getElementById('postsGrid').innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">⚠️</div>
-                        <h3>فشل في تحميل البيانات</h3>
-                        <p style="color: rgba(255,255,255,0.2);">تأكد من إعدادات JSONBin بشكل صحيح</p>
-                        <button class="btn btn-warning" onclick="refreshPosts()" style="margin-top:15px;">🔄 إعادة المحاولة</button>
-                    </div>
-                `;
-            }
-        }
-
-        // ===== حفظ البيانات في JSONBin =====
-        async function saveData() {
-            try {
-                const data = {
-                    posts: posts,
-                    comments: comments
-                };
-
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_CONFIG.apiKey
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (!response.ok) {
-                    throw new Error('فشل في حفظ البيانات');
-                }
-
-                return true;
-
-            } catch (error) {
-                console.error('❌ خطأ في الحفظ:', error);
-                showToast('⚠️ فشل في حفظ البيانات');
-                return false;
-            }
-        }
-
-        // ===== عرض المقالات =====
-        function renderPosts() {
-            const grid = document.getElementById('postsGrid');
-
-            if (posts.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📝</div>
-                        <h3>لا توجد مقالات بعد</h3>
-                        <p style="color: rgba(255,255,255,0.2);">تابعنا للمزيد من المحتوى</p>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = posts.map((post, index) => {
-                const mediaHtml = post.mediaType === 'image' && post.mediaData ?
-                    `<img src="${post.mediaData}" alt="${post.title}" class="post-media" loading="lazy" />` :
-                    post.mediaType === 'video' && post.mediaData ?
-                    `<video class="post-media" controls><source src="${post.mediaData}" /></video>` :
-                    post.mediaType === 'image' && post.mediaUrl ?
-                    `<img src="${post.mediaUrl}" alt="${post.title}" class="post-media" loading="lazy" />` :
-                    post.mediaType === 'video' && post.mediaUrl ?
-                    `<video class="post-media" controls><source src="${post.mediaUrl}" /></video>` :
-                    '';
-
-                const tagsHtml = post.tags ?
-                    `<span class="post-tags">#${post.tags.split(',').map(t => t.trim()).join(' #')}</span>` :
-                    '';
-
-                const commentCount = comments.filter(c => c.postId === post.id && !c.parentId).length;
-
-                return `
-                    <div class="post-card" onclick="viewPost(${index})">
-                        ${mediaHtml}
-                        <div class="post-content">
-                            <div class="post-title">${post.title}</div>
-                            <div class="post-excerpt">${post.body.substring(0, 120)}${post.body.length > 120 ? '...' : ''}</div>
-                            ${tagsHtml}
-                            <div class="post-meta">
-                                <span>📅 ${post.date}</span>
-                                <span>💬 ${commentCount}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ===== تحديث العداد =====
-        function updateCount() {
-            document.getElementById('postCount').textContent = posts.length + ' مقال';
-        }
-
-        // ===== تحديث المقالات =====
-        function refreshPosts() {
-            showToast('🔄 جاري تحديث المقالات...');
-            loadData();
-        }
-
-        // ===== عرض مقال في Modal =====
-        function viewPost(index) {
-            const post = posts[index];
-            if (!post) {
-                showToast('⚠️ المقال غير موجود');
-                return;
-            }
-
-            // زيادة المشاهدات
-            post.views = (post.views || 0) + 1;
-            saveData().then(() => {
-                renderPosts();
-            });
-
-            const modal = document.getElementById('postModal');
-            const content = document.getElementById('modalContent');
-
-            const mediaHtml = post.mediaType === 'image' && post.mediaData ?
-                `<img src="${post.mediaData}" alt="${post.title}" class="modal-media" />` :
-                post.mediaType === 'video' && post.mediaData ?
-                `<video class="modal-media" controls autoplay><source src="${post.mediaData}" /></video>` :
-                post.mediaType === 'image' && post.mediaUrl ?
-                `<img src="${post.mediaUrl}" alt="${post.title}" class="modal-media" />` :
-                post.mediaType === 'video' && post.mediaUrl ?
-                `<video class="modal-media" controls autoplay><source src="${post.mediaUrl}" /></video>` :
-                '';
-
-            const tagsHtml = post.tags ?
-                `<p style="color: #00d9ff; font-size: 14px;">#${post.tags.split(',').map(t => t.trim()).join(' #')}</p>` :
-                '';
-
-            const postComments = comments.filter(c => c.postId === post.id && !c.parentId);
-
-            content.innerHTML = `
-                ${mediaHtml}
-                <div class="modal-title">${post.title}</div>
-                <div style="color: rgba(255,255,255,0.3); font-size: 14px; margin-bottom: 15px;">
-                    📅 ${post.date} • 👁️ ${post.views || 0} مشاهدة
-                </div>
-                ${tagsHtml}
-                <div class="modal-body">${post.body}</div>
-
-                <div class="modal-comments">
-                    <h3>💬 التعليقات (${postComments.length})</h3>
-                    <div class="comment-form">
-                        <textarea id="commentText" placeholder="اكتب تعليقك..."></textarea>
-                        <button class="btn" style="border-color:#00bfff;color:#00d9ff;background:transparent;" onclick="submitComment(${index})">إرسال التعليق</button>
-                    </div>
-
-                    ${postComments.map(c => `
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <span class="comment-author">${c.author}</span>
-                                <span class="comment-date">${c.date}</span>
-                            </div>
-                            <div class="comment-body">${c.body}</div>
-
-                            ${comments.filter(r => r.parentId === c.id).map(r => `
-                                <div class="comment-reply">
-                                    <span class="reply-author">${r.author}</span>
-                                    <span style="color: rgba(255,255,255,0.3); font-size: 12px;"> رد</span>
-                                    <div style="margin-top: 5px;">${r.body}</div>
-                                    <div style="font-size: 12px; color: rgba(255,255,255,0.2); margin-top: 5px;">${r.date}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // ===== إرسال تعليق =====
-        async function submitComment(index) {
-            const textarea = document.getElementById('commentText');
-            const body = textarea.value.trim();
-            if (!body) {
-                showToast('⚠️ الرجاء كتابة التعليق');
-                return;
-            }
-
-            const post = posts[index];
-            if (!post) {
-                showToast('⚠️ المقال غير موجود');
-                return;
-            }
-
-            const comment = {
-                id: Date.now(),
-                postId: post.id,
-                parentId: null,
-                author: '👤 زائر',
-                body: body,
-                date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' })
-            };
-
-            comments.push(comment);
-            const success = await saveData();
-            if (success) {
-                textarea.value = '';
-                showToast('✅ تم إرسال التعليق');
-                setTimeout(() => viewPost(index), 500);
-            }
-        }
-
-        // ===== إغلاق Modal =====
-        function closeModal(e) {
-            if (e && e.target !== e.currentTarget) return;
-            document.getElementById('postModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // ===== الانتقال إلى لوحة الإدارة =====
-        function goToAdmin() {
-            window.location.href = SECRET_ADMIN_PATH + '.html';
-        }
-
-        // ===== Toast =====
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            clearTimeout(toast.timeout);
-            toast.timeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // ===== تحميل البيانات =====
-        loadData();
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
+async function loadData() {
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
+            headers: { 'X-Master-Key': JSONBIN_CONFIG.apiKey }
         });
+        if (!response.ok) throw new Error('فشل التحميل');
+        const data = await response.json();
+        const record = data.record || { posts: [], comments: [] };
+        posts = record.posts || [];
+        comments = record.comments || [];
+        posts.sort((a, b) => b.id - a.id);
+        renderPosts();
+        updateCount();
+    } catch (error) {
+        console.error(error);
+        document.getElementById('postsGrid').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">⚠️</div>
+                <h3>فشل في تحميل البيانات</h3>
+                <p style="color:rgba(255,255,255,0.5);">${error.message}</p>
+                <button class="btn btn-warning" onclick="refreshPosts()" style="margin-top:15px;">🔄 إعادة المحاولة</button>
+            </div>
+        `;
+    }
+}
 
-        console.log('🚀 المدونة جاهزة مع JSONBin.io!');
-    </script>
+async function saveData() {
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_CONFIG.apiKey
+            },
+            body: JSON.stringify({ posts, comments })
+        });
+        if (!response.ok) throw new Error('فشل الحفظ');
+        return true;
+    } catch (error) {
+        console.error(error);
+        showToast('⚠️ ' + error.message, 'error');
+        return false;
+    }
+}
 
+function renderPosts() {
+    const grid = document.getElementById('postsGrid');
+    if (posts.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📝</div>
+                <h3>لا توجد مقالات بعد</h3>
+                <p style="color:rgba(255,255,255,0.2);">تابعنا للمزيد من المحتوى</p>
+            </div>
+        `;
+        return;
+    }
+    grid.innerHTML = posts.map((post, index) => {
+        const mediaHtml = post.mediaType === 'image' && post.mediaData ? `<img src="${post.mediaData}" class="post-media" loading="lazy" />` :
+                         post.mediaType === 'video' && post.mediaData ? `<video class="post-media" controls><source src="${post.mediaData}" /></video>` :
+                         post.mediaType === 'image' && post.mediaUrl ? `<img src="${post.mediaUrl}" class="post-media" loading="lazy" />` :
+                         post.mediaType === 'video' && post.mediaUrl ? `<video class="post-media" controls><source src="${post.mediaUrl}" /></video>` : '';
+        const tagsHtml = post.tags ? `<span class="post-tags">#${post.tags.split(',').map(t=>t.trim()).join(' #')}</span>` : '';
+        const commentCount = comments.filter(c => c.postId === post.id && !c.parentId).length;
+        return `
+            <div class="post-card" onclick="viewPost(${index})">
+                ${mediaHtml}
+                <div class="post-content">
+                    <div class="post-title">${post.title}</div>
+                    <div class="post-excerpt">${post.body.substring(0,120)}${post.body.length>120?'...':''}</div>
+                    ${tagsHtml}
+                    <div class="post-meta"><span>📅 ${post.date}</span><span>💬 ${commentCount}</span></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateCount() {
+    document.getElementById('postCount').textContent = posts.length + ' مقال';
+}
+
+function refreshPosts() {
+    showToast('🔄 جاري التحديث...', 'success');
+    loadData();
+}
+
+function viewPost(index) {
+    const post = posts[index];
+    if (!post) return;
+    post.views = (post.views || 0) + 1;
+    saveData();
+
+    const modal = document.getElementById('postModal');
+    const content = document.getElementById('modalContent');
+    const mediaHtml = post.mediaType === 'image' && post.mediaData ? `<img src="${post.mediaData}" class="modal-media" />` :
+                     post.mediaType === 'video' && post.mediaData ? `<video class="modal-media" controls autoplay><source src="${post.mediaData}" /></video>` :
+                     post.mediaType === 'image' && post.mediaUrl ? `<img src="${post.mediaUrl}" class="modal-media" />` :
+                     post.mediaType === 'video' && post.mediaUrl ? `<video class="modal-media" controls autoplay><source src="${post.mediaUrl}" /></video>` : '';
+    const tagsHtml = post.tags ? `<p style="color:#00d9ff;font-size:14px;">#${post.tags.split(',').map(t=>t.trim()).join(' #')}</p>` : '';
+    const postComments = comments.filter(c => c.postId === post.id && !c.parentId);
+
+    content.innerHTML = `
+        ${mediaHtml}
+        <div class="modal-title">${post.title}</div>
+        <div style="color:rgba(255,255,255,0.3);font-size:14px;margin-bottom:15px;">📅 ${post.date} • 👁️ ${post.views||0} مشاهدة</div>
+        ${tagsHtml}
+        <div class="modal-body">${post.body}</div>
+        <div class="modal-comments">
+            <h3>💬 التعليقات (${postComments.length})</h3>
+            <div class="comment-form">
+                <textarea id="commentText" placeholder="اكتب تعليقك..."></textarea>
+                <button class="btn" style="border-color:#00bfff;color:#00d9ff;background:transparent;" onclick="submitComment(${index})">إرسال التعليق</button>
+            </div>
+            ${postComments.map(c => `
+                <div class="comment-item">
+                    <div class="comment-header"><span class="comment-author">${c.author}</span><span class="comment-date">${c.date}</span></div>
+                    <div class="comment-body">${c.body}</div>
+                    ${comments.filter(r=>r.parentId===c.id).map(r=>`<div class="comment-reply"><span class="reply-author">${r.author}</span> <span style="color:rgba(255,255,255,0.3);font-size:12px;">رد</span><div style="margin-top:5px;">${r.body}</div><div style="font-size:12px;color:rgba(255,255,255,0.2);margin-top:5px;">${r.date}</div></div>`).join('')}
+                </div>
+            `).join('')}
+        </div>
+    `;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+async function submitComment(index) {
+    const textarea = document.getElementById('commentText');
+    const body = textarea.value.trim();
+    if (!body) { showToast('⚠️ الرجاء كتابة التعليق', 'error'); return; }
+    const post = posts[index];
+    if (!post) return;
+    const comment = { id: Date.now(), postId: post.id, parentId: null, author: '👤 زائر', body, date: new Date().toLocaleDateString('ar-SA', { year:'numeric', month:'long', day:'numeric' }) };
+    comments.push(comment);
+    const success = await saveData();
+    if (success) { textarea.value = ''; showToast('✅ تم إرسال التعليق', 'success'); setTimeout(()=>viewPost(index), 500); }
+}
+
+function closeModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('postModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function goToAdmin() { window.location.href = SECRET_ADMIN_PATH + '.html'; }
+
+function showToast(message, type = '') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast show';
+    if (type === 'error') toast.classList.add('toast-error');
+    if (type === 'success') toast.classList.add('toast-success');
+    clearTimeout(toast.timeout);
+    toast.timeout = setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+loadData();
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+console.log('🚀 المدونة جاهزة!');
+</script>
 </body>
 </html>
