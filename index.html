@@ -1,1 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MoUsE AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Tahoma",sans-serif;
+}
+
+body{
+
+background:#020814;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:40px;
+
+background-image:
+radial-gradient(circle at top,#06345f,#020814 70%);
+}
+
+/*======================
+LOGO
+=======================*/
+
+.logo{
+
+font-size:55px;
+font-weight:bold;
+letter-spacing:4px;
+color:#8fd6ff;
+
+text-shadow:
+0 0 10px #00bfff,
+0 0 20px #00bfff,
+0 0 40px #008cff,
+0 0 60px #008cff;
+
+position:relative;
+
+margin-bottom:70px;
+
+animation:glow 2s infinite alternate;
+
+}
+
+.logo:before{
+
+content:"🔥";
+
+position:absolute;
+
+top:-45px;
+left:50%;
+
+transform:translateX(-50%);
+
+font-size:42px;
+
+filter:hue-rotate(170deg)
+drop-shadow(0 0 10px #00c3ff)
+drop-shadow(0 0 25px #00c3ff);
+
+animation:fire 1s infinite;
+
+}
+
+@keyframes glow{
+
+from{
+
+text-shadow:
+0 0 10px #00bfff,
+0 0 20px #00bfff,
+0 0 30px #00bfff;
+
+}
+
+to{
+
+text-shadow:
+0 0 20px #00ffff,
+0 0 40px #00bfff,
+0 0 70px #00bfff;
+
+}
+
+}
+
+@keyframes fire{
+
+0%{transform:translateX(-50%) translateY(0);}
+50%{transform:translateX(-50%) translateY(-8px);}
+100%{transform:translateX(-50%) translateY(0);}
+
+}
+
+
+/*======================
+FRAME
+=======================*/
+
+.article{
+
+width:90%;
+max-width:900px;
+
+padding:40px;
+
+background:rgba(255,255,255,.05);
+
+border:2px solid #00bfff;
+
+border-radius:18px;
+
+box-shadow:
+
+0 0 20px #00aaff55,
+inset 0 0 20px #00aaff22;
+
+position:relative;
+
+line-height:2.3;
+
+font-size:22px;
+
+}
+
+
+/* زوايا الإطار */
+
+.article:before,
+.article:after{
+
+content:"";
+
+position:absolute;
+
+width:80px;
+height:80px;
+
+border-color:#00d9ff;
+
+}
+
+.article:before{
+
+top:-2px;
+right:-2px;
+
+border-top:5px solid;
+border-right:5px solid;
+
+}
+
+.article:after{
+
+bottom:-2px;
+left:-2px;
+
+border-bottom:5px solid;
+border-left:5px solid;
+
+}
+
+.author{
+
+margin-top:25px;
+
+font-size:24px;
+
+font-weight:bold;
+
+text-align:left;
+
+color:#7fdfff;
+
+}
+
+
+/*======================
+BUTTON
+=======================*/
+
+.share{
+
+margin-top:35px;
+
+background:#000;
+
+border:2px solid #00c3ff;
+
+color:white;
+
+padding:15px 35px;
+
+font-size:20px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+transition:.4s;
+
+}
+
+.share:hover{
+
+background:#00bfff;
+
+color:#000;
+
+box-shadow:0 0 20px #00bfff;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="logo">
+MoUsE AI
+</div>
+
+<div class="article">
+
+<p>
+
+سنتطور مع أول إرهاصات التوقف عن الشيتة، وتضخيم التفاهات، وتدشين المشاريع الصغيرة على أنها إنجازات تاريخية، وتحويل كل حدث عادي إلى ملحمة إعلامية، والتوقف عن صناعة الأبطال من الفراغ، وعن قياس النجاح بعدد التصفيقات وعدد المنشورات.
+
+سنتطور عندما يصبح العمل أهم من الضجيج، والنتائج أهم من الشعارات، والإنتاج أهم من المظاهر، والنقد البناء أهم من المجاملة.
+
+سنتطور عندما نحترم الوقت، ونقدّر العلم، وندعم أصحاب الكفاءة بدل أصحاب العلاقات، ونمنح الفرصة لمن يستحقها لا لمن يجيد التملق.
+
+سنتطور عندما تصبح المشاريع الصغيرة نواة لاقتصاد حقيقي، لا مجرد صور تذكارية ومناسبات لقص الشريط الأحمر.
+
+سنتطور عندما نتوقف عن تضخيم كل خطوة بسيطة وكأنها فتحٌ حضاري، بينما الأمم الأخرى تمضي بصمت نحو المستقبل.
+
+أما قبل ذلك...
+
+فسيظل شعار المرحلة...
+
+<h2 style="text-align:center;color:#00d9ff;margin-top:25px;">
+بعاد... بعاد... بعاد
+</h2>
+
+</p>
+
+<div class="author">
+
+✍ الكاتب : MoUsE AI
+
+</div>
+
+</div>
+
+<button class="share" onclick="shareX()">
+
+🐦 مشاركة على X
+
+</button>
+
+<script>
+
+function shareX(){
+
+let text=`سنتطور مع أول إرهاصات التوقف عن الشيتة، وتضخيم التفاهات، وتدشين المشاريع الصغيرة على أنها إنجازات تاريخية... أما قبل ذلك فسيظل شعار المرحلة: بعاد... بعاد... بعاد`;
+
+window.open(
+
+"https://twitter.com/intent/tweet?text="+encodeURIComponent(text),
+
+"_blank"
+
+);
+
+}
+
+</script>
+
+</body>
+</html>
