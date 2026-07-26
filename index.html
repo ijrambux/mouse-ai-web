@@ -128,6 +128,16 @@
             box-shadow: 0 0 40px rgba(0, 191, 255, 0.4);
         }
 
+        .btn-warning {
+            border-color: rgba(255, 165, 0, 0.4);
+        }
+
+        .btn-warning:hover {
+            background: #ff9900;
+            border-color: #ff9900;
+            color: #010612;
+        }
+
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -451,6 +461,20 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .action-bar h2 {
+            color: #00d9ff;
+            font-size: 20px;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -468,6 +492,10 @@
             }
             .modal-content .modal-title {
                 font-size: 22px;
+            }
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
 
@@ -502,6 +530,9 @@
         <header class="header">
             <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
             <div class="header-actions">
+                <button class="btn btn-warning" onclick="refreshPosts()" title="تحديث المقالات">
+                    🔄 تحديث
+                </button>
                 <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')">
                     <span class="x-icon-small">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -512,6 +543,11 @@
                 </button>
             </div>
         </header>
+
+        <div class="action-bar">
+            <h2>📰 آخر المقالات</h2>
+            <span style="color:rgba(255,255,255,0.3);font-size:14px;" id="postCount">0 مقال</span>
+        </div>
 
         <div class="posts-grid" id="postsGrid"></div>
 
@@ -552,27 +588,28 @@
         let posts = [];
         let comments = [];
 
+        // ===== تحميل البيانات من localStorage =====
         function loadData() {
             try {
                 const p = localStorage.getItem('mouse_posts');
-                if (p) posts = JSON.parse(p);
+                posts = p ? JSON.parse(p) : [];
 
                 const c = localStorage.getItem('mouse_comments');
-                if (c) comments = JSON.parse(c);
+                comments = c ? JSON.parse(c) : [];
             } catch (e) {
                 posts = [];
                 comments = [];
             }
-            renderPosts();
+            console.log('📊 تم تحميل:', posts.length, 'مقالات,', comments.length, 'تعليقات');
         }
 
-        function saveData() {
-            localStorage.setItem('mouse_posts', JSON.stringify(posts));
-            localStorage.setItem('mouse_comments', JSON.stringify(comments));
-        }
-
+        // ===== عرض المقالات =====
         function renderPosts() {
             const grid = document.getElementById('postsGrid');
+            const count = document.getElementById('postCount');
+
+            count.textContent = posts.length + ' مقال';
+
             if (posts.length === 0) {
                 grid.innerHTML = `
                     <div class="empty-state">
@@ -618,9 +655,20 @@
             }).join('');
         }
 
+        // ===== تحديث الصفحة =====
+        function refreshPosts() {
+            loadData();
+            renderPosts();
+            showToast('🔄 تم تحديث المقالات (' + posts.length + ' مقال)');
+        }
+
+        // ===== عرض مقال في Modal =====
         function viewPost(index) {
             const post = posts[index];
-            if (!post) return;
+            if (!post) {
+                showToast('⚠️ المقال غير موجود');
+                return;
+            }
 
             post.views = (post.views || 0) + 1;
             saveData();
@@ -685,6 +733,7 @@
             document.body.style.overflow = 'hidden';
         }
 
+        // ===== إرسال تعليق =====
         function submitComment(index) {
             const textarea = document.getElementById('commentText');
             const body = textarea.value.trim();
@@ -694,6 +743,11 @@
             }
 
             const post = posts[index];
+            if (!post) {
+                showToast('⚠️ المقال غير موجود');
+                return;
+            }
+
             const comment = {
                 id: Date.now(),
                 postId: post.id,
@@ -710,16 +764,29 @@
             showToast('✅ تم إرسال التعليق');
         }
 
+        // ===== حفظ البيانات =====
+        function saveData() {
+            try {
+                localStorage.setItem('mouse_posts', JSON.stringify(posts));
+                localStorage.setItem('mouse_comments', JSON.stringify(comments));
+            } catch (e) {
+                console.error('❌ خطأ في حفظ البيانات:', e);
+            }
+        }
+
+        // ===== إغلاق Modal =====
         function closeModal(e) {
             if (e && e.target !== e.currentTarget) return;
             document.getElementById('postModal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
+        // ===== الانتقال إلى لوحة الإدارة =====
         function goToAdmin() {
             window.location.href = SECRET_ADMIN_PATH + '.html';
         }
 
+        // ===== Toast =====
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -730,39 +797,22 @@
             }, 3000);
         }
 
+        // ===== تحميل البيانات عند بدء التشغيل =====
         loadData();
+        renderPosts();
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
 
-        if (posts.length === 0) {
-            const samplePosts = [{
-                id: 1,
-                title: '🚀 مستقبل الذكاء الاصطناعي',
-                body: 'الذكاء الاصطناعي يغير العالم بسرعة مذهلة. من المساعدات الصوتية إلى السيارات ذاتية القيادة، أصبح الذكاء الاصطناعي جزءًا لا يتجزأ من حياتنا اليومية.\n\nولكن ما هي الخطوة التالية؟ وكيف يمكننا الاستفادة القصوى من هذه التقنيات دون التأثير على خصوصيتنا وأمننا؟\n\nفي هذا المقال، سنستكشف أحدث التطورات في مجال الذكاء الاصطناعي وتأثيرها على مختلف المجالات.',
-                mediaType: 'image',
-                mediaUrl: 'https://picsum.photos/seed/ai/800/400',
-                mediaData: '',
-                tags: 'تقنية, ذكاء اصطناعي, مستقبل',
-                date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }),
-                views: 0
-            }, {
-                id: 2,
-                title: '🎨 التصميم والإبداع في العصر الرقمي',
-                body: 'التصميم الجيد ليس مجرد جمالية، بل هو أداة قوية للتواصل. في عالم مليء بالمحتوى، التصميم هو ما يميز المحتوى الجيد عن المتوسط.\n\nتعلم أساسيات التصميم يمكن أن يغير طريقة تفكيرك ويحسن من جودة مشاريعك بشكل كبير. سواء كنت مصممًا محترفًا أو مبتدئًا، هناك دائمًا مجال للتطور.',
-                mediaType: 'image',
-                mediaUrl: 'https://picsum.photos/seed/design/800/400',
-                mediaData: '',
-                tags: 'تصميم, إبداع, UI/UX',
-                date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }),
-                views: 0
-            }];
-
-            posts = samplePosts;
-            saveData();
+        // ===== تحديث تلقائي كل 30 ثانية =====
+        setInterval(() => {
+            loadData();
             renderPosts();
-        }
+            console.log('🔄 تحديث تلقائي:', posts.length, 'مقالات');
+        }, 30000);
+
+        console.log('🚀 المدونة جاهزة - ' + posts.length + ' مقالات');
     </script>
 
 </body>
