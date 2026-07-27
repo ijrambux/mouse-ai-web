@@ -5,14 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <title>MOUSE AI - البث المباشر</title>
-    <meta name="description" content="البث المباشر - MOUSE AI" />
+    <meta name="description" content="البث المباشر من MOUSE AI - شاهد الآن" />
     
-    <!-- Open Graph -->
+    <!-- ====== TWITTER/X PLAYER CARD ====== -->
+    <meta name="twitter:card" content="player" />
+    <meta name="twitter:site" content="@mouse0000000" />
+    <meta name="twitter:title" content="🎥 البث المباشر - MOUSE AI" />
+    <meta name="twitter:description" content="شاهد البث المباشر الآن من MOUSE AI" />
+    <meta name="twitter:player" content="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Feptv.dz%2Fvideos%2F1542336614253892%2F&show_text=true&width=560&t=0" />
+    <meta name="twitter:player:width" content="560" />
+    <meta name="twitter:player:height" content="429" />
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/ff0000/ffffff?text=LIVE" />
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="MOUSE AI - البث المباشر" />
-    <meta property="og:description" content="تابع البث المباشر الآن" />
-    <meta property="og:image" content="https://via.placeholder.com/1200x630/05315c/00d9ff?text=LIVE" />
-    
+    <meta property="og:url" content="https://mouse-ai-live.netlify.app/" />
+    <meta property="og:title" content="🎥 البث المباشر - MOUSE AI" />
+    <meta property="og:description" content="شاهد البث المباشر الآن من MOUSE AI" />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/ff0000/ffffff?text=LIVE" />
+    <meta property="og:video" content="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Feptv.dz%2Fvideos%2F1542336614253892%2F&show_text=true&width=560&t=0" />
+    <meta property="og:video:width" content="560" />
+    <meta property="og:video:height" content="429" />
+
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:radial-gradient(circle at 30% 10%,#05315c,#010612 75%);min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#fff;position:relative;overflow-x:hidden;padding:20px}
@@ -31,6 +45,9 @@
         .btn{padding:10px 24px;border:2px solid rgba(0,191,255,0.4);background:rgba(255,255,255,0.05);color:#fff;border-radius:30px;cursor:pointer;font-size:15px;font-weight:600;transition:all .3s ease;backdrop-filter:blur(8px);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
         .btn:hover{background:#00bfff;border-color:#00bfff;color:#010612;box-shadow:0 0 30px rgba(0,191,255,0.3);transform:translateY(-2px)}
         .btn-warning{border-color:rgba(255,165,0,0.4)}.btn-warning:hover{background:#ff9900;border-color:#ff9900;color:#010612}
+        .btn-live{background:rgba(255,0,0,0.15);border-color:#ff0000;color:#ff4444;animation:pulse-btn 2s ease-in-out infinite}
+        .btn-live:hover{background:#ff0000;border-color:#ff0000;color:#fff}
+        @keyframes pulse-btn{0%,100%{box-shadow:0 0 10px rgba(255,0,0,0.2)}50%{box-shadow:0 0 30px rgba(255,0,0,0.5)}}
         
         /* ===== LIVE STREAM ===== */
         .live-stream{background:rgba(255,255,255,0.03);border:2px solid rgba(255,0,0,0.3);border-radius:24px;padding:20px;margin-bottom:30px;backdrop-filter:blur(10px);transition:all .3s ease;position:relative}
@@ -42,7 +59,7 @@
         .live-stream .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:16px;background:rgba(0,0,0,0.5)}
         .live-stream .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:16px;border:none}
         
-        /* Share Buttons for Live */
+        /* Share Buttons */
         .live-share{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;justify-content:center;padding-top:15px;border-top:1px solid rgba(255,255,255,0.05)}
         .live-share .share-label{color:rgba(255,255,255,0.4);font-size:14px;display:flex;align-items:center;gap:8px}
         .share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:20px;text-decoration:none;color:#fff;font-size:13px;font-weight:600;transition:all .3s ease;border:none;cursor:pointer}
@@ -52,6 +69,14 @@
         .share-btn.whatsapp{background:#25d366}.share-btn.whatsapp:hover{background:#20b857}
         .share-btn.telegram{background:#0088cc}.share-btn.telegram:hover{background:#0077b3}
         .share-btn.copy{background:rgba(255,255,255,0.1)}.share-btn.copy:hover{background:rgba(255,255,255,0.2)}
+        
+        /* Twitter Share Preview */
+        .twitter-preview{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-top:15px;text-align:center}
+        .twitter-preview .preview-title{color:#00d9ff;font-size:16px;margin-bottom:8px}
+        .twitter-preview .preview-desc{color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:12px}
+        .twitter-preview .preview-box{background:rgba(0,0,0,0.3);border-radius:12px;padding:15px;border:1px solid rgba(255,255,255,0.05);max-width:500px;margin:0 auto}
+        .twitter-preview .preview-box .preview-video{background:rgba(255,0,0,0.1);border-radius:8px;padding:40px 20px;color:rgba(255,255,255,0.3);font-size:14px;border:1px dashed rgba(255,0,0,0.2)}
+        .twitter-preview .preview-box .preview-video .live-icon{font-size:32px;display:block;margin-bottom:8px}
         
         /* Posts */
         .section-divider{display:flex;align-items:center;gap:15px;margin:30px 0 20px}
@@ -99,8 +124,6 @@
         .admin-panel .form-row .full{grid-column:1/-1}
         
         .empty-state{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.3);grid-column:1/-1}
-        .empty-state .empty-icon{font-size:64px;margin-bottom:20px;opacity:0.5}
-        .empty-state h3{color:rgba(255,255,255,0.5);margin-bottom:10px}
         .footer{text-align:center;padding:30px 0 10px;border-top:1px solid rgba(0,191,255,0.1);margin-top:40px;color:rgba(255,255,255,0.2);font-size:14px}
         
         .toast{position:fixed;bottom:30px;right:30px;padding:15px 30px;background:rgba(0,191,255,0.2);border:1px solid #00bfff;border-radius:12px;backdrop-filter:blur(10px);color:#fff;font-weight:500;z-index:2000;animation:slideUp .5s ease;display:none}
@@ -137,21 +160,21 @@
     <header class="header">
         <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
         <div class="header-actions">
-            <button class="btn btn-warning" onclick="refreshPosts()">🔄 تحديث</button>
-            <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')">
+            <button class="btn btn-live" onclick="shareOnX()">
                 <span class="x-icon-small">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </span>
-                X
+                شارك البث على X
             </button>
+            <button class="btn btn-warning" onclick="refreshPosts()">🔄 تحديث</button>
             <button class="btn" onclick="toggleAdmin()" style="border-color:rgba(255,50,50,0.3);color:#ff6b6b;">⚙️ إدارة</button>
         </div>
     </header>
 
     <!-- ===== LIVE STREAM ===== -->
-    <div class="live-stream">
+    <div class="live-stream" id="liveStream">
         <div class="live-badge">
             <span class="dot"></span>
             بث مباشر
@@ -171,11 +194,24 @@
         </div>
         <div class="live-share">
             <span class="share-label">📤 شارك البث المباشر:</span>
+            <button onclick="shareOnX()" class="share-btn twitter">🐦 X (تويتر)</button>
             <a href="#" onclick="shareLive('facebook')" class="share-btn facebook">فيسبوك</a>
-            <a href="#" onclick="shareLive('twitter')" class="share-btn twitter">X</a>
             <a href="#" onclick="shareLive('whatsapp')" class="share-btn whatsapp">واتساب</a>
             <a href="#" onclick="shareLive('telegram')" class="share-btn telegram">تلغرام</a>
             <button onclick="copyLiveLink()" class="share-btn copy">📋 نسخ الرابط</button>
+        </div>
+        
+        <!-- Twitter Preview -->
+        <div class="twitter-preview">
+            <div class="preview-title">🐦 كيف سيظهر البث على منصة X</div>
+            <div class="preview-desc">عند مشاركة الرابط، سيشاهد أصدقاؤك الفيديو مباشرة في التغريدة</div>
+            <div class="preview-box">
+                <div class="preview-video">
+                    <span class="live-icon">🔴</span>
+                    <div style="font-weight:600;color:#ff4444;">بث مباشر</div>
+                    <div style="font-size:12px;margin-top:5px;">سيظهر الفيديو تلقائياً في التغريدة</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -256,6 +292,33 @@ for (let i = 0; i < 150; i++) {
     document.getElementById('stars').appendChild(star);
 }
 
+// ========== TWITTER/X SHARE ==========
+function shareOnX() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('🔴 شاهد البث المباشر الآن من @mouse0000000');
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    window.open(twitterUrl, '_blank', 'width=600,height=500');
+}
+
+function shareLive(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('🔴 بث مباشر - MOUSE AI');
+    const links = {
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
+        telegram: `https://t.me/share/url?url=${url}&text=${text}`
+    };
+    window.open(links[platform], '_blank', 'width=600,height=500');
+}
+
+function copyLiveLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('📋 تم نسخ رابط البث', 'success');
+    }).catch(() => {
+        showToast('⚠️ فشل النسخ', 'error');
+    });
+}
+
 // ========== DATA ==========
 let posts = [];
 let comments = [];
@@ -311,7 +374,7 @@ function saveData() {
 function renderPosts() {
     const grid = document.getElementById('postsGrid');
     if (posts.length === 0) {
-        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><h3>لا توجد مقالات بعد</h3></div>`;
+        grid.innerHTML = `<div class="empty-state"><div style="font-size:64px;margin-bottom:20px;opacity:0.5;">📝</div><h3 style="color:rgba(255,255,255,0.5);">لا توجد مقالات بعد</h3></div>`;
         return;
     }
     grid.innerHTML = posts.map((post, index) => {
@@ -349,28 +412,6 @@ function renderAdminPosts() {
     `).join('');
 }
 
-// ========== SHARE LIVE ==========
-function shareLive(platform) {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('🎥 بث مباشر - MOUSE AI');
-    const links = {
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-        twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
-        whatsapp: `https://wa.me/?text=${text}%20${url}`,
-        telegram: `https://t.me/share/url?url=${url}&text=${text}`
-    };
-    window.open(links[platform], '_blank', 'width=600,height=500');
-}
-
-function copyLiveLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-        showToast('📋 تم نسخ رابط البث', 'success');
-    }).catch(() => {
-        showToast('⚠️ فشل النسخ', 'error');
-    });
-}
-
-// ========== ADMIN ==========
 function toggleAdmin() {
     document.getElementById('adminPanel').classList.toggle('active');
     if (document.getElementById('adminPanel').classList.contains('active')) {
@@ -462,7 +503,6 @@ function clearForm() {
     editingId = null;
 }
 
-// ========== VIEW POST ==========
 function viewPost(index) {
     const post = posts[index];
     if (!post) return;
@@ -488,8 +528,8 @@ function viewPost(index) {
         
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;padding:15px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
             <span style="color:rgba(255,255,255,0.4);font-size:14px;display:flex;align-items:center;gap:8px;">📤 مشاركة:</span>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn facebook">فيسبوك</a>
             <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">X</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn facebook">فيسبوك</a>
             <a href="https://wa.me/?text=${shareText}%20${shareUrl}" target="_blank" class="share-btn whatsapp">واتساب</a>
             <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn telegram">تلغرام</a>
             <button onclick="copyLink()" class="share-btn copy">📋 نسخ الرابط</button>
@@ -564,7 +604,7 @@ function showToast(message, type = '') {
 
 loadData();
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-console.log('🚀 البث المباشر جاهز!');
+console.log('🚀 البث المباشر جاهز للنشر على X!');
 </script>
 </body>
 </html>
