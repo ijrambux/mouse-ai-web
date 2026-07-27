@@ -4,60 +4,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- SEO Meta Tags -->
-    <title>MOUSE AI - المدونة التقنية</title>
-    <meta name="description" content="مدونة MOUSE AI التقنية - مقالات وحلول برمجية وتقنية" />
-    <meta name="keywords" content="تقنية, برمجة, ذكاء اصطناعي, AI, mouse" />
-    <meta name="author" content="MOUSE AI" />
+    <title>MOUSE AI - البث المباشر</title>
+    <meta name="description" content="البث المباشر - MOUSE AI" />
     
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://mouse-ai-blog.netlify.app/" />
-    <meta property="og:title" content="MOUSE AI - المدونة التقنية" />
-    <meta property="og:description" content="مدونة MOUSE AI التقنية - مقالات وحلول برمجية وتقنية" />
-    <meta property="og:image" content="https://via.placeholder.com/1200x630/05315c/00d9ff?text=MOUSE+AI" />
+    <meta property="og:title" content="MOUSE AI - البث المباشر" />
+    <meta property="og:description" content="تابع البث المباشر الآن" />
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/05315c/00d9ff?text=LIVE" />
     
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MOUSE AI - المدونة التقنية" />
-    <meta name="twitter:description" content="مدونة MOUSE AI التقنية - مقالات وحلول برمجية وتقنية" />
-    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/05315c/00d9ff?text=MOUSE+AI" />
-
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:radial-gradient(circle at 30% 10%,#05315c,#010612 75%);min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#fff;position:relative;overflow-x:hidden;padding:20px}
         
-        /* Stars Background */
         #stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
         .star{position:absolute;background:#fff;border-radius:50%;box-shadow:0 0 6px #fff,0 0 15px #00cfff,0 0 30px #00cfff;animation:fall linear infinite}
         @keyframes fall{0%{transform:translateY(-100px) translateX(0);opacity:1}100%{transform:translate(-200px,110vh);opacity:0}}
         
         .container{position:relative;z-index:1;max-width:1200px;margin:0 auto}
         
-        /* Header */
         .header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid rgba(0,191,255,0.2);margin-bottom:30px;flex-wrap:wrap;gap:15px}
         .logo{font-size:clamp(28px,5vw,48px);font-weight:900;color:transparent;background:linear-gradient(90deg,#fff,#bff8ff,#00d9ff,#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;animation:water 5s linear infinite;filter:drop-shadow(0 0 15px #00cfff);user-select:none;cursor:pointer}
         @keyframes water{to{background-position:300% 0}}
         .header-actions{display:flex;gap:12px;flex-wrap:wrap}
         
-        /* Buttons */
         .btn{padding:10px 24px;border:2px solid rgba(0,191,255,0.4);background:rgba(255,255,255,0.05);color:#fff;border-radius:30px;cursor:pointer;font-size:15px;font-weight:600;transition:all .3s ease;backdrop-filter:blur(8px);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
         .btn:hover{background:#00bfff;border-color:#00bfff;color:#010612;box-shadow:0 0 30px rgba(0,191,255,0.3);transform:translateY(-2px)}
         .btn-warning{border-color:rgba(255,165,0,0.4)}.btn-warning:hover{background:#ff9900;border-color:#ff9900;color:#010612}
-        .btn-share{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.1);padding:6px 14px;font-size:13px}
-        .btn-share:hover{background:rgba(255,255,255,0.1)}
         
-        /* Hero Video Section */
-        .hero-video{background:rgba(255,255,255,0.03);border:1px solid rgba(0,191,255,0.15);border-radius:24px;padding:25px;margin-bottom:40px;backdrop-filter:blur(10px);transition:all .3s ease}
-        .hero-video:hover{border-color:rgba(0,191,255,0.3);box-shadow:0 10px 40px rgba(0,0,0,0.3)}
-        .hero-video .hero-title{color:#00d9ff;font-size:22px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-        .hero-video .hero-title .badge{background:rgba(0,191,255,0.15);color:#00d9ff;font-size:12px;padding:2px 12px;border-radius:20px;border:1px solid rgba(0,191,255,0.2)}
-        .hero-video .hero-subtitle{color:rgba(255,255,255,0.4);font-size:14px;margin-bottom:18px}
-        .hero-video .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:16px;background:rgba(0,0,0,0.3)}
-        .hero-video .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:16px;border:none}
-        .hero-video .video-caption{color:rgba(255,255,255,0.3);font-size:13px;margin-top:12px;text-align:center}
+        /* ===== LIVE STREAM ===== */
+        .live-stream{background:rgba(255,255,255,0.03);border:2px solid rgba(255,0,0,0.3);border-radius:24px;padding:20px;margin-bottom:30px;backdrop-filter:blur(10px);transition:all .3s ease;position:relative}
+        .live-stream:hover{border-color:rgba(255,0,0,0.6);box-shadow:0 0 50px rgba(255,0,0,0.1)}
+        .live-badge{position:absolute;top:-12px;right:30px;background:#ff0000;color:#fff;padding:4px 20px;border-radius:30px;font-size:14px;font-weight:700;animation:pulse 1.5s ease-in-out infinite;display:flex;align-items:center;gap:8px;box-shadow:0 0 30px rgba(255,0,0,0.4)}
+        .live-badge .dot{display:inline-block;width:10px;height:10px;background:#fff;border-radius:50%;animation:blink 1s ease-in-out infinite}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+        .live-stream .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:16px;background:rgba(0,0,0,0.5)}
+        .live-stream .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:16px;border:none}
         
-        /* Posts Grid */
+        /* Share Buttons for Live */
+        .live-share{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;justify-content:center;padding-top:15px;border-top:1px solid rgba(255,255,255,0.05)}
+        .live-share .share-label{color:rgba(255,255,255,0.4);font-size:14px;display:flex;align-items:center;gap:8px}
+        .share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:20px;text-decoration:none;color:#fff;font-size:13px;font-weight:600;transition:all .3s ease;border:none;cursor:pointer}
+        .share-btn:hover{transform:scale(1.05)}
+        .share-btn.facebook{background:#1877f2}.share-btn.facebook:hover{background:#166fe5}
+        .share-btn.twitter{background:#000}.share-btn.twitter:hover{background:#1a1a1a}
+        .share-btn.whatsapp{background:#25d366}.share-btn.whatsapp:hover{background:#20b857}
+        .share-btn.telegram{background:#0088cc}.share-btn.telegram:hover{background:#0077b3}
+        .share-btn.copy{background:rgba(255,255,255,0.1)}.share-btn.copy:hover{background:rgba(255,255,255,0.2)}
+        
+        /* Posts */
         .section-divider{display:flex;align-items:center;gap:15px;margin:30px 0 20px}
         .section-divider .line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(0,191,255,0.3),transparent)}
         .section-divider h2{color:#00d9ff;font-size:20px;white-space:nowrap}
@@ -65,13 +61,12 @@
         .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:25px;margin-top:10px}
         .post-card{background:rgba(255,255,255,0.05);border:1px solid rgba(0,191,255,0.15);border-radius:20px;overflow:hidden;backdrop-filter:blur(8px);transition:all .3s ease;cursor:pointer}
         .post-card:hover{transform:translateY(-5px);border-color:rgba(0,191,255,0.4);box-shadow:0 10px 40px rgba(0,0,0,0.4)}
-        .post-card .post-media{width:100%;height:200px;object-fit:cover;background:rgba(0,191,255,0.1)}
+        .post-card .post-thumbnail{width:100%;height:200px;object-fit:cover}
         .post-card .post-content{padding:20px}
         .post-card .post-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4}
         .post-card .post-excerpt{color:#aac8e0;font-size:15px;line-height:1.8;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
         .post-card .post-meta{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(255,255,255,0.4)}
         .post-card .post-tags{color:#00d9ff;font-size:12px}
-        .post-card .post-thumbnail{width:100%;height:200px;object-fit:cover}
         
         /* Modal */
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(15px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
@@ -79,20 +74,9 @@
         .modal-content{background:radial-gradient(circle at top,#05315c,#010612 70%);border:2px solid rgba(0,191,255,0.3);border-radius:24px;max-width:900px;width:100%;padding:40px;max-height:90vh;overflow-y:auto;position:relative}
         .modal-content .close-modal{position:sticky;top:0;float:left;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;border-radius:50%;transition:all .3s ease;display:flex;align-items:center;justify-content:center}
         .modal-content .close-modal:hover{background:#ff3333;transform:rotate(90deg)}
-        .modal-content .modal-media{width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin:15px 0}
         .modal-content .modal-title{font-size:28px;font-weight:700;margin:15px 0 10px;color:#00d9ff}
         .modal-content .modal-body{font-size:18px;line-height:2.2;color:#e8f4ff;white-space:pre-wrap}
-        
-        /* Share Buttons in Modal */
-        .share-section{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;padding:15px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
-        .share-section .share-label{color:rgba(255,255,255,0.5);font-size:14px;display:flex;align-items:center;gap:8px}
-        .share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;text-decoration:none;color:#fff;font-size:13px;font-weight:600;transition:all .3s ease;border:none;cursor:pointer}
-        .share-btn:hover{transform:scale(1.05)}
-        .share-btn.facebook{background:#1877f2}.share-btn.facebook:hover{background:#166fe5}
-        .share-btn.twitter{background:#000}.share-btn.twitter:hover{background:#1a1a1a}
-        .share-btn.whatsapp{background:#25d366}.share-btn.whatsapp:hover{background:#20b857}
-        .share-btn.telegram{background:#0088cc}.share-btn.telegram:hover{background:#0077b3}
-        .share-btn.copy{background:rgba(255,255,255,0.1)}.share-btn.copy:hover{background:rgba(255,255,255,0.2)}
+        .modal-content .modal-media{width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin:15px 0}
         
         /* Comments */
         .modal-comments{margin-top:25px;border-top:1px solid rgba(0,191,255,0.2);padding-top:20px}
@@ -105,7 +89,7 @@
         .comment-item .comment-date{font-size:12px;color:rgba(255,255,255,0.3)}
         .comment-item .comment-body{color:#e8f4ff;line-height:1.8}
         
-        /* Admin Panel */
+        /* Admin */
         .admin-panel{display:none;background:rgba(255,255,255,0.03);border:1px solid rgba(0,191,255,0.2);border-radius:20px;padding:30px;margin-bottom:30px}
         .admin-panel.active{display:block;animation:fadeIn .3s ease}
         .admin-panel h2{color:#00d9ff;margin-bottom:20px}
@@ -114,28 +98,20 @@
         .admin-panel .form-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
         .admin-panel .form-row .full{grid-column:1/-1}
         
-        /* Utility */
         .empty-state{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.3);grid-column:1/-1}
         .empty-state .empty-icon{font-size:64px;margin-bottom:20px;opacity:0.5}
         .empty-state h3{color:rgba(255,255,255,0.5);margin-bottom:10px}
         .footer{text-align:center;padding:30px 0 10px;border-top:1px solid rgba(0,191,255,0.1);margin-top:40px;color:rgba(255,255,255,0.2);font-size:14px}
         
-        /* Toast */
         .toast{position:fixed;bottom:30px;right:30px;padding:15px 30px;background:rgba(0,191,255,0.2);border:1px solid #00bfff;border-radius:12px;backdrop-filter:blur(10px);color:#fff;font-weight:500;z-index:2000;animation:slideUp .5s ease;display:none}
         .toast.show{display:block}.toast.error{border-color:#ff4444;background:rgba(255,50,50,0.2)}.toast.success{border-color:#00ff66;background:rgba(0,255,100,0.2)}
         @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
         @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
         
-        /* X Icon */
         .x-icon-small{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#fff;border-radius:50%}
         .x-icon-small svg{width:14px;height:14px;fill:#010612}
-        
-        /* Admin Secret Link */
         .admin-secret-link{position:fixed;bottom:10px;left:10px;opacity:0.03;font-size:10px;color:rgba(255,255,255,0.1);transition:all .3s ease;cursor:pointer;z-index:50;background:transparent;border:none;padding:4px 8px;border-radius:4px}
         .admin-secret-link:hover{opacity:0.5;background:rgba(255,255,255,0.05)}
-        
-        .action-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:5px}
-        .action-bar h2{color:#00d9ff;font-size:20px}
         
         .post-count{color:rgba(255,255,255,0.3);font-size:14px}
         
@@ -145,18 +121,16 @@
             .posts-grid{grid-template-columns:1fr}
             .modal-content{padding:25px}
             .modal-content .modal-title{font-size:22px}
-            .action-bar{flex-direction:column;align-items:stretch}
             .admin-panel .form-row{grid-template-columns:1fr}
-            .hero-video{padding:15px}
-            .hero-video .hero-title{font-size:18px}
+            .live-stream{padding:12px}
+            .live-badge{font-size:12px;padding:3px 14px;top:-10px;right:15px}
         }
         @media(max-width:480px){.btn{padding:8px 16px;font-size:13px}}
-        ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.05)}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00bfff,#008cff);border-radius:10px}::-webkit-scrollbar-thumb:hover{background:#00d9ff}
+        ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.05)}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00bfff,#008cff);border-radius:10px}
     </style>
 </head>
 <body>
 
-<!-- Stars Background -->
 <div id="stars"></div>
 
 <div class="container">
@@ -176,13 +150,12 @@
         </div>
     </header>
 
-    <!-- ===== HERO VIDEO SECTION ===== -->
-    <div class="hero-video">
-        <div class="hero-title">
-            🎬 فيديو مميز
-            <span class="badge">حصري</span>
+    <!-- ===== LIVE STREAM ===== -->
+    <div class="live-stream">
+        <div class="live-badge">
+            <span class="dot"></span>
+            بث مباشر
         </div>
-        <div class="hero-subtitle">شاهد أحدث الفيديوهات من قناة EPTV - محتوى تقني مميز</div>
         <div class="video-wrapper">
             <iframe 
                 src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Feptv.dz%2Fvideos%2F1542336614253892%2F&show_text=true&width=560&t=0" 
@@ -196,7 +169,14 @@
                 allowFullScreen="true">
             </iframe>
         </div>
-        <div class="video-caption">📌 فيديو من صفحة EPTV على فيسبوك - اضغط للتشغيل بملء الشاشة</div>
+        <div class="live-share">
+            <span class="share-label">📤 شارك البث المباشر:</span>
+            <a href="#" onclick="shareLive('facebook')" class="share-btn facebook">فيسبوك</a>
+            <a href="#" onclick="shareLive('twitter')" class="share-btn twitter">X</a>
+            <a href="#" onclick="shareLive('whatsapp')" class="share-btn whatsapp">واتساب</a>
+            <a href="#" onclick="shareLive('telegram')" class="share-btn telegram">تلغرام</a>
+            <button onclick="copyLiveLink()" class="share-btn copy">📋 نسخ الرابط</button>
+        </div>
     </div>
 
     <!-- Admin Panel -->
@@ -236,15 +216,11 @@
         <div id="adminPostsList" style="margin-top:20px;"></div>
     </div>
 
-    <!-- Posts Section -->
+    <!-- Posts -->
     <div class="section-divider">
         <div class="line"></div>
         <h2>📰 آخر المقالات</h2>
         <div class="line"></div>
-    </div>
-
-    <div class="action-bar">
-        <span class="post-count" id="postCount">0 مقال</span>
     </div>
 
     <div class="posts-grid" id="postsGrid"></div>
@@ -265,13 +241,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== DATA ==========
-let posts = [];
-let comments = [];
-let editingId = null;
-
 // ========== STARS ==========
-const starsContainer = document.getElementById('stars');
 for (let i = 0; i < 150; i++) {
     const star = document.createElement('div');
     star.className = 'star';
@@ -283,10 +253,14 @@ for (let i = 0; i < 150; i++) {
     star.style.animationDuration = (5 + Math.random() * 7) + 's';
     star.style.animationDelay = (Math.random() * 10) + 's';
     star.style.opacity = 0.4 + Math.random() * 0.6;
-    starsContainer.appendChild(star);
+    document.getElementById('stars').appendChild(star);
 }
 
-// ========== LOCAL STORAGE ==========
+// ========== DATA ==========
+let posts = [];
+let comments = [];
+let editingId = null;
+
 function loadData() {
     try {
         const data = localStorage.getItem('mouse_blog_data');
@@ -295,12 +269,11 @@ function loadData() {
             posts = parsed.posts || [];
             comments = parsed.comments || [];
         } else {
-            // Seed with sample posts
             posts = [
                 {
                     id: Date.now() - 100000,
                     title: '🎯 كيف تبدأ في عالم البرمجة؟',
-                    body: 'البرمجة هي مهارة العصر... ابدأ بتعلم الأساسيات ثم اختر مساراً متخصصاً.\n\nنصائح للمبتدئين:\n• ابدأ بلغة سهلة مثل Python\n• تدرب يومياً ولو 30 دقيقة\n• شارك في مشاريع مفتوحة المصدر',
+                    body: 'البرمجة هي مهارة العصر... ابدأ بتعلم الأساسيات ثم اختر مساراً متخصصاً.',
                     tags: 'برمجة, تعلم, مبتدئين',
                     thumbnail: 'https://via.placeholder.com/600x400/05315c/00d9ff?text=Programming',
                     mediaType: 'none',
@@ -311,7 +284,7 @@ function loadData() {
                 {
                     id: Date.now() - 50000,
                     title: '🤖 الذكاء الاصطناعي في 2026',
-                    body: 'شهد العام 2026 طفرة هائلة في مجال الذكاء الاصطناعي...\n\nأبرز التطورات:\n• نماذج لغوية تفهم السياق بشكل أفضل\n• أدوات توليد الفيديو بالذكاء الاصطناعي\n• تطبيقات الذكاء الاصطناعي في الطب والهندسة',
+                    body: 'شهد العام 2026 طفرة هائلة في مجال الذكاء الاصطناعي...',
                     tags: 'ذكاء اصطناعي, AI, تقنية',
                     thumbnail: 'https://via.placeholder.com/600x400/05315c/00d9ff?text=AI+2026',
                     mediaType: 'none',
@@ -324,34 +297,21 @@ function loadData() {
         }
         posts.sort((a, b) => b.id - a.id);
         renderPosts();
-        updateCount();
         renderAdminPosts();
-    } catch (error) {
-        console.error(error);
-    }
+    } catch (error) { console.error(error); }
 }
 
 function saveData() {
     try {
-        const data = { posts, comments };
-        localStorage.setItem('mouse_blog_data', JSON.stringify(data));
+        localStorage.setItem('mouse_blog_data', JSON.stringify({ posts, comments }));
         return true;
-    } catch (error) {
-        return false;
-    }
+    } catch (error) { return false; }
 }
 
-// ========== RENDER ==========
 function renderPosts() {
     const grid = document.getElementById('postsGrid');
     if (posts.length === 0) {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">📝</div>
-                <h3>لا توجد مقالات بعد</h3>
-                <p style="color:rgba(255,255,255,0.2);">تابعنا للمزيد من المحتوى</p>
-            </div>
-        `;
+        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><h3>لا توجد مقالات بعد</h3></div>`;
         return;
     }
     grid.innerHTML = posts.map((post, index) => {
@@ -389,15 +349,31 @@ function renderAdminPosts() {
     `).join('');
 }
 
-function updateCount() {
-    document.getElementById('postCount').textContent = posts.length + ' مقال';
+// ========== SHARE LIVE ==========
+function shareLive(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('🎥 بث مباشر - MOUSE AI');
+    const links = {
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
+        telegram: `https://t.me/share/url?url=${url}&text=${text}`
+    };
+    window.open(links[platform], '_blank', 'width=600,height=500');
+}
+
+function copyLiveLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('📋 تم نسخ رابط البث', 'success');
+    }).catch(() => {
+        showToast('⚠️ فشل النسخ', 'error');
+    });
 }
 
 // ========== ADMIN ==========
 function toggleAdmin() {
-    const panel = document.getElementById('adminPanel');
-    panel.classList.toggle('active');
-    if (panel.classList.contains('active')) {
+    document.getElementById('adminPanel').classList.toggle('active');
+    if (document.getElementById('adminPanel').classList.contains('active')) {
         renderAdminPosts();
     }
 }
@@ -424,7 +400,7 @@ function savePost(e) {
             showToast('✅ تم تحديث المقال', 'success');
         }
     } else {
-        const newPost = {
+        posts.unshift({
             id: Date.now(),
             title,
             body,
@@ -434,14 +410,12 @@ function savePost(e) {
             mediaUrl,
             date: new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' }),
             views: 0
-        };
-        posts.unshift(newPost);
+        });
         showToast('✅ تم إضافة المقال', 'success');
     }
     
     saveData();
     renderPosts();
-    updateCount();
     renderAdminPosts();
     clearForm();
 }
@@ -464,18 +438,16 @@ function deletePost(index) {
     posts.splice(index, 1);
     saveData();
     renderPosts();
-    updateCount();
     renderAdminPosts();
     showToast('🗑️ تم حذف المقال', 'success');
 }
 
 function deleteAllPosts() {
-    if (!confirm('⚠️ هل أنت متأكد من حذف جميع المقالات؟ هذا الإجراء لا يمكن التراجع عنه!')) return;
+    if (!confirm('⚠️ هل أنت متأكد من حذف جميع المقالات؟')) return;
     posts = [];
     comments = [];
     saveData();
     renderPosts();
-    updateCount();
     renderAdminPosts();
     showToast('🗑️ تم حذف جميع المقالات', 'error');
 }
@@ -504,9 +476,8 @@ function viewPost(index) {
                      post.mediaType === 'video' && post.mediaUrl ? `<video class="modal-media" controls autoplay><source src="${post.mediaUrl}" /></video>` : '';
     const tagsHtml = post.tags ? `<p style="color:#00d9ff;font-size:14px;">#${post.tags.split(',').map(t=>t.trim()).join(' #')}</p>` : '';
     const postComments = comments.filter(c => c.postId === post.id && !c.parentId);
-    
     const shareUrl = encodeURIComponent(window.location.href);
-    const shareText = encodeURIComponent(post.title + ' - ' + post.body.substring(0, 100));
+    const shareText = encodeURIComponent(post.title);
 
     content.innerHTML = `
         ${mediaHtml}
@@ -515,8 +486,8 @@ function viewPost(index) {
         ${tagsHtml}
         <div class="modal-body">${post.body}</div>
         
-        <div class="share-section">
-            <span class="share-label">📤 مشاركة:</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;padding:15px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);">
+            <span style="color:rgba(255,255,255,0.4);font-size:14px;display:flex;align-items:center;gap:8px;">📤 مشاركة:</span>
             <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn facebook">فيسبوك</a>
             <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn twitter">X</a>
             <a href="https://wa.me/?text=${shareText}%20${shareUrl}" target="_blank" class="share-btn whatsapp">واتساب</a>
@@ -534,7 +505,6 @@ function viewPost(index) {
                 <div class="comment-item">
                     <div class="comment-header"><span class="comment-author">${c.author}</span><span class="comment-date">${c.date}</span></div>
                     <div class="comment-body">${c.body}</div>
-                    ${comments.filter(r=>r.parentId===c.id).map(r=>`<div class="comment-reply" style="background:rgba(0,191,255,0.05);border-radius:12px;padding:12px;margin-top:10px;border-right:3px solid #00d9ff;"><span style="color:#00d9ff;font-weight:600;">${r.author}</span> <span style="color:rgba(255,255,255,0.3);font-size:12px;">رد</span><div style="margin-top:5px;">${r.body}</div><div style="font-size:12px;color:rgba(255,255,255,0.2);margin-top:5px;">${r.date}</div></div>`).join('')}
                 </div>
             `).join('')}
         </div>
@@ -547,33 +517,30 @@ function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
         showToast('📋 تم نسخ الرابط', 'success');
     }).catch(() => {
-        showToast('⚠️ فشل النسخ، حاول يدوياً', 'error');
+        showToast('⚠️ فشل النسخ', 'error');
     });
 }
 
-// ========== COMMENTS ==========
 function submitComment(index) {
     const textarea = document.getElementById('commentText');
     const body = textarea.value.trim();
     if (!body) { showToast('⚠️ الرجاء كتابة التعليق', 'error'); return; }
     const post = posts[index];
     if (!post) return;
-    const comment = { 
+    comments.push({ 
         id: Date.now(), 
         postId: post.id, 
         parentId: null, 
         author: '👤 زائر', 
         body, 
         date: new Date().toLocaleDateString('ar-SA', { year:'numeric', month:'long', day:'numeric' }) 
-    };
-    comments.push(comment);
+    });
     saveData();
     textarea.value = '';
     showToast('✅ تم إرسال التعليق', 'success');
     setTimeout(()=>viewPost(index), 500);
 }
 
-// ========== UTILITY ==========
 function refreshPosts() {
     loadData();
     showToast('🔄 تم التحديث', 'success');
@@ -595,10 +562,9 @@ function showToast(message, type = '') {
     toast.timeout = setTimeout(() => toast.classList.remove('show'), 4000);
 }
 
-// ========== INIT ==========
 loadData();
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-console.log('🚀 مدونة MOUSE AI جاهزة للنشر مع فيديو فيسبوك!');
+console.log('🚀 البث المباشر جاهز!');
 </script>
 </body>
 </html>
