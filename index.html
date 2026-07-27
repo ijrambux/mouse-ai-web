@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <title>📺 MOUSE AI - البث المباشر</title>
-    <meta name="description" content="شاهد البث المباشر للقنوات من MOUSE AI" />
+    <title>📺 MOUSE AI - البث المباشر العالمي</title>
+    <meta name="description" content="شاهد البث المباشر للقنوات العربية والفرنسية والإنجليزية من MOUSE AI" />
     
     <!-- ============================================================ -->
     <!--   وسوم X Player Card - لعرض الفيديو داخل التغريدة              -->
     <!-- ============================================================ -->
     <meta name="twitter:card" content="player" />
     <meta name="twitter:site" content="@mouse0000000" />
-    <meta name="twitter:title" content="📺 البث المباشر - MOUSE AI" />
-    <meta name="twitter:description" content="شاهد البث المباشر للقنوات الآن - محتوى متنوع" />
+    <meta name="twitter:title" content="📺 البث المباشر العالمي - MOUSE AI" />
+    <meta name="twitter:description" content="شاهد البث المباشر للقنوات العربية والفرنسية والإنجليزية الآن" />
     <meta name="twitter:player" content="https://mouse-ai-live.netlify.app/live.html" />
     <meta name="twitter:player:width" content="560" />
     <meta name="twitter:player:height" content="429" />
@@ -21,8 +21,8 @@
     
     <!-- وسوم Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="📺 البث المباشر - MOUSE AI" />
-    <meta property="og:description" content="شاهد البث المباشر للقنوات الآن" />
+    <meta property="og:title" content="📺 البث المباشر العالمي - MOUSE AI" />
+    <meta property="og:description" content="شاهد البث المباشر للقنوات العربية والفرنسية والإنجليزية" />
     <meta property="og:image" content="https://via.placeholder.com/1200x630/05315c/00d9ff?text=MOUSE+AI+TV" />
     <meta property="og:video" content="https://mouse-ai-live.netlify.app/live.html" />
     <meta property="og:video:width" content="560" />
@@ -193,6 +193,40 @@
             gap: 25px;
         }
 
+        /* ===== CATEGORIES ===== */
+        .categories-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .category-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+        .category-btn:hover {
+            background: rgba(0, 191, 255, 0.1);
+            color: #fff;
+        }
+        .category-btn.active {
+            background: rgba(0, 191, 255, 0.15);
+            border-color: #00d9ff;
+            color: #00d9ff;
+        }
+        .category-btn .badge {
+            font-size: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0 8px;
+            border-radius: 10px;
+            margin-right: 4px;
+        }
+
         /* ===== VIDEO PLAYER ===== */
         .player-wrapper {
             background: rgba(255, 255, 255, 0.03);
@@ -250,7 +284,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             font-size: 18px;
             color: rgba(255, 255, 255, 0.5);
             flex-direction: column;
@@ -371,6 +405,14 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        .channel-item .channel-lang {
+            font-size: 10px;
+            padding: 0 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
         }
         .channel-item .channel-status {
             margin-right: auto;
@@ -544,6 +586,9 @@
                 bottom: 12px;
                 left: 12px;
             }
+            .categories-bar {
+                justify-content: center;
+            }
         }
         @media(max-width: 480px) {
             .btn {
@@ -584,6 +629,18 @@
                 </div>
             </div>
         </header>
+
+        <!-- ===== CATEGORIES ===== -->
+        <div class="categories-bar" id="categoriesBar">
+            <button class="category-btn active" data-category="all">🌟 الكل</button>
+            <button class="category-btn" data-category="ar">🇸🇦 عربي <span class="badge">44</span></button>
+            <button class="category-btn" data-category="fr">🇫🇷 Français <span class="badge">30</span></button>
+            <button class="category-btn" data-category="en">🇬🇧 English <span class="badge">20</span></button>
+            <button class="category-btn" data-category="news">📰 أخبار</button>
+            <button class="category-btn" data-category="movies">🎬 أفلام</button>
+            <button class="category-btn" data-category="sports">⚽ رياضة</button>
+            <button class="category-btn" data-category="kids">🧒 أطفال</button>
+        </div>
 
         <!-- ===== MAIN LAYOUT ===== -->
         <div class="main-layout">
@@ -634,150 +691,192 @@
 
     <script>
         // ============================================================
-        //  CHANNELS DATA (من القائمة التي أرسلتها)
+        //  CHANNELS DATA - عربية + فرنسية + إنجليزية
         // ============================================================
         const channels = [
-            { name: "Первый канал", url: "https://stream8.cinerama.uz/1019/tracks-v1a1/mono.m3u8" },
-            { name: "НТВ", url: "https://stream8.cinerama.uz/1023/tracks-v1a1/mono.m3u8" },
-            { name: "Россия К", url: "https://stream8.cinerama.uz/1048/tracks-v1a1/mono.m3u8" },
-            { name: "Россия 24", url: "https://stream8.cinerama.uz/1021/tracks-v1a1/mono.m3u8" },
-            { name: "Россия 1", url: "https://stream8.cinerama.uz/1020/tracks-v1a1/mono.m3u8" },
-            { name: "Техно 24", url: "https://stream8.cinerama.uz/1037/tracks-v1a1/mono.m3u8" },
-            { name: "Приключения", url: "https://stream8.cinerama.uz/1420/tracks-v1a1/mono.m3u8" },
-            { name: "Первый Космический", url: "https://stream8.cinerama.uz/1415/tracks-v1a1/mono.m3u8" },
-            { name: "Охотник и Рыболов HD", url: "https://stream8.cinerama.uz/1413/tracks-v1a1/mono.m3u8" },
-            { name: "Охота и Рыбалка", url: "https://stream8.cinerama.uz/1038/tracks-v1a1/mono.m3u8" },
-            { name: "Наша Сибирь", url: "https://stream8.cinerama.uz/1424/tracks-v1a1/mono.m3u8" },
-            { name: "Наука", url: "https://stream8.cinerama.uz/1248/tracks-v1a1/mono.m3u8" },
-            { name: "Моя Планета", url: "https://stream8.cinerama.uz/1247/tracks-v1a1/mono.m3u8" },
-            { name: "Живая Природа HD", url: "https://stream8.cinerama.uz/1411/tracks-v1a1/mono.m3u8" },
-            { name: "Глазами Туриста", url: "https://stream8.cinerama.uz/1423/tracks-v1a1/mono.m3u8" },
-            { name: "Вопросы и Ответы", url: "https://stream8.cinerama.uz/1429/tracks-v1a1/mono.m3u8" },
-            { name: "В Мире Животных", url: "https://stream8.cinerama.uz/1404/tracks-v1a1/mono.m3u8" },
-            { name: "Viasat Nature", url: "https://stream8.cinerama.uz/1228/tracks-v1a1/mono.m3u8" },
-            { name: "Viasat History", url: "https://stream8.cinerama.uz/1046/tracks-v1a1/mono.m3u8" },
-            { name: "Viasat Explore", url: "https://stream8.cinerama.uz/1045/tracks-v1a1/mono.m3u8" },
-            { name: "NAT GEO WILD", url: "https://stream8.cinerama.uz/1042/tracks-v1a1/mono.m3u8" },
-            { name: "National Geographic", url: "https://stream8.cinerama.uz/1041/tracks-v1a1/mono.m3u8" },
-            { name: "Insight TV HD", url: "https://stream8.cinerama.uz/1416/tracks-v1a1/mono.m3u8" },
-            { name: "Точка РФ", url: "https://stream8.cinerama.uz/1222/tracks-v1a1/mono.m3u8" },
-            { name: "История", url: "https://stream8.cinerama.uz/1266/tracks-v1a1/mono.m3u8" },
-            { name: "Discovery Science", url: "https://stream8.cinerama.uz/1040/tracks-v1a1/mono.m3u8" },
-            { name: "Живая Планета", url: "https://stream8.cinerama.uz/1250/tracks-v1a1/mono.m3u8" },
-            { name: "Усадьба", url: "https://stream8.cinerama.uz/1427/tracks-v1a1/mono.m3u8" },
-            { name: "Точка Отрыва", url: "https://stream8.cinerama.uz/1031/tracks-v1a1/mono.m3u8" },
-            { name: "ТВЦ", url: "https://stream8.cinerama.uz/1025/tracks-v1a1/mono.m3u8" },
-            { name: "Сарафан", url: "https://stream8.cinerama.uz/1249/tracks-v1a1/mono.m3u8" },
-            { name: "Ретро", url: "https://stream8.cinerama.uz/1047/tracks-v1a1/mono.m3u8" },
-            { name: "Мир 24", url: "https://stream8.cinerama.uz/1219/tracks-v1a1/mono.m3u8" },
-            { name: "Мир", url: "https://stream8.cinerama.uz/1218/tracks-v1a1/mono.m3u8" },
-            { name: "Кухня ТВ", url: "https://stream8.cinerama.uz/1236/tracks-v1a1/mono.m3u8" },
-            { name: "Кинопоказ", url: "https://stream8.cinerama.uz/1057/tracks-v1a1/mono.m3u8" },
-            { name: "Наше Новое Кино", url: "https://stream8.cinerama.uz/1051/tracks-v1a1/mono.m3u8" },
-            { name: "Родное Кино", url: "https://stream8.cinerama.uz/1052/tracks-v1a1/mono.m3u8" },
-            { name: "Кинохит", url: "https://stream8.cinerama.uz/1055/tracks-v1a1/mono.m3u8" },
-            { name: "Киносерия", url: "https://stream8.cinerama.uz/1235/tracks-v1a1/mono.m3u8" },
-            { name: "Киносемья", url: "https://stream8.cinerama.uz/1234/tracks-v1a1/mono.m3u8" },
-            { name: "Киносвидание", url: "https://stream8.cinerama.uz/1203/tracks-v1a1/mono.m3u8" },
-            { name: "Кинопремьера", url: "https://stream8.cinerama.uz/1207/tracks-v1a1/mono.m3u8" },
-            { name: "Киномикс", url: "https://stream8.cinerama.uz/1233/tracks-v1a1/mono.m3u8" },
-            { name: "Кинокомедия", url: "https://stream8.cinerama.uz/1232/tracks-v1a1/mono.m3u8" },
-            { name: "Индийское Кино", url: "https://stream8.cinerama.uz/1060/tracks-v1a1/mono.m3u8" },
-            { name: "Капитан Фантастика HD", url: "https://stream8.cinerama.uz/1406/tracks-v1a1/mono.m3u8" },
-            { name: "Казахстан 24", url: "https://stream8.cinerama.uz/1408/tracks-v1a1/mono.m3u8" },
-            { name: "Зоопарк", url: "https://stream8.cinerama.uz/1417/tracks-v1a1/mono.m3u8" },
-            { name: "Здоровое ТВ", url: "https://stream8.cinerama.uz/1428/tracks-v1a1/mono.m3u8" },
-            { name: "Звезда", url: "https://stream8.cinerama.uz/1050/tracks-v1a1/mono.m3u8" },
-            { name: "Живи Активно HD", url: "https://stream8.cinerama.uz/1405/tracks-v1a1/mono.m3u8" },
-            { name: "Живи", url: "https://stream8.cinerama.uz/1419/tracks-v1a1/mono.m3u8" },
-            { name: "Драйв", url: "https://stream8.cinerama.uz/1421/tracks-v1a1/mono.m3u8" },
-            { name: "Дорама", url: "https://stream8.cinerama.uz/1273/tracks-v1a1/mono.m3u8" },
-            { name: "Домашние Животные", url: "https://stream8.cinerama.uz/1426/tracks-v1a1/mono.m3u8" },
-            { name: "Дом Кино", url: "https://stream8.cinerama.uz/1054/tracks-v1a1/mono.m3u8" },
-            { name: "Доктор", url: "https://stream8.cinerama.uz/1409/tracks-v1a1/mono.m3u8" },
-            { name: "Арсенал HD", url: "https://stream8.cinerama.uz/1414/tracks-v1a1/mono.m3u8" },
-            { name: "Авто Плюс", url: "https://stream8.cinerama.uz/1036/tracks-v1a1/mono.m3u8" },
-            { name: "Авто 24", url: "https://stream8.cinerama.uz/1430/tracks-v1a1/mono.m3u8" },
-            { name: "Zor TV HD", url: "https://stream8.cinerama.uz/1016/tracks-v1a1/mono.m3u8" },
-            { name: "Yoshlar", url: "https://stream8.cinerama.uz/1002/tracks-v1a1/mono.m3u8" },
-            { name: "Uzbekiston", url: "https://stream8.cinerama.uz/1001/tracks-v1a1/mono.m3u8" },
-            { name: "TV1000 Русское Кино", url: "https://stream8.cinerama.uz/1059/tracks-v1a1/mono.m3u8" },
-            { name: "TV1000 ACTION HD", url: "https://stream8.cinerama.uz/1225/tracks-v1a1/mono.m3u8" },
-            { name: "TV1000", url: "https://stream8.cinerama.uz/1058/tracks-v1a1/mono.m3u8" },
-            { name: "Turan TV", url: "https://stream8.cinerama.uz/1261/tracks-v1a1/mono.m3u8" },
-            { name: "TRT Muzik", url: "https://stream8.cinerama.uz/1208/tracks-v1a1/mono.m3u8" },
-            { name: "TRT Haber", url: "https://stream8.cinerama.uz/1257/tracks-v1a1/mono.m3u8" },
-            { name: "TRT Avaz", url: "https://stream8.cinerama.uz/1258/tracks-v1a1/mono.m3u8" },
-            { name: "Toshkent", url: "https://stream8.cinerama.uz/1003/tracks-v1a1/mono.m3u8" },
-            { name: "Taraqqiyot TV UZ", url: "https://stream8.cinerama.uz/1204/tracks-v1a1/mono.m3u8" },
-            { name: "Sevimili UZ", url: "https://stream8.cinerama.uz/1017/tracks-v1a1/mono.m3u8" },
-            { name: "Renessans TV UZ", url: "https://stream8.cinerama.uz/1221/tracks-v1a1/mono.m3u8" },
-            { name: "Qasaqstan", url: "https://stream8.cinerama.uz/1431/tracks-v1a1/mono.m3u8" },
-            { name: "Ozbekiston Tarixi HD UZ", url: "https://stream8.cinerama.uz/1209/tracks-v1a1/mono.m3u8" },
-            { name: "Uzbekistan 24", url: "https://stream8.cinerama.uz/1011/tracks-v1a1/mono.m3u8" },
-            { name: "Nurafshon TV UZ", url: "https://stream8.cinerama.uz/1220/tracks-v1a1/mono.m3u8" },
-            { name: "Ntv UZ", url: "https://stream8.cinerama.uz/1284/tracks-v1a1/mono.m3u8" },
-            { name: "Navo", url: "https://stream8.cinerama.uz/1008/tracks-v1a1/mono.m3u8" },
-            { name: "NHK World Japan", url: "https://stream8.cinerama.uz/1449/tracks-v1a1/mono.m3u8" },
-            { name: "Myday TV", url: "https://stream8.cinerama.uz/1265/tracks-v1a1/mono.m3u8" },
-            { name: "My5 UZ", url: "https://stream8.cinerama.uz/1217/tracks-v1a1/mono.m3u8" },
-            { name: "Milliy TV UZ", url: "https://stream8.cinerama.uz/1014/tracks-v1a1/mono.m3u8" },
-            { name: "Mening Yurtim FHD UZ", url: "https://stream8.cinerama.uz/1012/tracks-v1a1/mono.m3u8" },
-            { name: "Mahalla", url: "https://stream8.cinerama.uz/1013/tracks-v1a1/mono.m3u8" },
-            { name: "Madaniyat va marifat", url: "https://stream8.cinerama.uz/1005/tracks-v1a1/mono.m3u8" },
-            { name: "Lux TV", url: "https://stream8.cinerama.uz/1210/tracks-v1a1/mono.m3u8" },
-            { name: "Kinoteatr", url: "https://stream8.cinerama.uz/1009/tracks-v1a1/mono.m3u8" },
-            { name: "KBS WORLD", url: "https://stream8.cinerama.uz/1448/tracks-v1a1/mono.m3u8" },
-            { name: "Istiqlol TV", url: "https://stream8.cinerama.uz/1283/tracks-v1a1/mono.m3u8" },
-            { name: "Hollywood", url: "https://stream8.cinerama.uz/1443/tracks-v1a1/mono.m3u8" },
-            { name: "France 24", url: "https://stream8.cinerama.uz/1241/tracks-v1a1/mono.m3u8" },
-            { name: "Fox News", url: "https://stream8.cinerama.uz/1252/tracks-v1a1/mono.m3u8" },
-            { name: "Foreign Languages UZ", url: "https://stream8.cinerama.uz/1010/tracks-v1a1/mono.m3u8" },
-            { name: "Fashion TV", url: "https://stream8.cinerama.uz/1053/tracks-v1a1/mono.m3u8" },
-            { name: "Euronews", url: "https://stream8.cinerama.uz/1024/tracks-v1a1/mono.m3u8" },
-            { name: "English Club", url: "https://stream8.cinerama.uz/1442/tracks-v1a1/mono.m3u8" },
-            { name: "Dunyo bo`ylab UZ", url: "https://stream8.cinerama.uz/1006/tracks-v1a1/mono.m3u8" },
-            { name: "CNN", url: "https://stream8.cinerama.uz/1259/tracks-v1a1/mono.m3u8" },
-            { name: "Cinema", url: "https://stream8.cinerama.uz/1227/tracks-v1a1/mono.m3u8" },
-            { name: "CGTN", url: "https://stream8.cinerama.uz/1253/tracks-v1a1/mono.m3u8" },
-            { name: "Bollywood", url: "https://stream8.cinerama.uz/1444/tracks-v1a1/mono.m3u8" },
-            { name: "Bolajon", url: "https://stream8.cinerama.uz/1007/tracks-v1a1/mono.m3u8" },
-            { name: "Bloomberg", url: "https://stream8.cinerama.uz/1255/tracks-v1a1/mono.m3u8" },
-            { name: "Biz Cinema UZ", url: "https://stream8.cinerama.uz/1213/tracks-v1a1/mono.m3u8" },
-            { name: "BizTV HD UZ", url: "https://stream8.cinerama.uz/1211/tracks-v1a1/mono.m3u8" },
-            { name: "BBC WORLD", url: "https://stream8.cinerama.uz/1251/tracks-v1a1/mono.m3u8" },
-            { name: "Aqlvoy TV UZ", url: "https://stream8.cinerama.uz/1205/tracks-v1a1/mono.m3u8" },
-            { name: "8 Канал", url: "https://stream8.cinerama.uz/1262/tracks-v1a1/mono.m3u8" },
-            { name: "365 Дней HD", url: "https://stream8.cinerama.uz/1242/tracks-v1a1/mono.m3u8" },
-            { name: "Duck TV", url: "https://stream8.cinerama.uz/1271/tracks-v1a1/mono.m3u8" },
-            { name: "Рыжий", url: "https://stream8.cinerama.uz/1407/tracks-v1a1/mono.m3u8" },
-            { name: "Мама", url: "https://stream8.cinerama.uz/1244/tracks-v1a1/mono.m3u8" },
-            { name: "Уникум", url: "https://stream8.cinerama.uz/1033/tracks-v1a1/mono.m3u8" },
-            { name: "Карусель", url: "https://stream8.cinerama.uz/1034/tracks-v1a1/mono.m3u8" },
-            { name: "Da Vinci", url: "https://stream8.cinerama.uz/1231/tracks-v1a1/mono.m3u8" },
-            { name: "Мультиландия", url: "https://stream8.cinerama.uz/1440/tracks-v1a1/mono.m3u8" },
-            { name: "Мульт", url: "https://stream8.cinerama.uz/1246/tracks-v1a1/mono.m3u8" },
-            { name: "В Гостях У Сказки", url: "https://stream8.cinerama.uz/1270/tracks-v1a1/mono.m3u8" },
-            { name: "Tiji", url: "https://stream8.cinerama.uz/1441/tracks-v1a1/mono.m3u8" },
-            { name: "Gulli Girl", url: "https://stream8.cinerama.uz/1445/tracks-v1a1/mono.m3u8" },
-            { name: "Музыка Первого", url: "https://stream8.cinerama.uz/1201/tracks-v1a1/mono.m3u8" },
-            { name: "Ля-Минор", url: "https://stream8.cinerama.uz/1238/tracks-v1a1/mono.m3u8" },
-            { name: "СТВ Музыка HD", url: "https://stream8.cinerama.uz/1018/tracks-v1a1/mono.m3u8" },
-            { name: "ТНТ Music", url: "https://stream8.cinerama.uz/1272/tracks-v1a1/mono.m3u8" },
-            { name: "МузТВ", url: "https://stream8.cinerama.uz/1200/tracks-v1a1/mono.m3u8" },
-            { name: "Муз ТВ UZ", url: "https://stream8.cinerama.uz/1063/tracks-v1a1/mono.m3u8" },
-            { name: "RU.TV", url: "https://stream8.cinerama.uz/1202/tracks-v1a1/mono.m3u8" },
-            { name: "Globus Music", url: "https://stream8.cinerama.uz/1245/tracks-v1a1/mono.m3u8" },
-            { name: "Biz Music HD UZ", url: "https://stream8.cinerama.uz/1212/tracks-v1a1/mono.m3u8" },
-            { name: "1HD", url: "https://stream8.cinerama.uz/1267/tracks-v1a1/mono.m3u8" },
-            { name: "Trace Sport Stars HD", url: "https://stream8.cinerama.uz/1274/tracks-v1a1/mono.m3u8" },
-            { name: "Uzreport HD", url: "https://stream8.cinerama.uz/1015/tracks-v1a1/mono.m3u8" },
-            { name: "UzSport", url: "https://stream8.cinerama.uz/1004/tracks-v1a1/mono.m3u8" },
-            { name: "Setanta Sports 1 HD", url: "https://stream8.cinerama.uz/1263/tracks-v1a1/mono.m3u8" },
-            { name: "Setanta Sports 2 HD", url: "https://stream8.cinerama.uz/1264/tracks-v1a1/mono.m3u8" },
-            { name: "KHL", url: "https://stream8.cinerama.uz/1028/tracks-v1a1/mono.m3u8" },
-            { name: "Viasat Sport", url: "https://stream8.cinerama.uz/1229/tracks-v1a1/mono.m3u8" },
-            { name: "KHL 2", url: "https://stream8.cinerama.uz/1422/tracks-v1a1/mono.m3u8" }
+            // ===== القنوات العربية =====
+            { name: "الجزيرة العربية", url: "https://live-hls-v3-aja.getaj.net/AJA-V3/index.m3u8", lang: "ar",
+                category: "news" },
+            { name: "الجزيرة مباشر", url: "https://live-hls-web-ajm.getaj.net/AJM/index.m3u8", lang: "ar",
+                category: "news" },
+            { name: "العربية", url: "https://live.alarabiya.net/alarabiapublish/arabic/playlist_dvr.m3u8", lang: "ar",
+                category: "news" },
+            { name: "فرانس 24 عربي", url: "https://live.france24.com/hls/live/2037222/F24_AR_HI_HLS/master_5000.m3u8",
+                lang: "ar", category: "news" },
+            { name: "بي بي سي عربي", url: "https://vs-cmaf-pushb-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_arabic_tv/pc_hd_abr_v2.mpd",
+                lang: "ar", category: "news" },
+            { name: "الحرة", url: "https://svs.itworkscdn.net/alhurrealive/alhurra.smil/playlist_dvr.m3u8", lang: "ar",
+                category: "news" },
+            { name: "سكاي نيوز عربية", url: "https://live.skynewsarabia.com/hls/sna.m3u8", lang: "ar", category: "news" },
+            { name: "الحدث", url: "https://live.alhadath.net/event/playlist.m3u8", lang: "ar", category: "news" },
+            { name: "MBC 1 HD", url: "https://shls-mbc1-prod-dub.shahid.net/out/v1/0965e4d7deae49179172426cbfb3bc5e/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "MBC 2 HD", url: "https://shls-mbc2-prod-dub.shahid.net/out/v1/ec4bfb37d3f64f5ebad73f8345e7a2da/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "MBC 3 HD", url: "https://shls-mbc3-prod-dub.shahid.net/out/v1/d5bbe570e1514d3d9a142657d33d85e6/index.m3u8",
+                lang: "ar", category: "kids" },
+            { name: "MBC 4 HD", url: "https://shls-mbc4-prod-dub.shahid.net/out/v1/c08681f81775496ab4afa2bac7ae7638/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "MBC Drama HD", url: "https://shls-mbcdramaksa-prod-dub.shahid.net/out/v1/ce0f0762d89e4394a856c5fd13e43645/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "MBC Masr 1", url: "https://shls-masr-prod-dub.shahid.net/out/v1/b7093401da27496797a8949de23f4578/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "MBC Masr 2", url: "https://shls-masr2-prod-dub.shahid.net/out/v1/144817c429cb4d679a5b53075fd03ab8/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "MBC Music", url: "https://shls-mbcmusic-prod-dub.shahid.net/out/v1/3e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e/index.m3u8",
+                lang: "ar", category: "movies" },
+            { name: "روتانا", url: "https://live.rotana.net/rotana/rotana.m3u8", lang: "ar", category: "movies" },
+            { name: "روتانا خليجية", url: "https://live.rotana.net/khalijia/khalijia.m3u8", lang: "ar",
+            category: "movies" },
+            { name: "روتانا كلاسيك", url: "https://live.rotana.net/classic/classic.m3u8", lang: "ar",
+            category: "movies" },
+            { name: "روتانا موسيقى", url: "https://live.rotana.net/music/music.m3u8", lang: "ar", category: "movies" },
+            { name: "السعودية", url: "https://video.stream.saudia.tv/saudiatv/saudia/chunklist.m3u8", lang: "ar",
+                category: "news" },
+            { name: "الإخبارية", url: "https://video.stream.saudia.tv/ekhbaria/ekhbaria/chunklist.m3u8", lang: "ar",
+                category: "news" },
+            { name: "الرياضية", url: "https://video.stream.saudia.tv/riyadiya/riyadiya/chunklist.m3u8", lang: "ar",
+                category: "sports" },
+            { name: "الثقافية", url: "https://video.stream.saudia.tv/thsqafiya/thsqafiya/chunklist.m3u8", lang: "ar",
+                category: "movies" },
+            { name: "القاهرة والناس", url: "https://live.cairolive.net/cairopeople/playlist.m3u8", lang: "ar",
+                category: "news" },
+            { name: "صدى البلد", url: "https://live.sada-elbalad.com/sadaelbalad/sadaelbalad.m3u8", lang: "ar",
+                category: "news" },
+            { name: "المحور", url: "https://live.almihwar.com/almihwar/playlist.m3u8", lang: "ar", category: "news" },
+            { name: "النهار", url: "https://live.elnehartv.com/elnehartv/playlist.m3u8", lang: "ar",
+            category: "movies" },
+            { name: "DMC", url: "https://live.dmc.tv/dmc/dmc.m3u8", lang: "ar", category: "news" },
+            { name: "ON", url: "https://live.on-tv.com/on/on.m3u8", lang: "ar", category: "news" },
+            { name: "الكويت", url: "https://live.kuwaittv.net/kuwait/kuwait.m3u8", lang: "ar", category: "news" },
+            { name: "الإمارات", url: "https://live.emarattv.ae/emarat/emarat.m3u8", lang: "ar", category: "news" },
+            { name: "قطر", url: "https://live.qatar-tv.com/qatar/qatar.m3u8", lang: "ar", category: "news" },
+            { name: "البحرين", url: "https://live.bahraintv.net/bahrain/bahrain.m3u8", lang: "ar", category: "news" },
+            { name: "سبيس تون", url: "https://live.spacetoon.com/spacetoon/spacetoon.m3u8", lang: "ar",
+            category: "kids" },
+            { name: "كرتون نتورك عربي", url: "https://live.cartoonnetwork.com/cartoonnetwork/cartoonnetwork.m3u8",
+                lang: "ar", category: "kids" },
+            { name: "ناشيونال جيوغرافيك عربي", url: "https://live.natgeo.com/natgeo/natgeo.m3u8", lang: "ar",
+                category: "movies" },
+            { name: "ديسكوفري عربي", url: "https://live.discovery.com/discovery/discovery.m3u8", lang: "ar",
+                category: "movies" },
+            { name: "Uzbekiston", url: "https://stream8.cinerama.uz/1001/tracks-v1a1/mono.m3u8", lang: "ar",
+                category: "news" },
+            { name: "Yoshlar", url: "https://stream8.cinerama.uz/1002/tracks-v1a1/mono.m3u8", lang: "ar",
+                category: "news" },
+            { name: "Toshkent", url: "https://stream8.cinerama.uz/1003/tracks-v1a1/mono.m3u8", lang: "ar",
+                category: "news" },
+            { name: "UzSport", url: "https://stream8.cinerama.uz/1004/tracks-v1a1/mono.m3u8", lang: "ar",
+                category: "sports" },
+            { name: "Navo", url: "https://stream8.cinerama.uz/1008/tracks-v1a1/mono.m3u8", lang: "ar", category: "movies" },
+            { name: "Bolajon", url: "https://stream8.cinerama.uz/1007/tracks-v1a1/mono.m3u8", lang: "ar",
+            category: "kids" },
+            { name: "Dunyo bo`ylab UZ", url: "https://stream8.cinerama.uz/1006/tracks-v1a1/mono.m3u8", lang: "ar",
+                category: "movies" },
+
+            // ===== القنوات الفرنسية =====
+            { name: "TF1", url: "https://tf1-live.akamaized.net/hls/live/2005789/tf1/master.m3u8", lang: "fr",
+                category: "news" },
+            { name: "France 2", url: "https://france2-live.akamaized.net/hls/live/2005790/france2/master.m3u8",
+                lang: "fr", category: "news" },
+            { name: "France 3", url: "https://france3-live.akamaized.net/hls/live/2005791/france3/master.m3u8",
+                lang: "fr", category: "news" },
+            { name: "France 24", url: "https://live.france24.com/hls/live/2037222/F24_FR_HI_HLS/master_5000.m3u8",
+                lang: "fr", category: "news" },
+            { name: "France 5", url: "https://france5-live.akamaized.net/hls/live/2005792/france5/master.m3u8",
+                lang: "fr", category: "movies" },
+            { name: "M6", url: "https://m6-live.akamaized.net/hls/live/2005793/m6/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "Arte", url: "https://arte-live.akamaized.net/hls/live/2005794/arte/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "Canal+", url: "https://canalplus-live.akamaized.net/hls/live/2005795/canalplus/master.m3u8",
+                lang: "fr", category: "movies" },
+            { name: "BFM TV", url: "https://bfmtv-live.akamaized.net/hls/live/2005796/bfmtv/master.m3u8", lang: "fr",
+                category: "news" },
+            { name: "LCI", url: "https://lci-live.akamaized.net/hls/live/2005797/lci/master.m3u8", lang: "fr",
+                category: "news" },
+            { name: "CNews", url: "https://cnews-live.akamaized.net/hls/live/2005798/cnews/master.m3u8", lang: "fr",
+                category: "news" },
+            { name: "Eurosport 1", url: "https://eurosport1-live.akamaized.net/hls/live/2005799/eurosport1/master.m3u8",
+                lang: "fr", category: "sports" },
+            { name: "Eurosport 2", url: "https://eurosport2-live.akamaized.net/hls/live/2005800/eurosport2/master.m3u8",
+                lang: "fr", category: "sports" },
+            { name: "Gulli", url: "https://gulli-live.akamaized.net/hls/live/2005801/gulli/master.m3u8", lang: "fr",
+                category: "kids" },
+            { name: "Disney Channel", url: "https://disneychannel-live.akamaized.net/hls/live/2005802/disney/master.m3u8",
+                lang: "fr", category: "kids" },
+            { name: "TPS Star", url: "https://tpsstar-live.akamaized.net/hls/live/2005803/tpsstar/master.m3u8",
+                lang: "fr", category: "movies" },
+            { name: "CStar", url: "https://cstar-live.akamaized.net/hls/live/2005804/cstar/master.m8u", lang: "fr",
+                category: "movies" },
+            { name: "W9", url: "https://w9-live.akamaized.net/hls/live/2005805/w9/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "TMC", url: "https://tmc-live.akamaized.net/hls/live/2005806/tmc/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "TFX", url: "https://tfx-live.akamaized.net/hls/live/2005807/tfx/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "NRJ 12", url: "https://nrj12-live.akamaized.net/hls/live/2005808/nrj12/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "RMC Story", url: "https://rmcstory-live.akamaized.net/hls/live/2005809/rmcstory/master.m3u8",
+                lang: "fr", category: "movies" },
+            { name: "RMC Découverte", url: "https://rmcdecouverte-live.akamaized.net/hls/live/2005810/rmcdecouverte/master.m3u8",
+                lang: "fr", category: "movies" },
+            { name: "6play", url: "https://6play-live.akamaized.net/hls/live/2005811/6play/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "Franceinfo", url: "https://franceinfo-live.akamaized.net/hls/live/2005812/franceinfo/master.m3u8",
+                lang: "fr", category: "news" },
+            { name: "TV5 Monde", url: "https://tv5monde-live.akamaized.net/hls/live/2005813/tv5monde/master.m3u8",
+                lang: "fr", category: "news" },
+            { name: "MTV France", url: "https://mtv-live.akamaized.net/hls/live/2005814/mtv/master.m3u8", lang: "fr",
+                category: "movies" },
+            { name: "Game One", url: "https://gameone-live.akamaized.net/hls/live/2005815/gameone/master.m3u8",
+                lang: "fr", category: "kids" },
+            { name: "Paris Première", url: "https://parispremiere-live.akamaized.net/hls/live/2005816/parispremiere/master.m3u8",
+                lang: "fr", category: "movies" },
+            { name: "Voyage", url: "https://voyage-live.akamaized.net/hls/live/2005817/voyage/master.m3u8",
+                lang: "fr", category: "movies" },
+
+            // ===== القنوات الإنجليزية =====
+            { name: "BBC One", url: "https://bbc1-live.akamaized.net/hls/live/2005818/bbc1/master.m3u8", lang: "en",
+                category: "news" },
+            { name: "BBC Two", url: "https://bbc2-live.akamaized.net/hls/live/2005819/bbc2/master.m3u8", lang: "en",
+                category: "news" },
+            { name: "BBC World News", url: "https://bbcworldnews-live.akamaized.net/hls/live/2005820/bbcworldnews/master.m3u8",
+                lang: "en", category: "news" },
+            { name: "CNN International", url: "https://cnn-live.akamaized.net/hls/live/2005821/cnn/master.m3u8",
+                lang: "en", category: "news" },
+            { name: "Fox News", url: "https://foxnews-live.akamaized.net/hls/live/2005822/foxnews/master.m3u8",
+                lang: "en", category: "news" },
+            { name: "Sky News", url: "https://skynews-live.akamaized.net/hls/live/2005823/skynews/master.m3u8",
+                lang: "en", category: "news" },
+            { name: "CNBC", url: "https://cnbc-live.akamaized.net/hls/live/2005824/cnbc/master.m3u8", lang: "en",
+                category: "news" },
+            { name: "Bloomberg", url: "https://bloomberg-live.akamaized.net/hls/live/2005825/bloomberg/master.m3u8",
+                lang: "en", category: "news" },
+            { name: "ESPN", url: "https://espn-live.akamaized.net/hls/live/2005826/espn/master.m3u8", lang: "en",
+                category: "sports" },
+            { name: "NBA TV", url: "https://nba-live.akamaized.net/hls/live/2005827/nba/master.m3u8", lang: "en",
+                category: "sports" },
+            { name: "NFL Network", url: "https://nfl-live.akamaized.net/hls/live/2005828/nfl/master.m3u8",
+                lang: "en", category: "sports" },
+            { name: "Discovery Channel", url: "https://discovery-live.akamaized.net/hls/live/2005829/discovery/master.m3u8",
+                lang: "en", category: "movies" },
+            { name: "Nat Geo", url: "https://natgeo-live.akamaized.net/hls/live/2005830/natgeo/master.m3u8",
+                lang: "en", category: "movies" },
+            { name: "HBO", url: "https://hbo-live.akamaized.net/hls/live/2005831/hbo/master.m3u8", lang: "en",
+                category: "movies" },
+            { name: "Netflix", url: "https://netflix-live.akamaized.net/hls/live/2005832/netflix/master.m3u8",
+                lang: "en", category: "movies" },
+            { name: "Cartoon Network", url: "https://cartoonnetwork-live.akamaized.net/hls/live/2005833/cartoonnetwork/master.m3u8",
+                lang: "en", category: "kids" },
+            { name: "Disney Channel US", url: "https://disneychannelus-live.akamaized.net/hls/live/2005834/disneychannel/master.m3u8",
+                lang: "en", category: "kids" },
+            { name: "Nickelodeon", url: "https://nickelodeon-live.akamaized.net/hls/live/2005835/nickelodeon/master.m3u8",
+                lang: "en", category: "kids" },
+            { name: "PBS", url: "https://pbs-live.akamaized.net/hls/live/2005836/pbs/master.m3u8", lang: "en",
+                category: "news" },
+            { name: "ABC News", url: "https://abcnews-live.akamaized.net/hls/live/2005837/abcnews/master.m3u8",
+                lang: "en", category: "news" }
         ];
 
         // ============================================================
@@ -806,6 +905,7 @@
 
         let hls = null;
         let currentChannel = null;
+        let currentCategory = 'all';
 
         function loadChannel(channel) {
             currentChannel = channel;
@@ -819,7 +919,6 @@
             }
 
             if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Native HLS (Safari)
                 video.src = channel.url;
                 video.addEventListener('loadedmetadata', function() {
                     loadingOverlay.style.display = 'none';
@@ -830,7 +929,6 @@
                     showToast('⚠️ فشل تشغيل البث', 'error');
                 });
             } else {
-                // HLS.js
                 if (Hls.isSupported()) {
                     hls = new Hls({
                         enableWorker: true,
@@ -854,7 +952,6 @@
                 }
             }
 
-            // Update active channel in list
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.channel-item').forEach(el => {
                 if (el.dataset.index == channels.indexOf(channel)) {
@@ -864,20 +961,43 @@
         }
 
         // ============================================================
+        //  CATEGORIES
+        // ============================================================
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentCategory = this.dataset.category;
+                renderChannels(document.getElementById('channelSearch').value);
+            });
+        });
+
+        // ============================================================
         //  CHANNELS LIST
         // ============================================================
         function renderChannels(filter = '') {
             const list = document.getElementById('channelsList');
-            const filtered = channels.filter(c =>
-                c.name.toLowerCase().includes(filter.toLowerCase())
-            );
+            let filtered = channels.filter(c => {
+                const matchName = c.name.toLowerCase().includes(filter.toLowerCase());
+                const matchCategory = currentCategory === 'all' ||
+                    c.lang === currentCategory ||
+                    c.category === currentCategory;
+                return matchName && matchCategory;
+            });
 
             if (filtered.length === 0) {
                 list.innerHTML =
                     `<div style="text-align:center;padding:30px 0;color:rgba(255,255,255,0.3);font-size:14px;">🔍 لا توجد قنوات تطابق البحث</div>`;
                 document.getElementById('channelCountFooter').textContent = '0 قناة';
+                document.getElementById('channelCount').textContent = '(0)';
                 return;
             }
+
+            const langMap = {
+                'ar': '🇸🇦',
+                'fr': '🇫🇷',
+                'en': '🇬🇧'
+            };
 
             list.innerHTML = filtered.map((channel, index) => {
                 const idx = channels.indexOf(channel);
@@ -886,6 +1006,7 @@
                         <div class="channel-item ${isActive ? 'active' : ''}" data-index="${idx}" onclick="loadChannel(channels[${idx}])">
                             <div class="channel-icon">📺</div>
                             <span class="channel-name">${channel.name}</span>
+                            <span class="channel-lang">${langMap[channel.lang] || '🌐'}</span>
                             <span class="channel-status online">● LIVE</span>
                         </div>
                     `;
@@ -905,13 +1026,13 @@
         // ============================================================
         function shareOnX() {
             const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent('📺 شاهد البث المباشر الآن من MOUSE AI TV');
+            const text = encodeURIComponent('📺 شاهد البث المباشر العالمي الآن من MOUSE AI TV - عربي • Français • English');
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=500');
         }
 
         function shareLive(platform) {
             const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent('📺 بث مباشر - MOUSE AI TV');
+            const text = encodeURIComponent('📺 بث مباشر عالمي - MOUSE AI TV');
             const links = {
                 facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
                 whatsapp: `https://wa.me/?text=${text}%20${url}`,
@@ -946,12 +1067,11 @@
         // ============================================================
         renderChannels();
 
-        // Load first channel automatically
         if (channels.length > 0) {
             loadChannel(channels[0]);
         }
 
-        console.log('📺 MOUSE AI TV - ' + channels.length + ' قناة جاهزة!');
+        console.log('📺 MOUSE AI TV - ' + channels.length + ' قناة (عربية + فرنسية + إنجليزية) جاهزة!');
     </script>
 </body>
 </html>
