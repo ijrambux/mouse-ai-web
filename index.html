@@ -120,6 +120,7 @@
             min-height: 68px;
         }
 
+        /* --- UPDATED GLOWING & MOVING LOGO --- */
         .nav-logo {
             display: flex;
             align-items: center;
@@ -128,26 +129,32 @@
             cursor: pointer;
         }
 
-        .nav-logo .logo-icon {
-            font-size: 28px;
-            filter: drop-shadow(0 0 20px rgba(108, 92, 231, 0.2));
-            animation: pulse-icon 2s ease-in-out infinite;
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            /* Animation for the whole logo block */
+            animation: floatGlowLogo 3s ease-in-out infinite;
         }
 
-        @keyframes pulse-icon {
-            0%,
-            100% {
-                transform: scale(1) rotate(0deg);
-            }
-            50% {
-                transform: scale(1.05) rotate(-2deg);
-            }
+        .nav-logo .logo-icon {
+            font-size: 32px;
+            display: inline-block;
+        }
+
+        .nav-logo .logo-text-group {
+            display: flex;
+            flex-direction: column;
         }
 
         .nav-logo .logo-text {
-            font-size: clamp(20px, 2.6vw, 30px);
+            font-size: clamp(22px, 2.8vw, 32px);
             font-weight: 900;
             color: var(--text-white);
+            line-height: 1;
+            letter-spacing: 0.5px;
+            /* Internal glow for text */
+            text-shadow: 0 0 10px rgba(108, 92, 231, 0.3), 0 0 20px rgba(108, 92, 231, 0.1);
         }
 
         .nav-logo .logo-text .highlight {
@@ -164,6 +171,24 @@
             font-weight: 400;
         }
 
+        /* Keyframes for Moving & Glowing Logo */
+        @keyframes floatGlowLogo {
+            0% { 
+                transform: translateY(0px); 
+                filter: drop-shadow(0 0 5px rgba(108, 92, 231, 0.2));
+            }
+            50% { 
+                transform: translateY(-6px); 
+                filter: drop-shadow(0 0 20px rgba(108, 92, 231, 0.8)) drop-shadow(0 0 40px rgba(108, 92, 231, 0.4));
+            }
+            100% { 
+                transform: translateY(0px); 
+                filter: drop-shadow(0 0 5px rgba(108, 92, 231, 0.2));
+            }
+        }
+
+        /* ============================================================ */
+        
         .nav-links {
             display: flex;
             gap: 4px;
@@ -1115,10 +1140,13 @@
     ============================================================ -->
     <nav class="top-nav">
         <a href="#" class="nav-logo" onclick="location.reload()">
-            <span class="logo-icon">🐭</span>
-            <div>
-                <span class="logo-text">MOUSE <span class="highlight">AI</span></span>
-                <span class="logo-sub">• Tech Blog •</span>
+            <!-- THE GLOWING & MOVING LOGO BLOCK -->
+            <div class="logo-wrapper">
+                <span class="logo-icon">🐭</span>
+                <div class="logo-text-group">
+                    <span class="logo-text">MOUSE <span class="highlight">AI</span></span>
+                    <span class="logo-sub">• Tech Blog •</span>
+                </div>
             </div>
         </a>
 
@@ -1243,6 +1271,8 @@
                 <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
                 <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
                 <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+                <!-- NEW X PLATFORM LINK -->
+                <a href="https://x.com/mouse0000000" target="_blank" style="color: var(--primary-light); font-weight: bold;"><i class="fab fa-x-twitter"></i> X (Twitter)</a>
             </div>
         </div>
         <div class="footer-bottom">
