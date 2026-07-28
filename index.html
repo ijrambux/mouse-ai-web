@@ -95,7 +95,7 @@
         }
 
         /* ============================================================
-           TOP NAVIGATION - الواجهة
+           TOP NAVIGATION
            ============================================================ */
         .top-nav {
             position: relative;
@@ -272,54 +272,6 @@
             border-color: var(--primary);
         }
 
-        /* ===== زر دخول لوحة التحكم - مخفي ===== */
-        .admin-hidden-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 1px solid rgba(108, 92, 231, 0.1);
-            background: rgba(10, 10, 26, 0.7);
-            backdrop-filter: blur(10px);
-            color: rgba(255, 255, 255, 0.05);
-            cursor: pointer;
-            font-size: 20px;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .admin-hidden-btn:hover {
-            color: var(--primary);
-            border-color: rgba(108, 92, 231, 0.2);
-            background: rgba(10, 10, 26, 0.9);
-        }
-
-        .admin-hidden-btn .tooltip {
-            position: absolute;
-            bottom: 55px;
-            right: 50%;
-            transform: translateX(50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: var(--transition);
-            pointer-events: none;
-            font-weight: 400;
-        }
-
-        .admin-hidden-btn:hover .tooltip {
-            opacity: 1;
-        }
-
         /* ============================================================
            SEARCH BOX
            ============================================================ */
@@ -378,7 +330,7 @@
         }
 
         /* ============================================================
-           HERO SECTION - واجهة جذابة
+           HERO SECTION
            ============================================================ */
         .hero {
             background: linear-gradient(135deg, rgba(108, 92, 231, 0.04), rgba(0, 184, 148, 0.02));
@@ -486,7 +438,7 @@
         }
 
         /* ============================================================
-           POSTS GRID - الواجهة
+           POSTS GRID
            ============================================================ */
         .posts-header {
             display: flex;
@@ -999,13 +951,6 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 18px;
             }
-            .admin-hidden-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-                bottom: 12px;
-                right: 12px;
-            }
         }
 
         @media(max-width:480px) {
@@ -1037,53 +982,6 @@
                 margin: -16px -18px 12px -18px;
             }
         }
-
-        /* ============================================================
-           LOADING SKELETON
-           ============================================================ */
-        .skeleton {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: var(--radius);
-            padding: 22px 24px;
-            border: 1px solid var(--border-color);
-            animation: pulse-skeleton 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse-skeleton {
-            0%,
-            100% {
-                opacity: 0.3;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        .skeleton .skeleton-title {
-            height: 24px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            width: 80%;
-        }
-
-        .skeleton .skeleton-text {
-            height: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            width: 100%;
-        }
-
-        .skeleton .skeleton-text:last-child {
-            width: 60%;
-        }
-
-        /* ============================================================
-           ADMIN PANEL - (مضمنة ولكن مخفية)
-           ============================================================ */
-        /* تم تضمين CSS الخاص بلوحة التحكم في الملف السابق */
-        /* تم دمج الكودين معاً في هذا الملف النهائي */
     </style>
 </head>
 <body>
@@ -1093,7 +991,7 @@
     <div class="grid-overlay"></div>
 
     <!-- ============================================================
-    TOP NAVIGATION - الواجهة
+    TOP NAVIGATION
     ============================================================ -->
     <nav class="top-nav">
         <a href="#" class="nav-logo" onclick="location.reload()">
@@ -1121,14 +1019,8 @@
         </div>
     </nav>
 
-    <!-- ===== ADMIN HIDDEN BUTTON ===== -->
-    <button class="admin-hidden-btn" onclick="openAdmin()" title="لوحة التحكم">
-        <i class="fas fa-user-cog"></i>
-        <span class="tooltip">🔐 لوحة الإدارة</span>
-    </button>
-
     <!-- ============================================================
-    MAIN CONTAINER - الواجهة
+    MAIN CONTAINER
     ============================================================ -->
     <div class="container">
 
@@ -1206,7 +1098,6 @@
             </div>
             <div class="footer-col">
                 <h4>🔗 روابط</h4>
-                <a href="#" onclick="openAdmin()">🔐 لوحة الإدارة</a>
                 <a href="#">سياسة الخصوصية</a>
                 <a href="#">شروط الاستخدام</a>
                 <a href="#">اتصل بنا</a>
@@ -1228,9 +1119,15 @@
     <div class="toast" id="toast"></div>
 
     <!-- ============================================================
-    JAVASCRIPT - الواجهة + لوحة التحكم
+    JAVASCRIPT - الواجهة + لوحة التحكم المخفية
     ============================================================ -->
     <script>
+        // ============================================================
+        //  🔐 الرابط السري للوحة التحكم (غيّره كما تشاء)
+        //  هذا هو المفتاح السري - لا يعرفه إلا أنت!
+        // ============================================================
+        const SECRET_ADMIN_KEY = 'mouse2026admin';
+
         // ============================================================
         //  DATA - التخزين المحلي
         // ============================================================
@@ -1251,7 +1148,6 @@
                     posts = parsed.posts || [];
                     comments = parsed.comments || [];
                 } else {
-                    // بيانات افتراضية للعرض
                     posts = [{
                         id: 1,
                         title: 'مرحباً بكم في MOUSE AI',
@@ -1287,7 +1183,7 @@
         }
 
         // ============================================================
-        //  RENDER POSTS - الواجهة
+        //  RENDER POSTS
         // ============================================================
         function renderPosts() {
             const grid = document.getElementById('postsGrid');
@@ -1313,7 +1209,6 @@
 
             grid.innerHTML = filtered.map(post => {
                 const commentCount = comments.filter(c => c.postId === post.id && !c.parentId).length;
-                const hasMedia = post.mediaData || post.mediaUrl;
                 const isNew = new Date(post.date) > new Date(Date.now() - 86400000 * 3);
                 const isPopular = (post.views || 0) > 100;
 
@@ -1388,7 +1283,6 @@
 
             grid.innerHTML = filtered.map(post => {
                 const commentCount = comments.filter(c => c.postId === post.id && !c.parentId).length;
-                const hasMedia = post.mediaData || post.mediaUrl;
 
                 let mediaHtml = '';
                 if (post.mediaData) {
@@ -1451,11 +1345,11 @@
         }
 
         // ============================================================
-        //  ADMIN - فتح لوحة التحكم (مخفية)
+        //  🔐 فتح لوحة التحكم - الطريقة السرية
+        //  استخدم الرابط السري: الموقع/#SECRET_ADMIN_KEY
+        //  مثال: index.html#mouse2026admin
         // ============================================================
         function openAdmin() {
-            // فتح لوحة التحكم في نافذة جديدة أو نفس الصفحة
-            // إنشاء iframe أو فتح صفحة جديدة
             const adminHTML = `
                 <!DOCTYPE html>
                 <html lang="ar" dir="rtl">
@@ -1465,7 +1359,6 @@
                     <title>🐭 MOUSE AI - لوحة الإدارة</title>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
                     <style>
-                        /* ===== تم تضمين جميع CSS الخاص بلوحة التحكم هنا ===== */
                         *{margin:0;padding:0;box-sizing:border-box}
                         body{background:radial-gradient(circle at 30% 10%,#05315c,#010612 75%);min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#fff;position:relative;overflow-x:hidden;padding:20px}
                         #stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -1570,7 +1463,6 @@
                 </head>
                 <body>
                     <div id="stars"></div>
-                    <!-- تسجيل الدخول -->
                     <div class="login-overlay" id="loginOverlay">
                         <div class="login-box">
                             <div class="login-logo">🔐</div>
@@ -1581,7 +1473,6 @@
                             <div class="login-error" id="loginError">❌ كلمة المرور غير صحيحة</div>
                         </div>
                     </div>
-                    <!-- المحتوى -->
                     <div class="container" id="adminContainer" style="display:none;">
                         <header class="header">
                             <div class="logo" onclick="location.reload()">🐭 MOUSE AI</div>
@@ -1596,7 +1487,6 @@
                             <button class="tab-btn" data-tab="editor" onclick="showTab('editor')">✍️ محرر</button>
                             <button class="tab-btn" data-tab="comments" onclick="showTab('comments')">💬 التعليقات</button>
                         </div>
-                        <!-- Dashboard -->
                         <div class="tab-content active" id="tab-dashboard">
                             <h2 style="color: #00d9ff; margin-bottom: 20px;">📊 لوحة التحكم</h2>
                             <div class="stats-grid" id="statsGrid">
@@ -1618,7 +1508,6 @@
                                 <button class="btn btn-danger" onclick="resetAllData()" style="padding:12px 30px;font-size:16px;">🗑️ حذف كل شيء والبدء من الصفر</button>
                             </div>
                         </div>
-                        <!-- Posts -->
                         <div class="tab-content" id="tab-posts">
                             <div class="action-bar">
                                 <h2>📰 جميع المقالات</h2>
@@ -1629,7 +1518,6 @@
                             </div>
                             <div id="adminPostsList"></div>
                         </div>
-                        <!-- Editor -->
                         <div class="tab-content" id="tab-editor">
                             <div class="editor-section">
                                 <h2 id="editorTitle">✍️ كتابة مقال جديد</h2>
@@ -1662,7 +1550,6 @@
                                 </form>
                             </div>
                         </div>
-                        <!-- Comments -->
                         <div class="tab-content" id="tab-comments">
                             <h2 style="color: #00d9ff; margin-bottom: 20px;">💬 إدارة التعليقات</h2>
                             <div id="adminCommentsList"></div>
@@ -1830,7 +1717,6 @@
                             renderAdminPosts();
                             updateAdminStats();
                             showTab('posts');
-                            // تحديث الواجهة الأمامية
                             window.parent.location.reload();
                         }
 
@@ -2055,10 +1941,28 @@
             if (adminWindow) {
                 adminWindow.document.write(adminHTML);
                 adminWindow.document.close();
+                showToast('🔓 تم فتح لوحة التحكم', 'success');
             } else {
-                // إذا تم منع النوافذ المنبثقة
-                showToast('⚠️ يرجى السماح بالنوافذ المنبثقة أو استخدم Ctrl+Click', 'error');
+                showToast('⚠️ يرجى السماح بالنوافذ المنبثقة', 'error');
             }
+        }
+
+        // ============================================================
+        //  🔐 التحقق من الرابط السري عند تحميل الصفحة
+        //  إذا كان الرابط يحتوي على المفتاح السري، يتم فتح لوحة التحكم
+        // ============================================================
+        function checkSecretUrl() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash === SECRET_ADMIN_KEY) {
+                // إزالة الهاش من الرابط حتى لا يراها أحد
+                window.location.hash = '';
+                // فتح لوحة التحكم
+                setTimeout(() => {
+                    openAdmin();
+                }, 300);
+                return true;
+            }
+            return false;
         }
 
         // ============================================================
@@ -2080,13 +1984,13 @@
         //  KEYBOARD SHORTCUTS
         // ============================================================
         document.addEventListener('keydown', (e) => {
-            // فتح لوحة التحكم: Ctrl+Shift+A
+            // Ctrl+Shift+A - فتح لوحة التحكم (طريقة احتياطية)
             if (e.ctrlKey && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
                 e.preventDefault();
                 openAdmin();
             }
 
-            // تحديث: Ctrl+R
+            // Ctrl+R - تحديث
             if (e.ctrlKey && (e.key === 'r' || e.key === 'R')) {
                 e.preventDefault();
                 refreshFrontend();
@@ -2096,10 +2000,14 @@
         // ============================================================
         //  INIT
         // ============================================================
-        loadData();
+        // التحقق من الرابط السري أولاً
+        if (!checkSecretUrl()) {
+            loadData();
+        }
 
         console.log('🐭 MOUSE AI - المدونة التقنية');
-        console.log('🔐 لوحة التحكم: Ctrl+Shift+A');
+        console.log('🔐 الرابط السري: الموقع/#' + SECRET_ADMIN_KEY);
+        console.log('📌 اختصارات: Ctrl+Shift+A = فتح لوحة التحكم');
         console.log('📌 اختصارات: Ctrl+R = تحديث الصفحة');
     </script>
 </body>
