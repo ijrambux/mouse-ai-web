@@ -1,14 +1,18 @@
-// api/proxy.js
 export default async function handler(req, res) {
-    // قراءة الرابط الذي يرسله المتصفح
     const { url } = req.query;
 
     if (!url) {
-        return res.status(400).send('يرجى إرسال رابط M3U في الرابط');
+        return res.status(400).send('يرجى إرسال رابط M3U');
     }
 
     try {
-        const response = await fetch(url);
+        // مهلة زمنية 20 ثانية لتجنب التوقف للأبد
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         const data = await response.text();
         
         res.setHeader('Content-Type', 'text/plain');
