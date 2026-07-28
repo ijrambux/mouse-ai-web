@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🐭 MOUSE AI - IPTV Player</title>
-    <!-- Video.js Library (Professional Video Player) -->
+    <title>🐭 MOUSE AI - IPTV Player Pro</title>
+    <!-- Video.js Library -->
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        /* ============================================================
-           ROOT VARIABLES & RESET
-           ============================================================ */
         :root {
             --primary: #6c5ce7;
-            --bg-dark: #0f111a;
-            --bg-sidebar: #181b28;
-            --bg-card: #232736;
+            --bg-dark: #0e1019;
+            --bg-sidebar: #171a26;
+            --bg-card: #1f2333;
             --border-color: #2d3348;
             --text-white: #ffffff;
             --text-light: #a0a3bd;
@@ -25,341 +22,226 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg-dark); color: var(--text-white); overflow: hidden; height: 100vh; display: flex; }
+        body { background: var(--bg-dark); color: var(--text-white); overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
 
         /* ===== BACKGROUND STARS ===== */
         #stars-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .star { position: absolute; background: #00d4ff; border-radius: 50%; box-shadow: 0 0 15px #00d4ff; animation: twinkle var(--duration) infinite alternate; }
         @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.4); } 100% { opacity: 1; transform: scale(1.2); } }
 
-        /* ============================================================
-           LAYOUT (Sidebar + Main Content)
-           ============================================================ */
-        .app-container {
-            display: flex; width: 100%; height: 100vh; position: relative; z-index: 1; backdrop-filter: blur(5px);
+        /* ===== HEADER ===== */
+        header {
+            position: relative; z-index: 10; background: rgba(14, 16, 25, 0.9); backdrop-filter: blur(10px);
+            padding: 12px 25px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 15px;
         }
-
-        /* ---- SIDEBAR ---- */
-        .sidebar {
-            width: 320px; height: 100vh; background: var(--bg-sidebar);
-            border-left: 1px solid var(--border-color); padding: 20px 15px;
-            display: flex; flex-direction: column; overflow: hidden;
-        }
-
-        /* Animated Logo */
-        .brand-logo {
-            display: flex; align-items: center; gap: 12px; text-decoration: none; margin-bottom: 30px;
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-        @keyframes logoFloat {
-            0% { transform: translateY(0px); filter: drop-shadow(0 0 5px rgba(108, 92, 231, 0.2)); }
-            50% { transform: translateY(-4px); filter: drop-shadow(0 0 25px rgba(108, 92, 231, 0.8)); }
-            100% { transform: translateY(0px); filter: drop-shadow(0 0 5px rgba(108, 92, 231, 0.2)); }
-        }
-        .brand-logo .icon { font-size: 32px; }
-        .brand-logo .text-group { display: flex; flex-direction: column; }
-        .brand-logo .text-group .main { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+        .brand-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; animation: logoFloat 3s ease-in-out infinite; }
+        @keyframes logoFloat { 0% { transform: translateY(0px); } 50% { transform: translateY(-4px); filter: drop-shadow(0 0 25px rgba(108, 92, 231, 0.8)); } 100% { transform: translateY(0px); } }
+        .brand-logo .icon { font-size: 28px; }
+        .brand-logo .text-group .main { font-size: 22px; font-weight: 900; }
         .brand-logo .text-group .main span { color: #a29bfe; }
-        .brand-logo .text-group .sub { font-size: 10px; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase; margin-top: -2px; }
+        .brand-logo .text-group .sub { font-size: 10px; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase; }
 
-        /* Sidebar Actions */
-        .sidebar-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+        /* ===== INPUT AREA ===== */
+        .input-area {
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+            background: rgba(255,255,255,0.03); padding: 5px; border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+        .input-area:hover { border-color: var(--primary); }
+        
+        .input-url { 
+            background: transparent; border: none; color: #fff; 
+            padding: 8px 15px; font-size: 14px; width: 300px; outline: none;
+        }
+        .input-url::placeholder { color: var(--text-light); }
+
+        .btn-upload-wrapper { position: relative; display: inline-block; }
+        .btn-upload-wrapper input[type="file"] {
+            position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;
+        }
         .btn-action {
-            flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
-            color: var(--text-light); padding: 10px; border-radius: 8px; text-align: center;
-            font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;
+            background: rgba(255,255,255,0.05); border: none; color: var(--text-light);
+            padding: 8px 16px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 13px; display: flex; align-items: center; gap: 6px;
         }
-        .btn-action:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .btn-action i { display: block; font-size: 18px; margin-bottom: 4px; }
+        .btn-action:hover { background: var(--primary); color: #fff; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(108, 92, 231, 0.4); }
 
-        /* Channels List */
-        .channels-header { color: var(--text-light); font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .channels-list {
-            flex: 1; overflow-y: auto; padding-left: 5px; display: flex; flex-direction: column; gap: 8px;
-        }
+        /* ===== LAYOUT (Sidebar + Player) ===== */
+        .app-container { display: flex; flex: 1; position: relative; z-index: 1; overflow: hidden; }
+        
+        .sidebar { width: 320px; height: 100%; background: var(--bg-sidebar); border-left: 1px solid var(--border-color); padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
+        .channels-count { color: var(--text-light); font-size: 13px; margin-bottom: 10px; }
+        .channels-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-left: 5px; }
         .channels-list::-webkit-scrollbar { width: 4px; }
         .channels-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
         .channel-item {
-            background: var(--bg-card); border: 1px solid transparent; padding: 12px 15px;
-            border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px;
+            background: var(--bg-card); border: 1px solid transparent; padding: 10px 12px; border-radius: 8px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px;
         }
         .channel-item:hover { border-color: var(--border-color); background: #2b3042; }
-        .channel-item.active { border-color: var(--primary); background: rgba(108, 92, 231, 0.15); box-shadow: 0 0 20px rgba(108, 92, 231, 0.1); }
-        .channel-item .number { width: 30px; height: 30px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 13px; color: var(--text-light); }
+        .channel-item.active { border-color: var(--primary); background: rgba(108, 92, 231, 0.15); }
+        .channel-item .num { width: 25px; height: 25px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 11px; color: var(--text-light); }
         .channel-item .info { flex: 1; }
         .channel-item .info .name { font-size: 14px; font-weight: 600; }
-        .channel-item .info .group { font-size: 11px; color: var(--text-light); }
-        .channel-item .play-icon { color: var(--primary); opacity: 0; transition: 0.3s; }
-        .channel-item:hover .play-icon { opacity: 1; }
+        .channel-item .info .group { font-size: 10px; color: var(--text-light); }
 
-        /* ---- MAIN PLAYER AREA ---- */
-        .main-player {
-            flex: 1; height: 100vh; background: #000; position: relative;
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
+        .main-player { flex: 1; background: #000; position: relative; display: flex; justify-content: center; align-items: center; }
+        #videoPlayer { width: 100%; height: 100%; object-fit: contain; }
+        
+        .overlay-info {
+            position: absolute; bottom: 40px; left: 0; right: 0; text-align: center; pointer-events: none;
         }
+        .overlay-info .name { background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); padding: 10px 25px; border-radius: 30px; display: inline-block; font-size: 18px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1); }
 
-        #videoPlayer {
-            width: 100%; height: 100%; object-fit: contain;
-        }
-
-        .player-overlay {
-            position: absolute; bottom: 30px; left: 0; right: 0; text-align: center;
-            pointer-events: none; padding: 0 20px;
-        }
-        .player-overlay .channel-name {
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 10px 25px;
-            border-radius: 30px; display: inline-block; font-size: 18px; font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.1); pointer-events: auto;
-        }
-
-        .empty-state {
-            text-align: center; color: var(--text-light);
-        }
-        .empty-state i { font-size: 80px; margin-bottom: 20px; opacity: 0.2; }
-        .empty-state h3 { color: #fff; margin-bottom: 10px; }
-
-        /* ============================================================
-           FOOTER / SOCIAL
-           ============================================================ */
-        .sidebar-footer {
-            border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: 15px;
-            text-align: center; font-size: 12px; color: rgba(255,255,255,0.2);
-        }
-        .sidebar-footer a { color: var(--text-light); text-decoration: none; transition: 0.3s; font-size: 14px; }
-        .sidebar-footer a:hover { color: var(--primary); }
+        .empty-channels { text-align: center; padding: 40px 10px; color: var(--text-light); }
+        .empty-channels i { font-size: 50px; opacity: 0.2; margin-bottom: 15px; display: block; }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            body { overflow: auto; height: auto; }
-            .app-container { flex-direction: column-reverse; height: auto; }
-            .sidebar { width: 100%; height: 400px; border-left: none; border-top: 1px solid var(--border-color); }
+        @media (max-width: 800px) {
+            header { flex-direction: column; align-items: stretch; }
+            .input-area { border-radius: 12px; flex-direction: column; align-items: stretch; padding: 10px; }
+            .input-url { width: 100%; border-bottom: 1px solid var(--border-color); padding: 10px 5px; }
+            .btn-action { justify-content: center; }
+            .app-container { flex-direction: column-reverse; }
+            .sidebar { width: 100%; height: 250px; border-left: none; border-top: 1px solid var(--border-color); }
             .main-player { height: 300px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Stars -->
     <div id="stars-container"></div>
 
-    <!-- App Layout -->
-    <div class="app-container">
+    <header>
+        <a href="#" class="brand-logo" onclick="location.reload()">
+            <span class="icon">🐭</span>
+            <div class="text-group">
+                <span class="main">MOUSE <span>AI</span></span>
+                <span class="sub">Live TV Player</span>
+            </div>
+        </a>
         
-        <!-- Sidebar (Channels) -->
-        <div class="sidebar">
+        <div class="input-area">
+            <!-- URL Input -->
+            <input type="text" class="input-url" id="m3uUrlInput" placeholder="ضع رابط M3U هنا..." />
+            <!-- Load URL Button -->
+            <button class="btn-action btn-primary" onclick="loadFromUrl()"><i class="fas fa-link"></i> تشغيل الرابط</button>
             
-            <!-- Brand -->
-            <a href="#" class="brand-logo" onclick="location.reload()">
-                <span class="icon">🐭</span>
-                <div class="text-group">
-                    <span class="main">MOUSE <span>AI</span></span>
-                    <span class="sub">Live IPTV Player</span>
-                </div>
-            </a>
-
-            <!-- Actions -->
-            <div class="sidebar-actions">
-                <div class="btn-action" onclick="loadDefaultChannels()">
-                    <i class="fas fa-sync-alt"></i> تحديث القنوات
-                </div>
+            <!-- File Upload Button -->
+            <div class="btn-upload-wrapper">
+                <button class="btn-action"><i class="fas fa-upload"></i> رفع ملف .m3u</button>
+                <input type="file" id="fileInput" accept=".m3u,.m3u8,.txt" onchange="loadFromFile(event)" />
             </div>
+        </div>
+    </header>
 
-            <!-- Channels Header -->
-            <div class="channels-header">
-                <span>القنوات المتاحة</span>
-                <span id="channelCount">0</span>
-            </div>
-
-            <!-- Channels List -->
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="channels-count"><span id="channelCount">0</span> قناة متاحة</div>
             <div class="channels-list" id="channelsList">
-                <!-- JS will inject here -->
-                <div class="empty-state" style="padding-top:50px; text-align:center;">
+                <div class="empty-channels">
                     <i class="fas fa-satellite-dish"></i>
-                    <h3 style="color:#fff;">لا توجد قنوات</h3>
-                    <p style="color:var(--text-light); font-size:13px;">اضغط على "تحديث القنوات" لتحميل القائمة</p>
+                    <h3>أضف قنواتك الآن</h3>
+                    <p style="font-size:13px;">أدخل رابط M3U أو ارفع ملفاً من جهازك</p>
                 </div>
             </div>
-
-            <!-- Footer & Social -->
-            <div class="sidebar-footer">
-                <a href="https://x.com/mouse0000000" target="_blank"><i class="fab fa-x-twitter"></i> X (Twitter)</a>
-                <p style="margin-top:8px;">🐭 MOUSE AI 2026</p>
-            </div>
         </div>
 
-        <!-- Main Player Area -->
         <div class="main-player">
-            <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" style="width:100%; height:100%;">
-                <p class="vjs-no-js">To view this video please enable JavaScript.</p>
-            </video>
-
-            <div class="player-overlay">
-                <div class="channel-name" id="currentChannelName">📡 اختر قناة للبدء</div>
+            <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" style="width:100%; height:100%;"></video>
+            <div class="overlay-info">
+                <div class="name" id="currentChannelName">📡 اختر قناة للبث</div>
             </div>
         </div>
-
     </div>
 
     <script>
-        // ============================================================
-        // 1. GENERATE STARS BACKGROUND
-        // ============================================================
-        const starsContainer = document.getElementById('stars-container');
-        for (let i = 0; i < 200; i++) {
+        // 1. Stars Background
+        for (let i = 0; i < 150; i++) {
             const star = document.createElement('div');
             star.className = 'star';
             const size = Math.random() * 3 + 1;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
+            star.style.width = size + 'px'; star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + 'vw'; star.style.top = Math.random() * 100 + 'vh';
             star.style.setProperty('--duration', (Math.random() * 4 + 3) + 's');
             star.style.animationDelay = Math.random() * 10 + 's';
-            starsContainer.appendChild(star);
+            document.getElementById('stars-container').appendChild(star);
         }
 
-        // ============================================================
-        // 2. INIT VIDEO PLAYER (Video.js)
-        // ============================================================
+        // 2. Video Player Setup
         let player = videojs('videoPlayer', {
-            controls: true,
-            autoplay: false,
-            preload: 'auto',
-            fluid: true,
-            html5: {
-                vhs: {
-                    enableLowInitialPlaylist: true,
-                    smoothQualityChange: true,
-                }
-            }
+            controls: true, autoplay: false, preload: 'auto', fluid: true,
+            html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
-
-        // ============================================================
-        // 3. CHANNELS DATA (M3U Link)
-        // ============================================================
-        // هنا وضعت رابط تجريبي لقنوات حية يعمل بشكل ممتاز.
-        // يمكنك استبدال هذا الرابط بأي رابط M3U تريده.
-        const M3U_URL = "http://magazin2001.com/get.php?username=arn2&password=arn2&type=m3u_plus";
 
         let channels = [];
 
-        function loadDefaultChannels() {
-            document.getElementById('channelsList').innerHTML = `
-                <div style="text-align:center; padding:30px 0; color:var(--text-light);">
-                    <i class="fas fa-spinner fa-spin" style="font-size:30px; margin-bottom:15px; display:block;"></i>
-                    جاري تحميل القنوات...
-                </div>
-            `;
-            fetch(M3U_URL)
-                .then(response => response.text())
-                .then(data => {
-                    channels = parseM3U(data);
-                    renderChannels(channels);
-                })
-                .catch(error => {
-                    document.getElementById('channelsList').innerHTML = `
-                        <div style="text-align:center; padding:30px 0; color:#e74c3c;">
-                            <i class="fas fa-exclamation-triangle" style="font-size:30px; margin-bottom:15px; display:block;"></i>
-                            فشل تحميل القنوات. تأكد من الرابط أو حاول لاحقاً.
-                        </div>
-                    `;
-                    console.error(error);
-                });
-        }
-
-        // ============================================================
-        // 4. PARSE M3U DATA
-        // ============================================================
-        function parseM3U(m3uContent) {
-            const lines = m3uContent.split('\n');
+        // 3. Parser
+        function parseM3U(data) {
+            const lines = data.split('\n');
             const parsed = [];
-            let currentItem = {};
-
+            let current = {};
             lines.forEach(line => {
                 line = line.trim();
-
                 if (line.startsWith('#EXTINF:')) {
-                    // Extract name and group
-                    const match = line.match(/tvg-logo="(.*?)".*,(.*)/);
-                    const tvgName = line.split(',').pop();
-                    currentItem = {
-                        name: tvgName || "قناة غير معروفة",
-                        logo: match ? match[1] : '',
-                        group: line.includes('group-title="') ? line.split('group-title="')[1].split('"')[0] : 'أخرى',
-                    };
-                } else if (line.startsWith('http') && currentItem.name) {
-                    currentItem.url = line;
-                    parsed.push(currentItem);
-                    currentItem = {};
+                    const name = line.split(',').pop();
+                    const grp = line.includes('group-title="') ? line.split('group-title="')[1].split('"')[0] : 'أخرى';
+                    current = { name: name || 'قناة', group: grp };
+                } else if (line.startsWith('http') && current.name) {
+                    current.url = line;
+                    parsed.push(current);
+                    current = {};
                 }
             });
-
             return parsed;
         }
 
-        // ============================================================
-        // 5. RENDER CHANNELS IN SIDEBAR
-        // ============================================================
-        function renderChannels(channelList) {
+        function renderChannels(list) {
             const container = document.getElementById('channelsList');
-            document.getElementById('channelCount').textContent = channelList.length;
-
-            if (channelList.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:30px 0; color:var(--text-light);">لم يتم العثور على أي قنوات.</div>`;
-                return;
-            }
-
-            // Group them for better viewing
-            const grouped = {};
-            channelList.forEach(ch => {
-                if (!grouped[ch.group]) grouped[ch.group] = [];
-                grouped[ch.group].push(ch);
-            });
-
+            document.getElementById('channelCount').textContent = list.length;
+            if(!list.length) { container.innerHTML = `<div class="empty-channels"><i class="fas fa-satellite-dish"></i><h3>لا توجد قنوات</h3></div>`; return; }
+            
             let html = '';
-            for (const [group, items] of Object.entries(grouped)) {
-                html += `<div style="color:var(--text-light); font-size:12px; font-weight:bold; padding:15px 5px 5px 5px;">📁 ${group}</div>`;
-                items.forEach((ch, index) => {
-                    html += `
-                        <div class="channel-item" onclick="playChannel('${ch.url.replace(/'/g, "\\'")}', '${ch.name.replace(/'/g, "\\'")}')">
-                            <div class="number">${index + 1}</div>
-                            <div class="info">
-                                <div class="name">${ch.name}</div>
-                                <div class="group">${ch.group}</div>
-                            </div>
-                            <div class="play-icon"><i class="fas fa-play-circle"></i></div>
-                        </div>
-                    `;
-                });
-            }
-
+            list.forEach((ch, i) => {
+                html += `<div class="channel-item" onclick="playChannel('${ch.url.replace(/'/g, "\\'")}', '${ch.name.replace(/'/g, "\\'")}')">
+                    <div class="num">${i+1}</div>
+                    <div class="info"><div class="name">${ch.name}</div><div class="group">${ch.group}</div></div>
+                </div>`;
+            });
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // 6. PLAY CHANNEL
-        // ============================================================
         function playChannel(url, name) {
             document.getElementById('currentChannelName').innerHTML = `📺 الآن: ${name}`;
-            
-            // Change video source and play
             player.src({ type: 'application/x-mpegURL', src: url });
             player.play();
-
-            // Highlight active channel
-            const items = document.querySelectorAll('.channel-item');
-            items.forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             event.target.closest('.channel-item')?.classList.add('active');
         }
 
-        // ============================================================
-        // 7. AUTO-LOAD ON START
-        // ============================================================
-        loadDefaultChannels();
+        // 4. Load from URL
+        function loadFromUrl() {
+            const url = document.getElementById('m3uUrlInput').value.trim();
+            if(!url) { alert('يرجى إدخال رابط M3U صحيح'); return; }
+            fetch(url).then(r => r.text()).then(d => { channels = parseM3U(d); renderChannels(channels); }).catch(() => alert('فشل تحميل الرابط. تأكد من صحته.'));
+        }
 
-        console.log('🐭 MOUSE AI - IPTV Player Loaded!');
-        console.log('📡 Channels loaded from M3U link.');
+        // 5. Load from FILE
+        function loadFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                channels = parseM3U(e.target.result);
+                renderChannels(channels);
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // reset input
+        }
     </script>
 </body>
 </html>
