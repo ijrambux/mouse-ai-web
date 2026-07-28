@@ -12,7 +12,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0a0a0a; color: #fff; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
-        /* HEADER - خفيف */
+        /* HEADER */
         header { background: #141414; padding: 12px 25px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; }
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand .icon { font-size: 26px; }
@@ -24,19 +24,17 @@
         .search-area input::placeholder { color: #666; }
         .search-area i { color: #666; }
 
-        /* LAYOUT - شبكي */
+        /* LAYOUT */
         .app-container { display: flex; flex: 1; overflow: hidden; }
         
-        /* SIDEBAR - أخف بكثير */
+        /* SIDEBAR */
         .sidebar { width: 380px; background: #111; border-left: 1px solid #222; display: flex; flex-direction: column; }
         .sidebar-header { padding: 12px 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 14px; color: #aaa; }
         
-        /* قائمة القنوات مع التمرير */
         .channels-list { flex: 1; overflow-y: auto; padding: 5px 10px; }
         .channels-list::-webkit-scrollbar { width: 4px; }
         .channels-list::-webkit-scrollbar-thumb { background: #6c5ce7; border-radius: 10px; }
 
-        /* عنصر القناة - خفيف جداً */
         .channel-item {
             display: flex; align-items: center; padding: 7px 10px; border-radius: 6px;
             cursor: pointer; transition: 0.15s; margin-bottom: 3px;
@@ -97,7 +95,7 @@
             <div class="channels-list" id="channelsList">
                 <div style="padding:30px; text-align:center; color:#444;">
                     <i class="fas fa-spinner fa-spin" style="font-size:25px; margin-bottom:10px; display:block;"></i>
-                    تحميل القنوات...
+                    جاري تحميل القنوات...
                 </div>
             </div>
         </div>
@@ -128,28 +126,47 @@
             html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
 
-        // بياناتك
+        // بيانات IPTV الخاصة بك
         const M3U_URL = "http://melones.bollo.hofcepesp1.top:8080/get.php?username=ES0129178155217538&password=qfkt3nxdc5px&type=m3u_plus";
-        const PROXY_URL = "https://api.allorigins.win/raw?url="; 
+        
+        // هذا هو البروكسي الجديد (الأقوى والأسرع)
+        const PROXY_URL = "https://corsproxy.io/?"; 
 
-        let allChannels = []; // نسخة احتياطية لجميع القنوات
+        let allChannels = [];
 
         // تحميل القنوات
         async function loadChannels() {
             try {
+                // استخدام البروكسي الجديد
                 const response = await fetch(PROXY_URL + encodeURIComponent(M3U_URL));
+                
+                if (!response.ok) {
+                    throw new Error('فشل الاتصال');
+                }
+                
                 const data = await response.text();
                 
+                // في حال السيرفر أرسل صفحة HTML بدلاً من M3U (حماية)
+                if (data.trim().startsWith('<!DOCTYPE html>')) {
+                    throw new Error('السيرفر يرفض الاتصال. قد يكون الرابط غير صحيح.');
+                }
+
                 allChannels = parseM3U(data);
                 if(allChannels.length > 0){
-                    // ترتيب القنوات أبجدياً وتجميعها تلقائياً
                     allChannels.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
                     renderChannels(allChannels);
                 } else {
-                    document.getElementById('channelsList').innerHTML = '<div style="padding:30px; text-align:center; color:#666;">لا توجد قنوات.</div>';
+                    document.getElementById('channelsList').innerHTML = '<div style="padding:30px; text-align:center; color:#666;">لا توجد قنوات متاحة.</div>';
                 }
             } catch (error) {
-                document.getElementById('channelsList').innerHTML = '<div style="padding:30px; text-align:center; color:#c00;">خطأ في الاتصال.</div>';
+                console.error(error);
+                document.getElementById('channelsList').innerHTML = `
+                    <div style="padding:30px; text-align:center; color:#c00;">
+                        <i class="fas fa-exclamation-triangle" style="font-size:30px; display:block; margin-bottom:10px;"></i>
+                        خطأ في الاتصال بالسيرفر.<br>
+                        <span style="font-size:13px; color:#666;">السبب: ${error.message}</span>
+                    </div>
+                `;
             }
         }
 
@@ -176,48 +193,31 @@
             return channels;
         }
 
-        // دالة عرض القنوات وتجميعها حسب الحروف الأبجدية (لترتيب أفضل)
+        // عرض القنوات
         function renderChannels(channels) {
             const listContainer = document.getElementById('channelsList');
             document.getElementById('channelCount').textContent = channels.length;
             listContainer.innerHTML = '';
 
-            // تجميع حسب الحرف الأول لتسهيل البحث
-            const grouped = {};
-            channels.forEach(ch => {
-                const firstLetter = ch.name.charAt(0).toUpperCase();
-                if (!grouped[firstLetter]) grouped[firstLetter] = [];
-                grouped[firstLetter].push(ch);
+            channels.forEach((ch, index) => {
+                const item = document.createElement('div');
+                item.className = 'channel-item';
+                item.setAttribute('data-name', ch.name.toLowerCase());
+                item.setAttribute('onclick', `playChannel('${ch.url.replace(/'/g, "\\'")}', '${ch.name.replace(/'/g, "\\'")}', '${ch.logo.replace(/'/g, "\\'")}')`);
+                
+                const safeLogo = ch.logo ? ch.logo : '';
+                item.innerHTML = `
+                    <div class="num">${index + 1}</div>
+                    <div class="logo">
+                        ${safeLogo ? `<img src="${safeLogo}" onerror="this.style.display='none'; this.parentElement.innerHTML+='<i class=\\'fas fa-tv fallback\\'></i>';" />` : `<i class="fas fa-tv fallback"></i>`}
+                    </div>
+                    <div class="name">${ch.name}</div>
+                `;
+                listContainer.appendChild(item);
             });
-
-            // عرض المجموعات
-            for (const [letter, items] of Object.entries(grouped)) {
-                // إضافة عنوان المجموعة
-                const groupHeader = document.createElement('div');
-                groupHeader.style.cssText = "color:#555; font-size:12px; font-weight:bold; padding:10px 5px 5px 5px; border-top:1px solid #1a1a1a; margin-top:5px;";
-                groupHeader.textContent = letter;
-                listContainer.appendChild(groupHeader);
-
-                items.forEach((ch, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'channel-item';
-                    item.setAttribute('data-name', ch.name.toLowerCase());
-                    item.setAttribute('onclick', `playChannel('${ch.url.replace(/'/g, "\\'")}', '${ch.name.replace(/'/g, "\\'")}', '${ch.logo.replace(/'/g, "\\'")}')`);
-                    
-                    const safeLogo = ch.logo ? ch.logo : '';
-                    item.innerHTML = `
-                        <div class="num">${index + 1}</div>
-                        <div class="logo">
-                            ${safeLogo ? `<img src="${safeLogo}" onerror="this.style.display='none'; this.parentElement.innerHTML+='<i class=\\'fas fa-tv fallback\\'></i>';" />` : `<i class="fas fa-tv fallback"></i>`}
-                        </div>
-                        <div class="name">${ch.name}</div>
-                    `;
-                    listContainer.appendChild(item);
-                });
-            }
         }
 
-        // دالة البحث الفوري (مهم جداً)
+        // بحث فوري
         function filterChannels() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const items = document.querySelectorAll('.channel-item');
@@ -243,7 +243,6 @@
             
             document.getElementById('currentChannelName').innerHTML = name;
             
-            // تحديث لوحة التفاصيل (خفيفة)
             const panel = document.getElementById('infoPanel');
             panel.innerHTML = `
                 <div style="text-align:center; width:100%;">
@@ -259,7 +258,7 @@
             event.target.closest('.channel-item')?.classList.add('active');
         }
 
-        // بدء التحميل
+        // تشغيل التحميل
         loadChannels();
     </script>
 </body>
