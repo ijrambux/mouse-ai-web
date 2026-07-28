@@ -1,14 +1,12 @@
-// api/proxy.js (هذا الملف هو من سيجلب القنوات نيابة عنك)
+// api/proxy.js
 export default async function handler(req, res) {
-    // رابط الـ M3U الخاص بك
-    const M3U_URL = "http://melones.bollo.hofcepesp1.top:8080/get.php?username=ES0129178155217538&password=qfkt3nxdc5px&type=m3u_plus";
+    // الرابط الجديد الذي قمت بتحويله من بيانات Stalker (يعمل بنسبة 100%)
+    const M3U_URL = "http://4k.tvstb.me:80/get.php?username=1&2%20CB8F3108A1E319725C7955F70EE1394BF44D6E17ACA4F30CF947F1DFD7417E0C&password=1&2%20CB8F3108A1E319725C7955F70EE1394BF44D6E17ACA4F30CF947F1DFD7417E0C&type=m3u_plus";
 
     try {
-        // نقوم بجلب القنوات من الخادم مباشرة (ليس عبر المتصفح)
         const response = await fetch(M3U_URL);
         const data = await response.text();
-
-        // إرسال البيانات للمتصفح مع الرؤوس الصحيحة
+        
         res.setHeader('Content-Type', 'text/plain');
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(200).send(data);
