@@ -1,4 +1,7 @@
-<?php include 'config.php'; $channels = getChannels(); ?>
+<?php
+include 'config.php';
+$channels = getIPTVChannels();
+?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -13,7 +16,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0d0d0d; color: #fff; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
-        /* ===== HEADER ===== */
+        /* HEADER */
         header { background: #1a1a1a; padding: 15px 30px; border-bottom: 2px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .brand { display: flex; align-items: center; gap: 15px; }
         .brand .icon { font-size: 30px; }
@@ -22,10 +25,10 @@
         .header-icons { font-size: 20px; color: #aaa; cursor: pointer; }
         .header-icons i { margin-left: 15px; }
 
-        /* ===== LAYOUT ===== */
+        /* LAYOUT */
         .app-container { display: flex; flex: 1; overflow: hidden; }
         
-        /* ===== SIDEBAR ===== */
+        /* SIDEBAR */
         .sidebar { width: 380px; background: #121212; border-left: 2px solid #222; display: flex; flex-direction: column; overflow: hidden; }
         .sidebar-header { padding: 15px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #161616; }
         .sidebar-header h3 { font-size: 16px; font-weight: 600; color: #aaa; letter-spacing: 1px; }
@@ -34,37 +37,37 @@
         .channels-list::-webkit-scrollbar { width: 5px; }
         .channels-list::-webkit-scrollbar-thumb { background: #6c5ce7; border-radius: 10px; }
 
-        /* ===== CHANNEL ITEM (Like your image) ===== */
+        /* CHANNEL ITEM */
         .channel-item {
             display: flex; align-items: center; padding: 12px 10px; border-radius: 8px;
             cursor: pointer; transition: 0.2s; margin-bottom: 8px; position: relative;
         }
         .channel-item:hover { background: #1f1f1f; }
-        .channel-item.active { background: #d90000; /* Red background like image */ }
+        .channel-item.active { background: #d90000; }
         .channel-item .num { width: 30px; font-size: 14px; color: #888; font-weight: bold; }
         .channel-item .logo { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin: 0 15px; }
         .channel-item .logo img { max-width: 100%; max-height: 100%; border-radius: 6px; }
         .channel-item .logo .fallback { width: 40px; height: 40px; background: #222; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .channel-item .name { flex: 1; font-size: 15px; font-weight: 600; color: #e0e0e0; }
+        .channel-item .name { flex: 1; font-size: 15px; font-weight: 600; color: #e0e0e0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .channel-item.active .name { color: #fff; }
         .channel-item .fav { color: #555; font-size: 18px; transition: 0.2s; }
         .channel-item .fav:hover { color: #fff; }
         .channel-item.active .fav { color: #fff; }
 
-        /* ===== MAIN PLAYER ===== */
-        .main-player { flex: 1; background: #000; display: flex; flex-direction: column; }
+        /* MAIN PLAYER */
+        .main-player { flex: 1; background: #000; display: flex; flex-direction: column; position: relative; }
         .video-wrapper { flex: 1; position: relative; background: #0a0a0a; display: flex; align-items: center; justify-content: center; }
-        #videoPlayer { width: 100%; height: 100%; object-fit: contain; }
+        #videoPlayer { width: 100%; height: 100%; }
         
         .info-overlay {
-            position: absolute; bottom: 40px; left: 40px;
+            position: absolute; bottom: 40px; left: 40px; pointer-events: none;
             background: rgba(0,0,0,0.7); padding: 15px 25px; border-radius: 10px;
             border-left: 4px solid #d90000;
         }
         .info-overlay .tag { background: #d90000; color: #fff; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 5px; }
-        .info-overlay h2 { font-size: 22px; font-weight: bold; }
+        .info-overlay h2 { font-size: 22px; font-weight: bold; margin: 0; }
 
-        /* ===== INFO PANEL (Right side in image) ===== */
+        /* RIGHT INFO PANEL */
         .info-panel {
             width: 350px; background: #151515; border-left: 1px solid #222; border-top: 1px solid #222;
             padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -73,20 +76,17 @@
         .info-panel .placeholder i { font-size: 60px; margin-bottom: 20px; }
         .info-panel .placeholder h3 { font-size: 18px; font-weight: 400; }
 
-        /* ===== RESPONSIVE ===== */
+        /* RESPONSIVE */
         @media (max-width: 1000px) { 
             .sidebar { width: 100%; height: 250px; border-top: 2px solid #222; border-left: none; }
             .app-container { flex-direction: column-reverse; }
             .main-player { height: 300px; }
             .info-panel { display: none; }
         }
-        
-        .vjs-control-bar { background: rgba(0,0,0,0.7) !important; }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
         <div class="brand">
             <span class="icon">🐭</span>
@@ -98,7 +98,6 @@
         </div>
     </header>
 
-    <!-- APP -->
     <div class="app-container">
         
         <!-- SIDEBAR -->
@@ -108,21 +107,33 @@
                 <span id="countText" style="font-size:13px; color:#555;"><?php echo count($channels); ?> قناة</span>
             </div>
             <div class="channels-list" id="channelsList">
-                <?php foreach($channels as $index => $ch): ?>
-                <div class="channel-item" onclick="playChannel('<?php echo addslashes($ch['url']); ?>', '<?php echo addslashes($ch['name']); ?>', '<?php echo addslashes($ch['logo']); ?>')">
+                <?php 
+                if (count($channels) > 0) {
+                    foreach($channels as $index => $ch): 
+                        // تنسيق آمن للبيانات لمنع الأخطاء
+                        $safeUrl = htmlspecialchars($ch['url'], ENT_QUOTES);
+                        $safeName = htmlspecialchars($ch['name'], ENT_QUOTES);
+                        $safeLogo = htmlspecialchars($ch['logo'], ENT_QUOTES);
+                ?>
+                <div class="channel-item" onclick="playChannel('<?php echo $safeUrl; ?>', '<?php echo $safeName; ?>', '<?php echo $safeLogo; ?>')">
                     <div class="num"><?php echo $index + 1; ?></div>
                     <div class="logo">
-                        <?php if(!empty($ch['logo'])): ?>
-                            <img src="<?php echo $ch['logo']; ?>" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <?php if(!empty($safeLogo)): ?>
+                            <img src="<?php echo $safeLogo; ?>" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                             <div class="fallback" style="display:none;"><i class="fas fa-tv"></i></div>
                         <?php else: ?>
                             <div class="fallback"><i class="fas fa-tv"></i></div>
                         <?php endif; ?>
                     </div>
-                    <div class="name"><?php echo $ch['name']; ?></div>
+                    <div class="name"><?php echo $safeName; ?></div>
                     <div class="fav"><i class="far fa-heart"></i></div>
                 </div>
-                <?php endforeach; ?>
+                <?php 
+                    endforeach; 
+                } else {
+                    echo '<div style="padding:20px; text-align:center; color:#666;">لا توجد قنوات متاحة حالياً. تأكد من رابط السيرفر.</div>';
+                }
+                ?>
             </div>
         </div>
 
@@ -137,7 +148,7 @@
             </div>
         </div>
 
-        <!-- RIGHT INFO PANEL (Matches your screenshot) -->
+        <!-- RIGHT INFO PANEL -->
         <div class="info-panel" id="infoPanel">
             <div class="placeholder">
                 <i class="fas fa-play-circle"></i>
@@ -148,26 +159,30 @@
     </div>
 
     <script>
-        // تشغيل الفيديو
+        // إعداد مشغل الفيديو
         const player = videojs('videoPlayer', {
-            controls: true, autoplay: true, preload: 'auto', fluid: true,
-            html5: { vhs: { enableLowInitialPlaylist: true } }
+            controls: true, 
+            autoplay: true, 
+            preload: 'auto', 
+            fluid: true,
+            html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
 
         function playChannel(url, name, logo) {
-            // تشغيل القناة
+            if(!url) return;
+            
             player.src({ type: 'application/x-mpegURL', src: url });
             player.play();
             
-            // تحديث الـ Overlay في المشغل
+            // تحديث معلومات الشاشة
             document.getElementById('currentChannelName').innerHTML = name;
             
-            // تحديث الـ Info Panel الجانبي
+            // تحديث اللوحة الجانبية
             const panel = document.getElementById('infoPanel');
             panel.innerHTML = `
                 <div style="text-align:center; width:100%;">
                     <div style="width:100px; height:100px; background:#222; border-radius:20px; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; border:2px solid #d90000;">
-                        ${logo ? `<img src="${logo}" style="max-width:80%; max-height:80%; border-radius:10px;" />` : `<i class="fas fa-tv" style="font-size:40px; color:#555;"></i>`}
+                        ${logo ? `<img src="${logo}" style="max-width:80%; max-height:80%; border-radius:10px;" onerror="this.outerHTML='<i class=\'fas fa-tv\' style=\'font-size:40px; color:#555;\'></i>'" />` : `<i class="fas fa-tv" style="font-size:40px; color:#555;"></i>`}
                     </div>
                     <span style="background:#d90000; padding:4px 12px; border-radius:4px; font-weight:bold; font-size:12px;">LIVE TV</span>
                     <h2 style="margin-top:15px; font-size:24px;">${name}</h2>
@@ -175,7 +190,7 @@
                 </div>
             `;
 
-            // تمييز القناة النشطة باللون الأحمر
+            // تمييز القناة باللون الأحمر
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             event.target.closest('.channel-item')?.classList.add('active');
         }
