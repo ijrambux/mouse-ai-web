@@ -27,14 +27,15 @@
             --accent-blue: #0984e3;
             --accent-pink: #fd79a8;
             --bg-dark: #0a0a1a;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --bg-card-hover: rgba(255, 255, 255, 0.05);
-            --border-color: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(108, 92, 231, 0.15);
-            --text-primary: #e8e8f0;
-            --text-secondary: rgba(200, 200, 220, 0.5);
-            --text-muted: rgba(200, 200, 220, 0.15);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(108, 92, 231, 0.2);
+            --text-white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.45);
+            --text-dim: rgba(255, 255, 255, 0.15);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
             --radius: 16px;
             --transition: all .3s cubic-bezier(.4, 0, .2, 1);
         }
@@ -52,7 +53,7 @@
             background: var(--bg-dark);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-primary);
+            color: var(--text-white);
             overflow-x: hidden;
         }
 
@@ -62,9 +63,9 @@
             inset: 0;
             z-index: 0;
             background:
-                radial-gradient(ellipse at 10% 20%, rgba(108, 92, 231, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 90% 80%, rgba(0, 184, 148, 0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(108, 92, 231, 0.02) 0%, transparent 70%),
+                radial-gradient(ellipse at 10% 20%, rgba(108, 92, 231, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 90% 80%, rgba(0, 184, 148, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(108, 92, 231, 0.03) 0%, transparent 70%),
                 var(--bg-dark);
             pointer-events: none;
         }
@@ -74,8 +75,8 @@
             inset: 0;
             z-index: 0;
             background-image:
-                linear-gradient(rgba(108, 92, 231, 0.012) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(108, 92, 231, 0.012) 1px, transparent 1px);
+                linear-gradient(rgba(108, 92, 231, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108, 92, 231, 0.015) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
         }
@@ -139,29 +140,22 @@
         .nav-logo .logo-text {
             font-size: clamp(20px, 2.6vw, 30px);
             font-weight: 900;
-            color: transparent;
-            background: linear-gradient(90deg, #fff, #a29bfe, var(--primary), #fff);
-            background-size: 300% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: water 6s linear infinite;
+            color: var(--text-white);
             filter: drop-shadow(0 0 20px rgba(108, 92, 231, 0.1));
+        }
+
+        .nav-logo .logo-text .highlight {
+            color: var(--primary-light);
         }
 
         .nav-logo .logo-sub {
             font-size: 9px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             letter-spacing: 2px;
             text-transform: uppercase;
             display: block;
             margin-top: -2px;
             font-weight: 400;
-        }
-
-        @keyframes water {
-            to {
-                background-position: 300% 0;
-            }
         }
 
         .nav-links {
@@ -172,7 +166,7 @@
         }
 
         .nav-links a {
-            color: var(--text-secondary);
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
@@ -185,14 +179,14 @@
         }
 
         .nav-links a:hover {
-            color: var(--text-primary);
-            background: rgba(108, 92, 231, 0.04);
+            color: var(--text-white);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .nav-links a.active {
-            color: var(--primary);
-            background: rgba(108, 92, 231, 0.06);
-            border-color: rgba(108, 92, 231, 0.08);
+            color: var(--text-white);
+            background: rgba(108, 92, 231, 0.08);
+            border-color: rgba(108, 92, 231, 0.12);
         }
 
         .nav-links a.active::after {
@@ -242,8 +236,8 @@
         .nav-btn {
             padding: 6px 14px;
             border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
             border-radius: 10px;
             cursor: pointer;
             font-size: 12px;
@@ -255,15 +249,15 @@
         }
 
         .nav-btn:hover {
-            background: rgba(108, 92, 231, 0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-color: rgba(108, 92, 231, 0.15);
-            color: var(--text-primary);
+            color: var(--text-white);
         }
 
         .nav-btn.primary {
             background: rgba(108, 92, 231, 0.08);
             border-color: rgba(108, 92, 231, 0.12);
-            color: var(--primary);
+            color: var(--primary-light);
         }
 
         .nav-btn.primary:hover {
@@ -278,7 +272,7 @@
         .search-box {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 3px 6px;
@@ -294,7 +288,7 @@
             background: transparent;
             border: none;
             padding: 5px 10px;
-            color: var(--text-primary);
+            color: var(--text-white);
             font-size: 12px;
             outline: none;
             width: 150px;
@@ -315,7 +309,7 @@
         }
 
         .search-box button:hover {
-            color: var(--primary);
+            color: var(--primary-light);
         }
 
         /* ============================================================
@@ -333,7 +327,7 @@
            HERO SECTION
            ============================================================ */
         .hero {
-            background: linear-gradient(135deg, rgba(108, 92, 231, 0.04), rgba(0, 184, 148, 0.02));
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.05), rgba(0, 184, 148, 0.03));
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 40px 35px;
@@ -355,7 +349,7 @@
             right: -30%;
             width: 60%;
             height: 200%;
-            background: radial-gradient(circle, rgba(108, 92, 231, 0.03) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.04) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -367,19 +361,16 @@
         .hero .hero-text h1 {
             font-size: clamp(28px, 4vw, 42px);
             font-weight: 800;
-            color: var(--text-primary);
+            color: var(--text-white);
             line-height: 1.2;
         }
 
         .hero .hero-text h1 .highlight {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary-light);
         }
 
         .hero .hero-text p {
-            color: var(--text-secondary);
+            color: var(--text-light);
             font-size: 16px;
             margin-top: 8px;
             max-width: 550px;
@@ -397,15 +388,15 @@
             padding: 4px 14px;
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            color: var(--text-secondary);
+            color: var(--text-light);
             transition: var(--transition);
             cursor: default;
         }
 
         .hero .hero-text .tags span.active {
             border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(108, 92, 231, 0.04);
+            color: var(--text-white);
+            background: rgba(108, 92, 231, 0.08);
         }
 
         .hero .hero-stats {
@@ -423,16 +414,13 @@
         .hero .hero-stats .stat .num {
             font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary-light);
             display: block;
         }
 
         .hero .hero-stats .stat .label {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -452,7 +440,7 @@
         .posts-header .title {
             font-size: 20px;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--text-white);
         }
 
         .posts-header .title .live-dot {
@@ -486,7 +474,7 @@
             border-radius: 20px;
             border: 1px solid var(--border-color);
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
@@ -494,14 +482,15 @@
         }
 
         .posts-header .filter-tabs button:hover {
-            color: var(--text-primary);
+            color: var(--text-white);
             border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.03);
         }
 
         .posts-header .filter-tabs button.active {
             border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(108, 92, 231, 0.04);
+            color: var(--text-white);
+            background: rgba(108, 92, 231, 0.06);
         }
 
         /* ===== POST CARDS ===== */
@@ -535,7 +524,7 @@
             border-radius: var(--radius) var(--radius) 0 0;
             overflow: hidden;
             max-height: 200px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
         }
 
         .post-card .post-media img,
@@ -573,13 +562,13 @@
         .post-card .post-title {
             font-size: 18px;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--text-white);
             margin-bottom: 8px;
             line-height: 1.4;
         }
 
         .post-card .post-excerpt {
-            color: var(--text-secondary);
+            color: var(--text-light);
             font-size: 14px;
             line-height: 1.7;
             margin-bottom: 12px;
@@ -594,7 +583,7 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
             font-size: 12px;
             color: var(--text-muted);
             flex-wrap: wrap;
@@ -610,6 +599,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            color: var(--text-muted);
         }
 
         .post-card .post-meta .tags {
@@ -654,7 +644,7 @@
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 14px;
-            color: var(--text-primary);
+            color: var(--text-white);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -662,8 +652,8 @@
 
         .sidebar-card .title .badge {
             font-size: 9px;
-            background: rgba(108, 92, 231, 0.06);
-            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
             padding: 0 10px;
             border-radius: 10px;
             font-weight: 400;
@@ -675,7 +665,7 @@
             align-items: center;
             gap: 12px;
             padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             transition: var(--transition);
             cursor: pointer;
         }
@@ -711,7 +701,7 @@
         .popular-item .info .name {
             font-size: 13px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text-white);
         }
 
         .popular-item .info .views {
@@ -723,19 +713,19 @@
         .sidebar-tag {
             display: inline-block;
             padding: 3px 12px;
-            background: rgba(108, 92, 231, 0.03);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             font-size: 10px;
-            color: var(--text-secondary);
+            color: var(--text-light);
             margin: 2px 4px 2px 0;
             transition: var(--transition);
             cursor: pointer;
         }
 
         .sidebar-tag:hover {
-            background: rgba(108, 92, 231, 0.05);
-            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-white);
             border-color: var(--border-hover);
         }
 
@@ -764,7 +754,7 @@
         }
 
         .footer-col h4 {
-            color: var(--text-primary);
+            color: var(--text-white);
             font-size: 13px;
             font-weight: 700;
             margin-bottom: 12px;
@@ -772,7 +762,7 @@
 
         .footer-col p,
         .footer-col a {
-            color: var(--text-secondary);
+            color: var(--text-light);
             font-size: 12px;
             line-height: 1.8;
             text-decoration: none;
@@ -781,19 +771,18 @@
         }
 
         .footer-col a:hover {
-            color: var(--primary);
+            color: var(--primary-light);
         }
 
         .footer-col .brand {
             font-size: 20px;
             font-weight: 900;
-            color: transparent;
-            background: linear-gradient(90deg, #fff, #a29bfe, var(--primary));
-            background-size: 300% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: water 5s linear infinite;
+            color: var(--text-white);
             display: inline-block;
+        }
+
+        .footer-col .brand .highlight {
+            color: var(--primary-light);
         }
 
         .footer-col .brand-sub {
@@ -807,7 +796,7 @@
             max-width: 1200px;
             margin: 18px auto 0;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
             text-align: center;
             color: var(--text-muted);
             font-size: 10px;
@@ -825,11 +814,11 @@
             bottom: 30px;
             right: 30px;
             padding: 12px 24px;
-            background: rgba(108, 92, 231, 0.06);
+            background: rgba(108, 92, 231, 0.08);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             backdrop-filter: blur(20px);
-            color: var(--text-primary);
+            color: var(--text-white);
             font-weight: 500;
             z-index: 2000;
             animation: slideUp .4s ease;
@@ -843,15 +832,15 @@
         }
         .toast.success {
             border-color: var(--secondary);
-            background: rgba(0, 184, 148, 0.04);
+            background: rgba(0, 184, 148, 0.06);
         }
         .toast.error {
             border-color: var(--accent-red);
-            background: rgba(225, 112, 85, 0.04);
+            background: rgba(225, 112, 85, 0.06);
         }
         .toast.info {
             border-color: var(--primary);
-            background: rgba(108, 92, 231, 0.04);
+            background: rgba(108, 92, 231, 0.06);
         }
 
         @keyframes slideUp {
@@ -881,13 +870,14 @@
         }
 
         .empty-state h3 {
-            color: var(--text-secondary);
+            color: var(--text-light);
             margin-bottom: 8px;
             font-size: 18px;
         }
 
         .empty-state p {
             font-size: 14px;
+            color: var(--text-muted);
         }
 
         /* ============================================================
@@ -982,6 +972,23 @@
                 margin: -16px -18px 12px -18px;
             }
         }
+
+        /* ============================================================
+           ADMIN HIDDEN BUTTON - مخفي تماماً
+           ============================================================ */
+        .admin-hidden-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+            border: none;
+            background: transparent;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
@@ -997,7 +1004,7 @@
         <a href="#" class="nav-logo" onclick="location.reload()">
             <span class="logo-icon">🐭</span>
             <div>
-                <span class="logo-text">MOUSE AI</span>
+                <span class="logo-text">MOUSE <span class="highlight">AI</span></span>
                 <span class="logo-sub">• مدونة تقنية •</span>
             </div>
         </a>
@@ -1018,6 +1025,9 @@
             <button class="nav-btn" onclick="refreshFrontend()"><i class="fas fa-sync-alt"></i> تحديث</button>
         </div>
     </nav>
+
+    <!-- ===== ADMIN HIDDEN BUTTON (غير مرئي) ===== -->
+    <button class="admin-hidden-btn" id="adminHiddenBtn" onclick="openAdmin()"></button>
 
     <!-- ============================================================
     MAIN CONTAINER
@@ -1078,9 +1088,9 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-col">
-                <span class="brand">🐭 MOUSE AI</span>
+                <span class="brand">🐭 MOUSE <span class="highlight">AI</span></span>
                 <div class="brand-sub">مدونة تقنية شاملة</div>
-                <p style="margin-top:10px;color:var(--text-muted);font-size:11px;">
+                <p style="margin-top:10px;color:var(--text-light);font-size:11px;">
                     نقدم لك أحدث المقالات والنصائح التقنية<br>
                     برمجة • تطبيقات • ذكاء اصطناعي • مراجعات
                 </p>
@@ -1350,6 +1360,7 @@
         //  مثال: index.html#mouse2026admin
         // ============================================================
         function openAdmin() {
+            // إخفاء أي أثر للزر
             const adminHTML = `
                 <!DOCTYPE html>
                 <html lang="ar" dir="rtl">
