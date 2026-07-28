@@ -119,7 +119,7 @@
             html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
 
-        // هذا هو الرابط الجديد الذي سيذهب إلى خادم Vercel الخاص بك
+        // Vercel API (يعمل بدون مشاكل CORS)
         const API_URL = "/api/proxy"; 
 
         let allChannels = [];
@@ -127,14 +127,11 @@
         async function loadChannels() {
             try {
                 const response = await fetch(API_URL);
-                
-                if (!response.ok) {
-                    throw new Error('فشل الاتصال بالسيرفر');
-                }
+                if (!response.ok) throw new Error('فشل الاتصال بالسيرفر');
                 
                 const data = await response.text();
-
                 allChannels = parseM3U(data);
+                
                 if(allChannels.length > 0){
                     allChannels.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
                     renderChannels(allChannels);
