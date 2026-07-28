@@ -1,7 +1,3 @@
-<?php
-include 'config.php';
-$channels = getIPTVChannels();
-?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -104,36 +100,13 @@ $channels = getIPTVChannels();
         <div class="sidebar">
             <div class="sidebar-header">
                 <h3><i class="fas fa-list" style="margin-left:10px;"></i> LIVE TV</h3>
-                <span id="countText" style="font-size:13px; color:#555;"><?php echo count($channels); ?> قناة</span>
+                <span id="countText" style="font-size:13px; color:#555;">جاري التحميل...</span>
             </div>
             <div class="channels-list" id="channelsList">
-                <?php 
-                if (count($channels) > 0) {
-                    foreach($channels as $index => $ch): 
-                        // تنسيق آمن للبيانات لمنع الأخطاء
-                        $safeUrl = htmlspecialchars($ch['url'], ENT_QUOTES);
-                        $safeName = htmlspecialchars($ch['name'], ENT_QUOTES);
-                        $safeLogo = htmlspecialchars($ch['logo'], ENT_QUOTES);
-                ?>
-                <div class="channel-item" onclick="playChannel('<?php echo $safeUrl; ?>', '<?php echo $safeName; ?>', '<?php echo $safeLogo; ?>')">
-                    <div class="num"><?php echo $index + 1; ?></div>
-                    <div class="logo">
-                        <?php if(!empty($safeLogo)): ?>
-                            <img src="<?php echo $safeLogo; ?>" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                            <div class="fallback" style="display:none;"><i class="fas fa-tv"></i></div>
-                        <?php else: ?>
-                            <div class="fallback"><i class="fas fa-tv"></i></div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="name"><?php echo $safeName; ?></div>
-                    <div class="fav"><i class="far fa-heart"></i></div>
+                <div style="padding:20px; text-align:center; color:#666;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:30px; margin-bottom:15px; display:block;"></i>
+                    جلب القنوات من السيرفر...
                 </div>
-                <?php 
-                    endforeach; 
-                } else {
-                    echo '<div style="padding:20px; text-align:center; color:#666;">لا توجد قنوات متاحة حالياً. تأكد من رابط السيرفر.</div>';
-                }
-                ?>
             </div>
         </div>
 
@@ -161,12 +134,94 @@ $channels = getIPTVChannels();
     <script>
         // إعداد مشغل الفيديو
         const player = videojs('videoPlayer', {
-            controls: true, 
-            autoplay: true, 
-            preload: 'auto', 
-            fluid: true,
+            controls: true, autoplay: true, preload: 'auto', fluid: true,
             html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
+
+        // بياناتك الخاصة (هنا وضعت بياناتك لتعمل)
+        const M3U_URL = "http://melones.bollo.hofcepesp1.top:8080/get.php?username=ES0129178155217538&password=qfkt3nxdc5px&type=m3u_plus";
+        
+        // ------------------------------------------------------------------
+        // ملاحظة هامة جداً: Vercel لا يسمح بالاتصال المباشر بخوادم خارجية (CORS).
+        // الحل المؤقت لهذا: استخدام "CORS Proxy" مجاني لتمرير الطلب.
+        // ------------------------------------------------------------------
+        const PROXY_URL = "https://api.allorigins.win/raw?url="; 
+
+        async function loadChannels() {
+            try {
+                // جلب ملف الـ M3U عبر الـ Proxy المخصص لـ Vercel
+                const response = await fetch(PROXY_URL + encodeURIComponent(M3U_URL));
+                const data = await response.text();
+                
+                const channels = parseM3U(data);
+                if(channels.length > 0){
+                    renderChannels(channels);
+                } else {
+                    document.getElementById('channelsList').innerHTML = '<div style="padding:20px; text-align:center; color:#666;">لم يتم العثور على قنوات في هذا الرابط.</div>';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('channelsList').innerHTML = '<div style="padding:20px; text-align:center; color:#e74c3c;">فشل الاتصال بالسيرفر. تأكد من صحة البيانات.</div>';
+                document.getElementById('countText').textContent = 'خطأ في الاتصال';
+            }
+        }
+
+        function parseM3U(content) {
+            const lines = content.split('\n');
+            const channels = [];
+            let current = {};
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const parts = line.split(',');
+                    const name = parts.pop();
+                    
+                    // استخراج الشعار والمجموعة
+                    const logoMatch = line.match(/tvg-logo="(.*?)"/);
+                    const logo = logoMatch ? logoMatch[1] : '';
+                    const groupMatch = line.match(/group-title="(.*?)"/);
+                    const group = groupMatch ? groupMatch[1] : 'أخرى';
+                    
+                    current = { name: name, logo: logo, group: group };
+                } else if (line.startsWith('http') && current.name) {
+                    current.url = line;
+                    channels.push(current);
+                    current = {};
+                }
+            });
+            return channels;
+        }
+
+        function renderChannels(channels) {
+            const listContainer = document.getElementById('channelsList');
+            document.getElementById('countText').textContent = channels.length + ' قناة';
+            
+            listContainer.innerHTML = '';
+            
+            channels.forEach((ch, index) => {
+                // تنسيق آمن للبيانات
+                const safeUrl = ch.url.replace(/'/g, "\\'");
+                const safeName = ch.name.replace(/'/g, "\\'");
+                const safeLogo = ch.logo.replace(/'/g, "\\'");
+                
+                const item = document.createElement('div');
+                item.className = 'channel-item';
+                item.setAttribute('onclick', `playChannel('${safeUrl}', '${safeName}', '${safeLogo}')`);
+                
+                item.innerHTML = `
+                    <div class="num">${index + 1}</div>
+                    <div class="logo">
+                        ${safeLogo ? `<img src="${safeLogo}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />` : ''}
+                        <div class="fallback" style="${safeLogo ? 'display:none;' : ''}"><i class="fas fa-tv"></i></div>
+                    </div>
+                    <div class="name">${safeName}</div>
+                    <div class="fav"><i class="far fa-heart"></i></div>
+                `;
+                
+                listContainer.appendChild(item);
+            });
+        }
 
         function playChannel(url, name, logo) {
             if(!url) return;
@@ -174,10 +229,8 @@ $channels = getIPTVChannels();
             player.src({ type: 'application/x-mpegURL', src: url });
             player.play();
             
-            // تحديث معلومات الشاشة
             document.getElementById('currentChannelName').innerHTML = name;
             
-            // تحديث اللوحة الجانبية
             const panel = document.getElementById('infoPanel');
             panel.innerHTML = `
                 <div style="text-align:center; width:100%;">
@@ -190,10 +243,12 @@ $channels = getIPTVChannels();
                 </div>
             `;
 
-            // تمييز القناة باللون الأحمر
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             event.target.closest('.channel-item')?.classList.add('active');
         }
+
+        // تشغيل التحميل فور فتح الصفحة
+        loadChannels();
     </script>
 </body>
 </html>
