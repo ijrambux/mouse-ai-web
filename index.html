@@ -86,16 +86,16 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="بحث..." onkeyup="filterChannels()" />
             </div>
+            
+            <!-- القائمة المنسدلة بروابطك الجديدة فقط (احترافية) -->
             <select class="server-select" id="serverSelect">
-                <option value="http://trxx.in:80/get.php?username=0e9a8c10e6&password=d55e107aca3c&type=m3u_plus">TREX 1 (رئيسي)</option>
-                <option value="http://trxx.in:80/get.php?username=a13d09a0ad&password=aa0d4b0e19d4&type=m3u_plus">TREX 2</option>
-                <option value="http://line.trxdnscloud.ru:80/get.php?username=2c16beb3ae&password=b28582fcb55a&type=m3u">VPN 1</option>
-                <option value="http://line.trxdnscloud.ru:80/get.php?username=960e7194ed&password=6ad64a81c16c&type=m3u">VPN 2</option>
-                <option value="http://line.trxdnscloud.ru:80/get.php?username=Enishte&password=Rahimch&type=m3u">VPN 3</option>
-                <option value="http://line.trxdnscloud.ru:80/get.php?username=d7t6ecg0og&password=kvcvs84fl3&type=m3u">VPN 4</option>
-                <option value="http://vpn.bimtrex.eu:80/get.php?username=e593f3116a&password=1kvyqpcgsy&type=m3u">Bimtrex</option>
+                <option value="http://tv14s.xyz:8080/get.php?username=rossjohn88@hotmail.com&password=KCBKTCnWTU&type=m3u" selected>TV14S (رئيسي مضمون)</option>
+                <option value="http://51.81.106.100:25461/get.php?username=sjzumbro7&password=7407045283&type=m3u">51.81.106.100 (احتياطي 1)</option>
+                <option value="http://skytv4k.org:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus">SkyTV4K (احتياطي 2)</option>
+                <option value="http://garaveli.123tv.to:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus">Garaveli (احتياطي 3)</option>
             </select>
-            <button class="btn-load" onclick="loadChannels()"><i class="fas fa-sync-alt"></i> تحميل</button>
+
+            <button class="btn-load" onclick="loadChannels()"><i class="fas fa-sync-alt"></i> تحميل القنوات</button>
         </div>
     </header>
 
@@ -163,7 +163,7 @@
                 listContainer.innerHTML = `
                     <div style="padding:30px; text-align:center; color:#c00;">
                         <i class="fas fa-exclamation-triangle" style="font-size:30px; display:block; margin-bottom:10px;"></i>
-                        خطأ في التحميل.<br><span style="font-size:13px; color:#666;">${error.message}</span>
+                        خطأ في التحميل.<br><span style="font-size:13px; color:#666;">الرابط الحالي قد يكون معطلاً، جرب اختيار رابط آخر.</span>
                     </div>
                 `;
             }
@@ -251,7 +251,7 @@
             event.target.closest('.channel-item')?.classList.add('active');
         }
 
-        // التحميل التلقائي عند فتح الصفحة
+        // بدء التحميل التلقائي عند فتح الصفحة
         loadChannels();
     </script>
 </body>
