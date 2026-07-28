@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MOUSE AI - Smart IPTV</title>
+    <title>🐭 MOUSE AI - Smart IPTV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
@@ -12,16 +12,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0a0a0a; color: #fff; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
-        header { background: #141414; padding: 12px 25px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; }
-        .brand { display: flex; align-items: center; gap: 12px; }
+        header { background: #141414; padding: 12px 25px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .brand { display: flex; align-items: center; gap: 12px; animation: floatGlow 3s infinite; }
+        @keyframes floatGlow { 0% { transform: translateY(0); } 50% { transform: translateY(-4px); filter: drop-shadow(0 0 15px #6c5ce7); } 100% { transform: translateY(0); } }
         .brand .icon { font-size: 26px; }
         .brand .text { font-size: 22px; font-weight: 900; color: #fff; }
         .brand .text span { color: #6c5ce7; }
         
+        .controls-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .search-area { display: flex; align-items: center; background: #1f1f1f; border-radius: 25px; padding: 5px 15px; border: 1px solid #333; }
         .search-area input { background: transparent; border: none; color: #fff; padding: 6px 10px; outline: none; width: 180px; font-size: 14px; }
         .search-area input::placeholder { color: #666; }
         .search-area i { color: #666; }
+
+        .server-select { background: #1f1f1f; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 25px; font-size: 13px; outline: none; cursor: pointer; }
+        .btn-load { background: #6c5ce7; border: none; color: #fff; padding: 6px 16px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-load:hover { background: #5a4bd1; }
 
         .app-container { display: flex; flex: 1; overflow: hidden; }
         .sidebar { width: 380px; background: #111; border-left: 1px solid #222; display: flex; flex-direction: column; }
@@ -62,21 +68,34 @@
             .sidebar { width: 100%; height: 250px; border-top: 1px solid #222; border-left: none; }
             .app-container { flex-direction: column-reverse; }
             .main-player { height: 300px; }
-            .info-panel { display: none; }
-            .search-area input { width: 120px; }
+            .info-panel, .brand .text { display: none; }
+            .search-area input { width: 100px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">
+        <a href="#" class="brand" onclick="location.reload()">
             <span class="icon">🐭</span>
             <div class="text">MOUSE <span>AI</span></div>
-        </div>
-        <div class="search-area">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="بحث عن قناة..." onkeyup="filterChannels()" />
+        </a>
+
+        <div class="controls-area">
+            <div class="search-area">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="بحث..." onkeyup="filterChannels()" />
+            </div>
+            <select class="server-select" id="serverSelect">
+                <option value="http://trxx.in:80/get.php?username=0e9a8c10e6&password=d55e107aca3c&type=m3u_plus">TREX 1 (رئيسي)</option>
+                <option value="http://trxx.in:80/get.php?username=a13d09a0ad&password=aa0d4b0e19d4&type=m3u_plus">TREX 2</option>
+                <option value="http://line.trxdnscloud.ru:80/get.php?username=2c16beb3ae&password=b28582fcb55a&type=m3u">VPN 1</option>
+                <option value="http://line.trxdnscloud.ru:80/get.php?username=960e7194ed&password=6ad64a81c16c&type=m3u">VPN 2</option>
+                <option value="http://line.trxdnscloud.ru:80/get.php?username=Enishte&password=Rahimch&type=m3u">VPN 3</option>
+                <option value="http://line.trxdnscloud.ru:80/get.php?username=d7t6ecg0og&password=kvcvs84fl3&type=m3u">VPN 4</option>
+                <option value="http://vpn.bimtrex.eu:80/get.php?username=e593f3116a&password=1kvyqpcgsy&type=m3u">Bimtrex</option>
+            </select>
+            <button class="btn-load" onclick="loadChannels()"><i class="fas fa-sync-alt"></i> تحميل</button>
         </div>
     </header>
 
@@ -108,7 +127,7 @@
             <div class="empty">
                 <i class="fas fa-play-circle"></i>
                 <h3>اختر قناة</h3>
-                <p style="font-size:13px; margin-top:8px;">ستظهر التفاصيل هنا</p>
+                <p style="font-size:13px;">ستظهر التفاصيل هنا</p>
             </div>
         </div>
     </div>
@@ -119,31 +138,32 @@
             html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
 
-        // Vercel API (يعمل بدون مشاكل CORS)
-        const API_URL = "/api/proxy"; 
-
         let allChannels = [];
 
         async function loadChannels() {
+            const listContainer = document.getElementById('channelsList');
+            listContainer.innerHTML = `<div style="padding:30px; text-align:center; color:#444;"><i class="fas fa-spinner fa-spin" style="font-size:25px; margin-bottom:10px; display:block;"></i>جاري التحميل...</div>`;
+
+            const selectedUrl = document.getElementById('serverSelect').value;
+            const apiUrl = `/api/proxy?url=${encodeURIComponent(selectedUrl)}`;
+
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error('فشل الاتصال بالسيرفر');
-                
                 const data = await response.text();
+
                 allChannels = parseM3U(data);
-                
                 if(allChannels.length > 0){
                     allChannels.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
                     renderChannels(allChannels);
                 } else {
-                    document.getElementById('channelsList').innerHTML = '<div style="padding:30px; text-align:center; color:#666;">لا توجد قنوات متاحة.</div>';
+                    listContainer.innerHTML = '<div style="padding:30px; text-align:center; color:#666;">لا توجد قنوات في هذا السيرفر.</div>';
                 }
             } catch (error) {
-                document.getElementById('channelsList').innerHTML = `
+                listContainer.innerHTML = `
                     <div style="padding:30px; text-align:center; color:#c00;">
                         <i class="fas fa-exclamation-triangle" style="font-size:30px; display:block; margin-bottom:10px;"></i>
-                        خطأ في الاتصال بالسيرفر.<br>
-                        <span style="font-size:13px; color:#666;">${error.message}</span>
+                        خطأ في التحميل.<br><span style="font-size:13px; color:#666;">${error.message}</span>
                     </div>
                 `;
             }
@@ -198,7 +218,6 @@
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const items = document.querySelectorAll('.channel-item');
             let visibleCount = 0;
-
             items.forEach(item => {
                 const name = item.getAttribute('data-name');
                 if (name.includes(query)) {
@@ -215,7 +234,6 @@
             if(!url) return;
             player.src({ type: 'application/x-mpegURL', src: url });
             player.play();
-            
             document.getElementById('currentChannelName').innerHTML = name;
             
             const panel = document.getElementById('infoPanel');
@@ -233,6 +251,7 @@
             event.target.closest('.channel-item')?.classList.add('active');
         }
 
+        // التحميل التلقائي عند فتح الصفحة
         loadChannels();
     </script>
 </body>
