@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🚀 UpdateHub - مركز التحديثات الشامل</title>
-    <meta name="description" content="أكبر منصة للتحديثات - برامج، تطبيقات، ألعاب، أنظمة تشغيل، سائقيات، مفاتيح، ثيمات وإضافات" />
-    <meta name="keywords" content="تحديثات, برامج, تطبيقات, ألعاب, أنظمة تشغيل, ويندوز, ماك, لينكس, أندرويد, iOS, سائقيات, درايفرز, مفاتيح, كراك, ثيمات, إضافات, بلوقن, ووردبريس" />
-    <meta name="author" content="UpdateHub Team" />
-    
+    <title>🚀 UpDateNet - منصة التحديثات الشاملة</title>
+    <meta name="description" content="منصة التحديثات الشاملة - برامج، تطبيقات، أنظمة تشغيل، مفاتيح، سائقيات، ثيمات، إضافات" />
+    <meta name="keywords" content="تحديثات, برامج, تطبيقات, أنظمة, مفاتيح, سائقيات, ثيمات, إضافات, ويندوز, ماك, أندرويد" />
+    <meta name="author" content="UpDateNet Team" />
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
+
+    <!-- Font Awesome للآيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
         /* ============================================================
@@ -23,10 +26,12 @@
         :root {
             --primary: #6c5ce7;
             --primary-dark: #5a4bd1;
-            --primary-glow: rgba(108, 92, 231, 0.15);
+            --primary-light: #a29bfe;
             --secondary: #00b894;
             --accent-orange: #fdcb6e;
             --accent-red: #e17055;
+            --accent-blue: #0984e3;
+            --accent-pink: #fd79a8;
             --bg-dark: #0a0a1a;
             --bg-card: rgba(255, 255, 255, 0.02);
             --bg-card-hover: rgba(255, 255, 255, 0.04);
@@ -38,6 +43,7 @@
             --shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
             --radius: 16px;
             --transition: all .3s cubic-bezier(.4, 0, .2, 1);
+            --sidebar-width: 280px;
         }
 
         body {
@@ -48,12 +54,12 @@
             overflow-x: hidden;
         }
 
-        /* ===== BACKGROUND EFFECTS ===== */
+        /* ===== BACKGROUND ===== */
         .bg-effect {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background: 
+            background:
                 radial-gradient(ellipse at 10% 20%, rgba(108, 92, 231, 0.04) 0%, transparent 60%),
                 radial-gradient(ellipse at 90% 80%, rgba(0, 184, 148, 0.03) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(108, 92, 231, 0.02) 0%, transparent 70%),
@@ -65,7 +71,7 @@
             position: fixed;
             inset: 0;
             z-index: 0;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(108, 92, 231, 0.015) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(108, 92, 231, 0.015) 1px, transparent 1px);
             background-size: 50px 50px;
@@ -75,9 +81,16 @@
         /* ============================================================
            SCROLLBAR
            ============================================================ */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
 
         /* ============================================================
            TOP NAVIGATION
@@ -111,8 +124,13 @@
         }
 
         @keyframes pulse-icon {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.05) rotate(-2deg); }
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.05) rotate(-2deg);
+            }
         }
 
         .nav-logo .logo-text {
@@ -138,7 +156,9 @@
         }
 
         @keyframes water {
-            to { background-position: 300% 0; }
+            to {
+                background-position: 300% 0;
+            }
         }
 
         .nav-links {
@@ -158,6 +178,7 @@
             transition: var(--transition);
             border: 1px solid transparent;
             position: relative;
+            cursor: pointer;
         }
 
         .nav-links a:hover {
@@ -204,8 +225,13 @@
         }
 
         @keyframes pulse-badge {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
 
         .nav-right {
@@ -246,6 +272,18 @@
             background: var(--primary);
             color: #fff;
             border-color: var(--primary);
+        }
+
+        .nav-btn.admin-btn {
+            background: rgba(225, 112, 85, 0.08);
+            border-color: rgba(225, 112, 85, 0.12);
+            color: var(--accent-red);
+        }
+
+        .nav-btn.admin-btn:hover {
+            background: var(--accent-red);
+            color: #fff;
+            border-color: var(--accent-red);
         }
 
         .search-box {
@@ -300,6 +338,229 @@
             max-width: 1440px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        /* ============================================================
+           ADMIN PANEL TOGGLE
+           ============================================================ */
+        .admin-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 999;
+            background: var(--accent-red);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 30px rgba(225, 112, 85, 0.3);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-toggle:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 4px 40px rgba(225, 112, 85, 0.5);
+        }
+
+        .admin-toggle .tooltip {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .admin-toggle:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* ============================================================
+           ADMIN PANEL (شريط جانبي)
+           ============================================================ */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: -420px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(10, 10, 26, 0.98);
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 24px;
+            overflow-y: auto;
+            transition: left .4s cubic-bezier(.4, 0, .2, 1);
+            box-shadow: 4px 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .admin-panel.open {
+            left: 0;
+        }
+
+        .admin-panel .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .admin-panel .panel-header .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-panel .panel-header .title .icon {
+            color: var(--accent-red);
+        }
+
+        .admin-panel .panel-header .close-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .admin-panel .panel-header .close-btn:hover {
+            background: rgba(225, 112, 85, 0.1);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        /* ===== Admin Form ===== */
+        .admin-form .form-group {
+            margin-bottom: 16px;
+        }
+
+        .admin-form .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .admin-form .form-group label .required {
+            color: var(--accent-red);
+            margin-right: 2px;
+        }
+
+        .admin-form .form-group input,
+        .admin-form .form-group select,
+        .admin-form .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: var(--transition);
+            outline: none;
+            font-family: inherit;
+        }
+
+        .admin-form .form-group input:focus,
+        .admin-form .form-group select:focus,
+        .admin-form .form-group textarea:focus {
+            border-color: var(--primary);
+            background: rgba(108, 92, 231, 0.03);
+            box-shadow: 0 0 30px rgba(108, 92, 231, 0.03);
+        }
+
+        .admin-form .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .admin-form .form-group select option {
+            background: var(--bg-dark);
+        }
+
+        .admin-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .admin-form .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .admin-form .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 30px rgba(108, 92, 231, 0.3);
+        }
+
+        .admin-form .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ===== Admin Stats ===== */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .admin-stat-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .admin-stat-box .number {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+
+        .admin-stat-box .label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* ============================================================
@@ -389,7 +650,7 @@
         }
 
         /* ============================================================
-           CATEGORY GRID - الأقسام الرئيسية
+           CATEGORY GRID
            ============================================================ */
         .category-grid {
             display: grid;
@@ -522,8 +783,13 @@
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.2;
+            }
         }
 
         .updates-header .sort {
@@ -615,10 +881,6 @@
             color: var(--text-secondary);
         }
 
-        .update-card .card-left .info .model span {
-            margin: 0 4px;
-        }
-
         .update-card .card-center {
             display: flex;
             align-items: center;
@@ -643,49 +905,37 @@
             font-weight: 600;
         }
 
-        .update-card .card-center .type.firmware {
+        .update-card .card-center .type.programs {
             background: rgba(108, 92, 231, 0.06);
             color: var(--primary);
         }
-
-        .update-card .card-center .type.keys {
-            background: rgba(253, 203, 110, 0.08);
-            color: var(--accent-orange);
-        }
-
-        .update-card .card-center .type.softcam {
+        .update-card .card-center .type.apps {
             background: rgba(0, 184, 148, 0.06);
             color: var(--secondary);
         }
-
-        .update-card .card-center .type.app {
-            background: rgba(0, 150, 255, 0.06);
-            color: #0096ff;
-        }
-
-        .update-card .card-center .type.game {
+        .update-card .card-center .type.games {
             background: rgba(225, 112, 85, 0.06);
             color: var(--accent-red);
         }
-
         .update-card .card-center .type.os {
-            background: rgba(108, 92, 231, 0.08);
-            color: #a29bfe;
+            background: rgba(253, 203, 110, 0.06);
+            color: var(--accent-orange);
         }
-
-        .update-card .card-center .type.driver {
+        .update-card .card-center .type.drivers {
+            background: rgba(9, 132, 227, 0.06);
+            color: var(--accent-blue);
+        }
+        .update-card .card-center .type.keys {
+            background: rgba(253, 203, 110, 0.08);
+            color: #ff9600;
+        }
+        .update-card .card-center .type.themes {
+            background: rgba(253, 121, 168, 0.06);
+            color: var(--accent-pink);
+        }
+        .update-card .card-center .type.plugins {
             background: rgba(0, 200, 200, 0.06);
             color: #00c8c8;
-        }
-
-        .update-card .card-center .type.theme {
-            background: rgba(255, 0, 200, 0.06);
-            color: #ff00c8;
-        }
-
-        .update-card .card-center .type.plugin {
-            background: rgba(255, 150, 0, 0.06);
-            color: #ff9600;
         }
 
         .update-card .card-center .date {
@@ -731,6 +981,18 @@
 
         .update-card .card-right button .icon {
             font-size: 12px;
+        }
+
+        .update-card .card-right button.delete-btn {
+            background: rgba(225, 112, 85, 0.04);
+            border-color: rgba(225, 112, 85, 0.06);
+            color: var(--accent-red);
+        }
+
+        .update-card .card-right button.delete-btn:hover {
+            background: var(--accent-red);
+            color: #fff;
+            border-color: var(--accent-red);
         }
 
         .update-card .new-flag {
@@ -796,15 +1058,12 @@
         .update-card .card-details ul li.fixed::before {
             content: '🔧';
         }
-
         .update-card .card-details ul li.new::before {
             content: '✨';
         }
-
         .update-card .card-details ul li.improved::before {
             content: '📈';
         }
-
         .update-card .card-details ul li.security::before {
             content: '🛡️';
         }
@@ -927,14 +1186,31 @@
             font-size: 13px;
         }
 
-        .toast.show { display: block; }
-        .toast.success { border-color: var(--secondary); background: rgba(0, 184, 148, 0.04); }
-        .toast.error { border-color: var(--accent-red); background: rgba(225, 112, 85, 0.04); }
-        .toast.info { border-color: var(--primary); background: rgba(108, 92, 231, 0.04); }
+        .toast.show {
+            display: block;
+        }
+        .toast.success {
+            border-color: var(--secondary);
+            background: rgba(0, 184, 148, 0.04);
+        }
+        .toast.error {
+            border-color: var(--accent-red);
+            background: rgba(225, 112, 85, 0.04);
+        }
+        .toast.info {
+            border-color: var(--primary);
+            background: rgba(108, 92, 231, 0.04);
+        }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ============================================================
@@ -1013,7 +1289,7 @@
         /* ============================================================
            RESPONSIVE
            ============================================================ */
-        @media(max-width: 1024px) {
+        @media(max-width:1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
@@ -1025,9 +1301,13 @@
             .footer-inner {
                 grid-template-columns: 1fr 1fr 1fr;
             }
+            .admin-panel {
+                width: 360px;
+                left: -380px;
+            }
         }
 
-        @media(max-width: 768px) {
+        @media(max-width:768px) {
             .top-nav {
                 flex-direction: column;
                 padding: 10px 16px;
@@ -1088,9 +1368,27 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 18px;
             }
+            .admin-panel {
+                width: 100%;
+                left: -100%;
+                padding: 16px;
+            }
+            .admin-panel.open {
+                left: 0;
+            }
+            .admin-form .form-row {
+                grid-template-columns: 1fr;
+            }
+            .admin-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 22px;
+                bottom: 20px;
+                left: 20px;
+            }
         }
 
-        @media(max-width: 480px) {
+        @media(max-width:480px) {
             .nav-links a {
                 font-size: 10px;
                 padding: 4px 10px;
@@ -1112,6 +1410,9 @@
             .category-grid {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
+            .admin-stats {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
@@ -1128,30 +1429,153 @@
         <a href="#" class="nav-logo">
             <span class="logo-icon">🚀</span>
             <div>
-                <span class="logo-text">UpdateHub</span>
-                <span class="logo-sub">• التحديثات الشاملة •</span>
+                <span class="logo-text">UpDateNet</span>
+                <span class="logo-sub">• منصة التحديثات الشاملة •</span>
             </div>
         </a>
 
         <div class="nav-links">
-            <a href="#" class="active">🏠 الرئيسية</a>
-            <a href="#">📦 البرامج <span class="badge new">جديد</span></a>
-            <a href="#">📱 التطبيقات</a>
-            <a href="#">🎮 الألعاب</a>
-            <a href="#">💻 الأنظمة</a>
-            <a href="#">🔑 المفاتيح <span class="badge keys">Keys</span></a>
-            <a href="#">🎨 الثيمات</a>
+            <a href="#" class="active" onclick="filterByCategory('all')">🏠 الرئيسية</a>
+            <a href="#" onclick="filterByCategory('programs')">💻 البرامج <span class="badge new">جديد</span></a>
+            <a href="#" onclick="filterByCategory('apps')">📱 التطبيقات</a>
+            <a href="#" onclick="filterByCategory('games')">🎮 الألعاب</a>
+            <a href="#" onclick="filterByCategory('os')">💿 الأنظمة</a>
+            <a href="#" onclick="filterByCategory('keys')">🔑 المفاتيح <span class="badge keys">Keys</span></a>
+            <a href="#" onclick="filterByCategory('themes')">🎨 الثيمات</a>
+            <a href="#" onclick="filterByCategory('plugins')">🧩 الإضافات</a>
         </div>
 
         <div class="nav-right">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 بحث..." onkeyup="filterUpdates()" />
-                <button onclick="filterUpdates()">🔍</button>
+                <input type="text" id="searchInput" placeholder="🔍 بحث..." onkeyup="applyFilters()" />
+                <button onclick="applyFilters()"><i class="fas fa-search"></i></button>
             </div>
-            <button class="nav-btn" onclick="refreshData()">🔄 تحديث</button>
-            <button class="nav-btn primary" onclick="showToast('📧 تم الاشتراك بنجاح!', 'success')">📩 اشتراك</button>
+            <button class="nav-btn" onclick="refreshData()"><i class="fas fa-sync-alt"></i> تحديث</button>
+            <button class="nav-btn primary" onclick="showToast('📧 تم الاشتراك بنجاح!', 'success')"><i class="fas fa-bell"></i> اشتراك</button>
         </div>
     </nav>
+
+    <!-- ============================================================
+    ADMIN TOGGLE BUTTON
+    ============================================================ -->
+    <button class="admin-toggle" onclick="toggleAdminPanel()" title="لوحة تحكم المدير">
+        <i class="fas fa-user-cog"></i>
+        <span class="tooltip">لوحة تحكم المدير</span>
+    </button>
+
+    <!-- ============================================================
+    ADMIN PANEL
+    ============================================================ -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="panel-header">
+            <div class="title">
+                <span class="icon"><i class="fas fa-user-cog"></i></span>
+                لوحة التحكم
+            </div>
+            <button class="close-btn" onclick="toggleAdminPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Admin Stats -->
+        <div class="admin-stats">
+            <div class="admin-stat-box">
+                <span class="number" id="adminTotal">0</span>
+                <span class="label">إجمالي التحديثات</span>
+            </div>
+            <div class="admin-stat-box">
+                <span class="number" id="adminToday">0</span>
+                <span class="label">تحديثات اليوم</span>
+            </div>
+            <div class="admin-stat-box">
+                <span class="number" id="adminCategories">0</span>
+                <span class="label">الأقسام</span>
+            </div>
+            <div class="admin-stat-box">
+                <span class="number" id="adminDownloads">0</span>
+                <span class="label">إجمالي التحميلات</span>
+            </div>
+        </div>
+
+        <!-- Add Update Form -->
+        <h4 style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">
+            <i class="fas fa-plus-circle" style="color:var(--primary);"></i> إضافة تحديث جديد
+        </h4>
+
+        <form class="admin-form" id="addUpdateForm" onsubmit="addUpdate(event)">
+            <div class="form-group">
+                <label>اسم التحديث <span class="required">*</span></label>
+                <input type="text" id="updateName" placeholder="مثال: Adobe Photoshop 2025" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>الإصدار <span class="required">*</span></label>
+                    <input type="text" id="updateVersion" placeholder="مثال: v25.6.0" required />
+                </div>
+                <div class="form-group">
+                    <label>القسم <span class="required">*</span></label>
+                    <select id="updateCategory" required>
+                        <option value="">اختر القسم</option>
+                        <option value="programs">💻 البرامج</option>
+                        <option value="apps">📱 التطبيقات</option>
+                        <option value="games">🎮 الألعاب</option>
+                        <option value="os">💿 أنظمة التشغيل</option>
+                        <option value="drivers">🔧 السائقيات</option>
+                        <option value="keys">🔑 المفاتيح</option>
+                        <option value="themes">🎨 الثيمات</option>
+                        <option value="plugins">🧩 الإضافات</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>الأيقونة (رمز تعبيري)</label>
+                <input type="text" id="updateIcon" placeholder="مثال: 🎨" value="📦" />
+            </div>
+
+            <div class="form-group">
+                <label>التفاصيل (كل سطر نقطة)</label>
+                <textarea id="updateDetails" placeholder="✨ ميزة جديدة&#10;📈 تحسين الأداء&#10;🛡️ تحديثات أمنية"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>رابط التحميل (اختياري)</label>
+                <input type="text" id="updateLink" placeholder="https://example.com/download" />
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-plus-circle"></i> إضافة التحديث
+            </button>
+        </form>
+
+        <!-- إدارة المفاتيح -->
+        <hr style="border-color:var(--border-color);margin:20px 0;" />
+
+        <h4 style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">
+            <i class="fas fa-key" style="color:var(--accent-orange);"></i> إدارة المفاتيح
+        </h4>
+
+        <form class="admin-form" id="addKeyForm" onsubmit="addKey(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>اسم المفتاح <span class="required">*</span></label>
+                    <input type="text" id="keyName" placeholder="مثال: Windows 11 Pro" required />
+                </div>
+                <div class="form-group">
+                    <label>المفتاح <span class="required">*</span></label>
+                    <input type="text" id="keyValue" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" required />
+                </div>
+            </div>
+            <button type="submit" class="submit-btn" style="background:var(--accent-orange);color:#2d3436;">
+                <i class="fas fa-key"></i> إضافة المفتاح
+            </button>
+        </form>
+
+        <div id="keysList" style="margin-top:16px;">
+            <!-- سيتم عرض المفاتيح هنا -->
+        </div>
+    </div>
 
     <!-- ============================================================
     MAIN CONTAINER
@@ -1161,14 +1585,14 @@
         <!-- ===== HERO ===== -->
         <div class="hero">
             <div class="hero-text">
-                <h1>🚀 مركز <span class="highlight">التحديثات الشامل</span></h1>
-                <p>كل ما تحتاجه من تحديثات • برامج • تطبيقات • ألعاب • أنظمة • مفاتيح • ثيمات • إضافات</p>
+                <h1>🚀 منصة <span class="highlight">التحديثات الشاملة</span></h1>
+                <p>برامج • تطبيقات • ألعاب • أنظمة • مفاتيح • ثيمات • إضافات</p>
                 <div class="tags">
                     <span class="active">🔥 الأحدث</span>
-                    <span>📦 برامج</span>
+                    <span>💻 برامج</span>
                     <span>📱 تطبيقات</span>
                     <span>🎮 ألعاب</span>
-                    <span>💻 أنظمة</span>
+                    <span>💿 أنظمة</span>
                     <span>🔑 مفاتيح</span>
                 </div>
             </div>
@@ -1210,7 +1634,7 @@
                     </div>
                     <div class="sort">
                         <span>ترتيب:</span>
-                        <select id="sortSelect" onchange="sortUpdates()">
+                        <select id="sortSelect" onchange="applyFilters()">
                             <option value="newest">الأحدث</option>
                             <option value="oldest">الأقدم</option>
                             <option value="popular">الأكثر تحميلاً</option>
@@ -1232,7 +1656,7 @@
                 <!-- الإحصائيات -->
                 <div class="sidebar-card">
                     <div class="title">
-                        📊 إحصائيات
+                        <i class="fas fa-chart-bar" style="color:var(--primary);"></i> إحصائيات
                         <span class="badge">تحديث</span>
                     </div>
                     <div class="sidebar-stat">
@@ -1260,7 +1684,7 @@
                 <!-- العلامات الأكثر استخداماً -->
                 <div class="sidebar-card">
                     <div class="title">
-                        🏷️ العلامات الشائعة
+                        <i class="fas fa-tags" style="color:var(--accent-orange);"></i> العلامات الشائعة
                         <span class="badge">Tags</span>
                     </div>
                     <div id="tagCloud">
@@ -1271,7 +1695,7 @@
                 <!-- أحدث المفاتيح -->
                 <div class="sidebar-card">
                     <div class="title">
-                        🔑 أحدث المفاتيح
+                        <i class="fas fa-key" style="color:var(--accent-orange);"></i> أحدث المفاتيح
                         <span class="badge">Keys</span>
                     </div>
                     <div id="latestKeys">
@@ -1290,8 +1714,8 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-col">
-                <span class="brand">🚀 UpdateHub</span>
-                <div class="brand-sub">مركز التحديثات الشامل</div>
+                <span class="brand">🚀 UpDateNet</span>
+                <div class="brand-sub">منصة التحديثات الشاملة</div>
                 <p style="margin-top:10px;color:var(--text-muted);font-size:11px;">
                     أكبر منصة عربية للتحديثات<br>
                     برامج • تطبيقات • ألعاب • أنظمة • مفاتيح • ثيمات
@@ -1302,17 +1726,17 @@
             </div>
             <div class="footer-col">
                 <h4>📦 الأقسام</h4>
-                <a href="#">البرامج</a>
-                <a href="#">التطبيقات</a>
-                <a href="#">الألعاب</a>
-                <a href="#">أنظمة التشغيل</a>
-                <a href="#">السائقيات</a>
+                <a href="#" onclick="filterByCategory('programs')">البرامج</a>
+                <a href="#" onclick="filterByCategory('apps')">التطبيقات</a>
+                <a href="#" onclick="filterByCategory('games')">الألعاب</a>
+                <a href="#" onclick="filterByCategory('os')">أنظمة التشغيل</a>
+                <a href="#" onclick="filterByCategory('drivers')">السائقيات</a>
             </div>
             <div class="footer-col">
                 <h4>🔧 خدمات</h4>
-                <a href="#">المفاتيح</a>
-                <a href="#">الثيمات</a>
-                <a href="#">الإضافات</a>
+                <a href="#" onclick="filterByCategory('keys')">المفاتيح</a>
+                <a href="#" onclick="filterByCategory('themes')">الثيمات</a>
+                <a href="#" onclick="filterByCategory('plugins')">الإضافات</a>
                 <a href="#">التحديثات الأمنية</a>
                 <a href="#">طلب تحديث</a>
             </div>
@@ -1332,7 +1756,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>🚀 UpdateHub • 2026 • جميع الحقوق محفوظة <span class="heart">❤</span></p>
+            <p>🚀 UpDateNet • 2026 • جميع الحقوق محفوظة <span class="heart">❤</span></p>
         </div>
     </footer>
 
@@ -1344,121 +1768,103 @@
     ============================================================ -->
     <script>
         // ============================================================
-        //  DATA - تحديثات شاملة لكل شيء
+        //  DATA - التحديثات
         // ============================================================
-        const updatesData = [
+        let updatesData = [
             // ===== برامج =====
             { id: 1, name: "Adobe Photoshop 2025", version: "v25.6.0", category: "programs", type: "برامج", icon: "🎨",
-                subType: "firmware", date: "2026-07-28", downloads: 15420, details: ["✨ تحسين أداء الفلاتر", "🛡️ تحديثات أمنية",
-                    "📈 دعم تنسيقات جديدة"
-                ] },
+                details: ["✨ تحسين أداء الفلاتر", "🛡️ تحديثات أمنية", "📈 دعم تنسيقات جديدة"], date: "2026-07-28",
+                downloads: 15420 },
             { id: 2, name: "Microsoft Office 2026", version: "v16.0.17231", category: "programs", type: "برامج",
-                icon: "📊", subType: "firmware", date: "2026-07-27", downloads: 12300,
-                details: ["✨ ميزات التعاون الجديدة", "📈 تحسين الأداء", "🛡️ تصحيح ثغرات أمنية"] },
-            { id: 3, name: "Adobe Premiere Pro", version: "v25.4.0", category: "programs", type: "برامج", icon: "🎬",
-                subType: "firmware", date: "2026-07-26", downloads: 8900,
-                details: ["📈 تسريع التصدير", "✨ دعم AI", "🔧 إصلاح مشاكل الصوت"] },
-            { id: 4, name: "WinRAR 7.5", version: "v7.5.0", category: "programs", type: "برامج", icon: "📦",
-                subType: "firmware", date: "2026-07-25", downloads: 21000, details: ["✨ دعم تنسيقات جديدة",
-                    "📈 زيادة سرعة الضغط", "🛡️ تحديثات أمنية"] },
+                icon: "📊",
+                details: ["✨ ميزات التعاون الجديدة", "📈 تحسين الأداء", "🛡️ تصحيح ثغرات أمنية"], date: "2026-07-27",
+                downloads: 12300 },
+            { id: 3, name: "WinRAR 7.5", version: "v7.5.0", category: "programs", type: "برامج", icon: "📦",
+                details: ["✨ دعم تنسيقات جديدة", "📈 زيادة سرعة الضغط", "🛡️ تحديثات أمنية"], date: "2026-07-26",
+                downloads: 21000 },
 
             // ===== تطبيقات =====
-            { id: 5, name: "WhatsApp 2.25.8", version: "v2.25.8", category: "apps", type: "تطبيقات", icon: "💬",
-                subType: "app", date: "2026-07-28", downloads: 45000,
-                details: ["✨ ميزة الترجمة الفورية", "📈 تحسين جودة المكالمات", "🔧 إصلاح أعطال"] },
-            { id: 6, name: "Telegram 10.8", version: "v10.8.0", category: "apps", type: "تطبيقات", icon: "✈️",
-                subType: "app", date: "2026-07-27", downloads: 32000,
-                details: ["✨ مشاركة الملفات الضخمة", "🛡️ تشفير محسّن", "📈 واجهة جديدة"] },
-            { id: 7, name: "Instagram 345.0", version: "v345.0.0", category: "apps", type: "تطبيقات", icon: "📸",
-                subType: "app", date: "2026-07-26", downloads: 56000,
-                details: ["✨ إضافة تأثيرات جديدة", "📈 تحسين البث المباشر", "🔧 إصلاح مشاكل"] },
-            { id: 8, name: "YouTube 19.45", version: "v19.45.0", category: "apps", type: "تطبيقات", icon: "▶️",
-                subType: "app", date: "2026-07-25", downloads: 78000,
-                details: ["✨ تحسين جودة الفيديو", "📈 واجهة جديدة", "🎧 دعم الصوت المكاني"] },
+            { id: 4, name: "WhatsApp 2.25.8", version: "v2.25.8", category: "apps", type: "تطبيقات", icon: "💬",
+                details: ["✨ ميزة الترجمة الفورية", "📈 تحسين جودة المكالمات", "🔧 إصلاح أعطال"], date: "2026-07-28",
+                downloads: 45000 },
+            { id: 5, name: "Telegram 10.8", version: "v10.8.0", category: "apps", type: "تطبيقات", icon: "✈️",
+                details: ["✨ مشاركة الملفات الضخمة", "🛡️ تشفير محسّن", "📈 واجهة جديدة"], date: "2026-07-27",
+                downloads: 32000 },
+            { id: 6, name: "Instagram 345.0", version: "v345.0.0", category: "apps", type: "تطبيقات", icon: "📸",
+                details: ["✨ إضافة تأثيرات جديدة", "📈 تحسين البث المباشر", "🔧 إصلاح مشاكل"], date: "2026-07-26",
+                downloads: 56000 },
 
             // ===== ألعاب =====
-            { id: 9, name: "Cyberpunk 2077 2.5", version: "v2.5.0", category: "games", type: "ألعاب", icon: "🎮",
-                subType: "game", date: "2026-07-28", downloads: 8700,
-                details: ["✨ إضافة محتوى جديد", "🔧 إصلاح 500+ مشكلة", "📈 تحسين الأداء"] },
-            { id: 10, name: "Call of Duty: Modern Warfare IV", version: "v1.25.0", category: "games", type: "ألعاب",
-                icon: "🔫", subType: "game", date: "2026-07-27", downloads: 12400,
-                details: ["✨ خرائط جديدة", "🎮 تحسين التوازن", "🔧 إصلاح الأخطاء"] },
-            { id: 11, name: "Assassin's Creed Mirage", version: "v1.8.0", category: "games", type: "ألعاب", icon: "🗡️",
-                subType: "game", date: "2026-07-26", downloads: 5600,
-                details: ["✨ مهام جديدة", "📈 تحسين الرسومات", "🔧 إصلاح مشاكل الأداء"] },
-            { id: 12, name: "FIFA 2026", version: "v1.0.3", category: "games", type: "ألعاب", icon: "⚽", subType: "game",
-                date: "2026-07-25", downloads: 34000,
-                details: ["✨ تحديث الفرق", "📈 تحسين طريقة اللعب", "🔧 إصلاح الأعطال"] },
+            { id: 7, name: "Cyberpunk 2077 2.5", version: "v2.5.0", category: "games", type: "ألعاب", icon: "🎮",
+                details: ["✨ إضافة محتوى جديد", "🔧 إصلاح 500+ مشكلة", "📈 تحسين الأداء"], date: "2026-07-28",
+                downloads: 8700 },
+            { id: 8, name: "Call of Duty: MW IV", version: "v1.25.0", category: "games", type: "ألعاب", icon: "🔫",
+                details: ["✨ خرائط جديدة", "🎮 تحسين التوازن", "🔧 إصلاح الأخطاء"], date: "2026-07-27", downloads: 12400 },
 
-            // ===== أنظمة تشغيل =====
-            { id: 13, name: "Windows 11 24H2", version: "v24H2 Build 26100", category: "os", type: "أنظمة", icon: "🪟",
-                subType: "os", date: "2026-07-28", downloads: 150000,
-                details: ["✨ واجهة جديدة", "🛡️ تحديثات أمنية", "📈 تحسين الأداء"] },
-            { id: 14, name: "macOS 15 Sequoia", version: "v15.2.0", category: "os", type: "أنظمة", icon: "🍎",
-                subType: "os", date: "2026-07-27", downloads: 45000,
-                details: ["✨ ميزات AI", "📈 تحسين البطارية", "🛡️ تحديثات أمنية"] },
-            { id: 15, name: "Ubuntu 24.10", version: "v24.10", category: "os", type: "أنظمة", icon: "🐧",
-                subType: "os", date: "2026-07-26", downloads: 28000,
-                details: ["✨ دعم جديد", "📈 تحسين الأداء", "🛡️ تحديثات أمنية"] },
+            // ===== أنظمة =====
+            { id: 9, name: "Windows 11 24H2", version: "v24H2", category: "os", type: "أنظمة", icon: "🪟",
+                details: ["✨ واجهة جديدة", "🛡️ تحديثات أمنية", "📈 تحسين الأداء"], date: "2026-07-28", downloads: 150000 },
+            { id: 10, name: "macOS 15 Sequoia", version: "v15.2.0", category: "os", type: "أنظمة", icon: "🍎",
+                details: ["✨ ميزات AI", "📈 تحسين البطارية", "🛡️ تحديثات أمنية"], date: "2026-07-27", downloads: 45000 },
 
             // ===== سائقيات =====
-            { id: 16, name: "NVIDIA Driver 572.16", version: "v572.16", category: "drivers", type: "سائقيات",
-                icon: "🎮", subType: "driver", date: "2026-07-28", downloads: 67000,
-                details: ["📈 تحسين أداء الألعاب", "🛡️ تحديثات أمنية", "✨ دعم بطاقات جديدة"] },
-            { id: 17, name: "AMD Adrenalin 25.7.1", version: "v25.7.1", category: "drivers", type: "سائقيات",
-                icon: "💻", subType: "driver", date: "2026-07-27", downloads: 34000,
-                details: ["📈 تحسين الأداء", "✨ دعم الألعاب الجديدة", "🛡️ تحديثات أمنية"] },
-            { id: 18, name: "Realtek Audio Driver 6.4", version: "v6.4.0", category: "drivers", type: "سائقيات",
-                icon: "🔊", subType: "driver", date: "2026-07-26", downloads: 89000,
-                details: ["📈 تحسين جودة الصوت", "🔧 إصلاح مشاكل التشغيل", "✨ دعم أجهزة جديدة"] },
+            { id: 11, name: "NVIDIA Driver 572.16", version: "v572.16", category: "drivers", type: "سائقيات",
+                icon: "🎮",
+                details: ["📈 تحسين أداء الألعاب", "🛡️ تحديثات أمنية", "✨ دعم بطاقات جديدة"], date: "2026-07-28",
+                downloads: 67000 },
+            { id: 12, name: "Realtek Audio Driver 6.4", version: "v6.4.0", category: "drivers", type: "سائقيات",
+                icon: "🔊",
+                details: ["📈 تحسين جودة الصوت", "🔧 إصلاح مشاكل التشغيل", "✨ دعم أجهزة جديدة"], date: "2026-07-26",
+                downloads: 89000 },
 
             // ===== مفاتيح =====
-            { id: 19, name: "Windows 11 Pro Key", version: "2026 Batch", category: "keys", type: "مفاتيح", icon: "🔑",
-                subType: "keys", date: "2026-07-28", downloads: 12000,
-                details: ["🔑 مفاتيح تفعيل Windows 11 Pro", "🔄 مفاتيح محدثة"] },
-            { id: 20, name: "Microsoft Office 2026 Keys", version: "2026 Batch", category: "keys", type: "مفاتيح",
-                icon: "📊", subType: "keys", date: "2026-07-27", downloads: 8900,
-                details: ["🔑 مفاتيح تفعيل Office 2026", "📦 جميع الإصدارات"] },
-            { id: 21, name: "Adobe Creative Cloud Keys", version: "2026 Batch", category: "keys", type: "مفاتيح",
-                icon: "🎨", subType: "keys", date: "2026-07-26", downloads: 5600,
-                details: ["🔑 مفاتيح تفعيل Adobe", "🎨 جميع البرامج"] },
+            { id: 13, name: "Windows 11 Pro Key", version: "2026 Batch", category: "keys", type: "مفاتيح", icon: "🔑",
+                details: ["🔑 مفاتيح تفعيل Windows 11 Pro", "🔄 مفاتيح محدثة"], date: "2026-07-28", downloads: 12000 },
+            { id: 14, name: "Microsoft Office 2026 Keys", version: "2026 Batch", category: "keys", type: "مفاتيح",
+                icon: "📊",
+                details: ["🔑 مفاتيح تفعيل Office 2026", "📦 جميع الإصدارات"], date: "2026-07-27", downloads: 8900 },
 
             // ===== ثيمات =====
-            { id: 22, name: "Dark UI Theme Pack", version: "v3.0", category: "themes", type: "ثيمات", icon: "🌙",
-                subType: "theme", date: "2026-07-28", downloads: 4300,
-                details: ["✨ تصميم مظلم متكامل", "🎨 دعم Windows 11", "📈 تحديث الأيقونات"] },
-            { id: 23, name: "MacOS Theme for Windows", version: "v2.5", category: "themes", type: "ثيمات", icon: "🍎",
-                subType: "theme", date: "2026-07-27", downloads: 3200,
-                details: ["✨ محاكاة MacOS", "📈 تحسينات جديدة", "🔧 إصلاح مشاكل"] },
+            { id: 15, name: "Dark UI Theme Pack", version: "v3.0", category: "themes", type: "ثيمات", icon: "🌙",
+                details: ["✨ تصميم مظلم متكامل", "🎨 دعم Windows 11", "📈 تحديث الأيقونات"], date: "2026-07-28",
+                downloads: 4300 },
 
             // ===== إضافات =====
-            { id: 24, name: "WordPress SEO Plugin", version: "v4.2.0", category: "plugins", type: "إضافات",
-                icon: "🔍", subType: "plugin", date: "2026-07-28", downloads: 12000,
-                details: ["📈 تحسين SEO", "✨ أدوات جديدة", "🛡️ تحديثات أمنية"] },
-            { id: 25, name: "Chrome AdBlocker Plus", version: "v3.8.0", category: "plugins", type: "إضافات",
-                icon: "🛡️", subType: "plugin", date: "2026-07-27", downloads: 45000,
-                details: ["🛡️ حماية أفضل", "📈 تحسين الأداء", "✨ دعم جديد"] }
+            { id: 16, name: "WordPress SEO Plugin", version: "v4.2.0", category: "plugins", type: "إضافات",
+                icon: "🔍",
+                details: ["📈 تحسين SEO", "✨ أدوات جديدة", "🛡️ تحديثات أمنية"], date: "2026-07-28", downloads: 12000 }
+        ];
+
+        // ============================================================
+        //  KEYS DATA (مفاتيح منفصلة)
+        // ============================================================
+        let keysData = [
+            { id: 1, name: "Windows 11 Pro", key: "WINDOWS-11PRO-2026-KEY1" },
+            { id: 2, name: "Microsoft Office 2026", key: "OFFICE-2026-ALL-KEY2" },
+            { id: 3, name: "Adobe Creative Cloud", key: "ADOBE-CC-2026-KEY3" }
         ];
 
         // ============================================================
         //  CATEGORIES
         // ============================================================
         const categories = [
-            { id: 'programs', name: 'البرامج', icon: '💻', color: '#6c5ce7' },
-            { id: 'apps', name: 'التطبيقات', icon: '📱', color: '#00b894' },
-            { id: 'games', name: 'الألعاب', icon: '🎮', color: '#e17055' },
-            { id: 'os', name: 'أنظمة التشغيل', icon: '💿', color: '#fdcb6e' },
-            { id: 'drivers', name: 'السائقيات', icon: '🔧', color: '#0096ff' },
-            { id: 'keys', name: 'المفاتيح', icon: '🔑', color: '#ff9600' },
-            { id: 'themes', name: 'الثيمات', icon: '🎨', color: '#ff00c8' },
-            { id: 'plugins', name: 'الإضافات', icon: '🧩', color: '#00c8c8' }
+            { id: 'programs', name: 'البرامج', icon: '💻' },
+            { id: 'apps', name: 'التطبيقات', icon: '📱' },
+            { id: 'games', name: 'الألعاب', icon: '🎮' },
+            { id: 'os', name: 'أنظمة التشغيل', icon: '💿' },
+            { id: 'drivers', name: 'السائقيات', icon: '🔧' },
+            { id: 'keys', name: 'المفاتيح', icon: '🔑' },
+            { id: 'themes', name: 'الثيمات', icon: '🎨' },
+            { id: 'plugins', name: 'الإضافات', icon: '🧩' }
         ];
+
+        let nextUpdateId = 17;
+        let nextKeyId = 4;
 
         // ============================================================
         //  GLOBALS
         // ============================================================
         let currentFilter = 'all';
-        let currentSort = 'newest';
         let filteredData = [...updatesData];
 
         // ============================================================
@@ -1466,16 +1872,22 @@
         // ============================================================
         function renderCategories() {
             const grid = document.getElementById('categoryGrid');
-            grid.innerHTML = categories.map(cat => {
+            grid.innerHTML = `
+                <div class="category-card ${currentFilter === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">
+                    <span class="icon">🌟</span>
+                    <span class="name">الكل</span>
+                    <span class="count">${updatesData.length} تحديث</span>
+                </div>
+            ` + categories.map(cat => {
                 const count = updatesData.filter(u => u.category === cat.id).length;
+                const isActive = currentFilter === cat.id;
                 return `
-                    <div class="category-card ${currentFilter === cat.id ? 'active' : ''}" 
-                         onclick="filterByCategory('${cat.id}')">
+                    <div class="category-card ${isActive ? 'active' : ''}" onclick="filterByCategory('${cat.id}')">
                         <span class="icon">${cat.icon}</span>
                         <span class="name">${cat.name}</span>
                         <span class="count">${count} تحديث</span>
                         ${count > 5 ? '<span class="badge green">محدث</span>' : ''}
-                        ${cat.id === 'keys' ? '<span class="badge orange">جديد</span>' : ''}
+                        ${cat.id === 'keys' && count > 0 ? '<span class="badge orange">جديد</span>' : ''}
                     </div>
                 `;
             }).join('');
@@ -1492,7 +1904,7 @@
                     <div style="text-align:center;padding:60px 0;color:var(--text-muted);">
                         <div style="font-size:48px;margin-bottom:16px;">🔍</div>
                         <p style="font-size:16px;font-weight:600;">لا توجد تحديثات</p>
-                        <p style="font-size:13px;">جاري البحث عن تحديثات جديدة...</p>
+                        <p style="font-size:13px;">يمكنك إضافة تحديث جديد من لوحة التحكم</p>
                     </div>
                 `;
                 return;
@@ -1501,26 +1913,15 @@
             grid.innerHTML = filteredData.map(update => {
                 const isNew = new Date(update.date) > new Date(Date.now() - 86400000 * 2);
                 const isHot = update.downloads > 20000;
-                const typeClass = update.subType || 'firmware';
-                const typeColors = {
-                    'firmware': 'firmware',
-                    'keys': 'keys',
-                    'softcam': 'softcam',
-                    'app': 'app',
-                    'game': 'game',
-                    'os': 'os',
-                    'driver': 'driver',
-                    'theme': 'theme',
-                    'plugin': 'plugin'
-                };
+                const typeClass = update.category || 'programs';
 
                 return `
-                    <div class="update-card">
+                    <div class="update-card" id="update-${update.id}">
                         ${isNew ? '<div class="new-flag">جديد</div>' : ''}
                         ${isHot && !isNew ? '<div class="hot-flag">🔥 شائع</div>' : ''}
                         <div class="card-row">
                             <div class="card-left">
-                                <div class="icon">${update.icon}</div>
+                                <div class="icon">${update.icon || '📦'}</div>
                                 <div class="info">
                                     <div class="name">${update.name}</div>
                                     <div class="model">${update.type} • ${update.category === 'keys' ? '🔑 مفاتيح' : ''}</div>
@@ -1528,15 +1929,18 @@
                             </div>
                             <div class="card-center">
                                 <span class="version">${update.version}</span>
-                                <span class="type ${typeColors[update.subType] || 'firmware'}">${update.type}</span>
+                                <span class="type ${typeClass}">${update.type}</span>
                                 <span class="date">📅 ${update.date}</span>
                             </div>
                             <div class="card-right">
-                                <button onclick="showToast('📥 جاري تحميل ${update.name}...', 'info')" class="download">
-                                    <span class="icon">⬇️</span> تحميل
+                                <button onclick="downloadUpdate(${update.id})" class="download">
+                                    <i class="fas fa-download"></i> تحميل
                                 </button>
                                 <button onclick="toggleDetails(${update.id})" title="تفاصيل">
-                                    📄
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <button onclick="deleteUpdate(${update.id})" class="delete-btn" title="حذف">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </div>
@@ -1552,6 +1956,36 @@
 
             document.getElementById('resultCount').textContent = `(${filteredData.length} تحديث)`;
             updateStats();
+            updateAdminStats();
+        }
+
+        // ============================================================
+        //  RENDER KEYS
+        // ============================================================
+        function renderKeys() {
+            const container = document.getElementById('latestKeys');
+            if (keysData.length === 0) {
+                container.innerHTML = `<p style="color:var(--text-muted);font-size:12px;">لا توجد مفاتيح مسجلة</p>`;
+                return;
+            }
+            container.innerHTML = keysData.slice(0, 5).map(key => `
+                <div class="sidebar-stat">
+                    <span class="label">🔑 ${key.name}</span>
+                    <span class="value highlight" style="font-size:11px;direction:ltr;text-align:left;">${key.key}</span>
+                </div>
+            `).join('');
+
+            // عرض في لوحة التحكم
+            const keysList = document.getElementById('keysList');
+            keysList.innerHTML = keysData.map(key => `
+                <div class="sidebar-stat" style="padding:4px 0;">
+                    <span class="label">🔑 ${key.name}</span>
+                    <span class="value" style="font-size:11px;direction:ltr;text-align:left;color:var(--accent-orange);">${key.key}</span>
+                    <button onclick="deleteKey(${key.id})" style="background:transparent;border:none;color:var(--accent-red);cursor:pointer;font-size:12px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
         }
 
         // ============================================================
@@ -1559,9 +1993,7 @@
         // ============================================================
         function toggleDetails(id) {
             const el = document.getElementById(`details-${id}`);
-            if (el) {
-                el.classList.toggle('open');
-            }
+            if (el) el.classList.toggle('open');
         }
 
         // ============================================================
@@ -1569,23 +2001,19 @@
         // ============================================================
         function filterByCategory(category) {
             currentFilter = category;
-            document.querySelectorAll('.category-card').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.category-card').forEach(el => {
-                if (el.querySelector('.name')?.textContent === categories.find(c => c.id === category)?.name) {
-                    el.classList.add('active');
-                }
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(el => {
+                if (el.textContent.includes('الرئيسية') && category === 'all') el.classList.add('active');
             });
             applyFilters();
-        }
-
-        function filterUpdates() {
-            applyFilters();
+            renderCategories();
         }
 
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const sort = document.getElementById('sortSelect').value;
 
-            filteredData = updatesData.filter(update => {
+            let filtered = updatesData.filter(update => {
                 const matchCategory = currentFilter === 'all' || update.category === currentFilter;
                 const matchSearch = update.name.toLowerCase().includes(searchTerm) ||
                     update.type.includes(searchTerm) ||
@@ -1593,32 +2021,24 @@
                 return matchCategory && matchSearch;
             });
 
-            sortUpdates();
-        }
-
-        // ============================================================
-        //  SORT
-        // ============================================================
-        function sortUpdates() {
-            const sort = document.getElementById('sortSelect').value;
-
             switch (sort) {
                 case 'newest':
-                    filteredData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
                     break;
                 case 'oldest':
-                    filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
                     break;
                 case 'popular':
-                    filteredData.sort((a, b) => b.downloads - a.downloads);
+                    filtered.sort((a, b) => b.downloads - a.downloads);
                     break;
                 case 'name':
-                    filteredData.sort((a, b) => a.name.localeCompare(b.name));
+                    filtered.sort((a, b) => a.name.localeCompare(b.name));
                     break;
                 default:
                     break;
             }
 
+            filteredData = filtered;
             renderUpdates();
         }
 
@@ -1642,15 +2062,141 @@
             document.getElementById('statLast').textContent = 'منذ قليل';
         }
 
+        function updateAdminStats() {
+            const total = updatesData.length;
+            const today = new Date().toISOString().split('T')[0];
+            const todayCount = updatesData.filter(u => u.date === today).length;
+            const categoriesCount = new Set(updatesData.map(u => u.category)).size;
+            const totalDownloads = updatesData.reduce((sum, u) => sum + u.downloads, 0);
+
+            document.getElementById('adminTotal').textContent = total;
+            document.getElementById('adminToday').textContent = todayCount;
+            document.getElementById('adminCategories').textContent = categoriesCount;
+            document.getElementById('adminDownloads').textContent = totalDownloads.toLocaleString();
+        }
+
         // ============================================================
-        //  RENDER SIDEBAR TAGS
+        //  ADMIN - ADD UPDATE
+        // ============================================================
+        function addUpdate(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('updateName').value.trim();
+            const version = document.getElementById('updateVersion').value.trim();
+            const category = document.getElementById('updateCategory').value;
+            const icon = document.getElementById('updateIcon').value.trim() || '📦';
+            const detailsText = document.getElementById('updateDetails').value.trim();
+            const link = document.getElementById('updateLink').value.trim();
+
+            if (!name || !version || !category) {
+                showToast('⚠️ الرجاء ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+
+            const details = detailsText ? detailsText.split('\n').filter(d => d.trim()) : ['✨ تحديث جديد'];
+
+            const categoryNames = {
+                'programs': 'برامج',
+                'apps': 'تطبيقات',
+                'games': 'ألعاب',
+                'os': 'أنظمة',
+                'drivers': 'سائقيات',
+                'keys': 'مفاتيح',
+                'themes': 'ثيمات',
+                'plugins': 'إضافات'
+            };
+
+            const newUpdate = {
+                id: nextUpdateId++,
+                name: name,
+                version: version,
+                category: category,
+                type: categoryNames[category] || 'تحديث',
+                icon: icon,
+                details: details,
+                date: new Date().toISOString().split('T')[0],
+                downloads: Math.floor(Math.random() * 5000) + 100
+            };
+
+            updatesData.push(newUpdate);
+            applyFilters();
+            renderCategories();
+            renderKeys();
+
+            document.getElementById('addUpdateForm').reset();
+            document.getElementById('updateIcon').value = '📦';
+
+            showToast(`✅ تم إضافة "${name}" بنجاح!`, 'success');
+            toggleAdminPanel();
+        }
+
+        // ============================================================
+        //  ADMIN - ADD KEY
+        // ============================================================
+        function addKey(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('keyName').value.trim();
+            const key = document.getElementById('keyValue').value.trim();
+
+            if (!name || !key) {
+                showToast('⚠️ الرجاء ملء جميع الحقول', 'error');
+                return;
+            }
+
+            keysData.push({
+                id: nextKeyId++,
+                name: name,
+                key: key
+            });
+
+            renderKeys();
+            document.getElementById('addKeyForm').reset();
+            showToast(`✅ تم إضافة المفتاح "${name}" بنجاح!`, 'success');
+        }
+
+        // ============================================================
+        //  ADMIN - DELETE UPDATE
+        // ============================================================
+        function deleteUpdate(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا التحديث؟')) return;
+
+            updatesData = updatesData.filter(u => u.id !== id);
+            applyFilters();
+            renderCategories();
+            renderKeys();
+            showToast('🗑️ تم حذف التحديث بنجاح', 'info');
+        }
+
+        function deleteKey(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا المفتاح؟')) return;
+            keysData = keysData.filter(k => k.id !== id);
+            renderKeys();
+            showToast('🗑️ تم حذف المفتاح بنجاح', 'info');
+        }
+
+        // ============================================================
+        //  DOWNLOAD
+        // ============================================================
+        function downloadUpdate(id) {
+            const update = updatesData.find(u => u.id === id);
+            if (update) {
+                showToast(`📥 جاري تحميل ${update.name}...`, 'info');
+                setTimeout(() => {
+                    showToast(`✅ تم تحميل ${update.name} بنجاح!`, 'success');
+                }, 1500);
+            }
+        }
+
+        // ============================================================
+        //  RENDER TAGS
         // ============================================================
         function renderTags() {
-            const tagContainer = document.getElementById('tagCloud');
+            const container = document.getElementById('tagCloud');
             const tags = {};
             updatesData.forEach(u => {
                 u.details.forEach(d => {
-                    const words = d.replace(/[✨📈🛡️🔧🔑]/g, '').trim().split(' ');
+                    const words = d.replace(/[✨📈🛡️🔧🔑🎨🎮]/g, '').trim().split(' ');
                     words.forEach(w => {
                         if (w.length > 3) {
                             tags[w] = (tags[w] || 0) + 1;
@@ -1659,9 +2205,8 @@
                 });
             });
 
-            const sortedTags = Object.entries(tags).sort((a, b) => b[1] - a[1]).slice(0, 15);
-
-            tagContainer.innerHTML = sortedTags.map(([tag, count]) => `
+            const sortedTags = Object.entries(tags).sort((a, b) => b[1] - a[1]).slice(0, 12);
+            container.innerHTML = sortedTags.map(([tag, count]) => `
                 <span class="sidebar-tag" onclick="searchTag('${tag}')">
                     #${tag} <span class="count">(${count})</span>
                 </span>
@@ -1675,23 +2220,15 @@
         }
 
         // ============================================================
-        //  RENDER LATEST KEYS
+        //  ADMIN PANEL TOGGLE
         // ============================================================
-        function renderLatestKeys() {
-            const container = document.getElementById('latestKeys');
-            const keys = updatesData.filter(u => u.category === 'keys').slice(0, 5);
-
-            if (keys.length === 0) {
-                container.innerHTML = `<p style="color:var(--text-muted);font-size:12px;">لا توجد مفاتيح جديدة</p>`;
-                return;
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open')) {
+                renderKeys();
+                updateAdminStats();
             }
-
-            container.innerHTML = keys.map(key => `
-                <div class="sidebar-stat">
-                    <span class="label">${key.icon} ${key.name}</span>
-                    <span class="value highlight" style="font-size:11px;">${key.version}</span>
-                </div>
-            `).join('');
         }
 
         // ============================================================
@@ -1701,8 +2238,11 @@
             showToast('🔄 جاري تحديث البيانات...', 'info');
             setTimeout(() => {
                 applyFilters();
+                renderCategories();
+                renderTags();
+                renderKeys();
                 showToast('✅ تم تحديث البيانات بنجاح!', 'success');
-            }, 1000);
+            }, 800);
         }
 
         // ============================================================
@@ -1730,19 +2270,26 @@
             if ((e.key === 'r' || e.key === 'R') && !e.ctrlKey && !e.metaKey) {
                 refreshData();
             }
+            if (e.key === 'Escape') {
+                document.getElementById('adminPanel').classList.remove('open');
+            }
         });
 
         // ============================================================
         //  INIT
         // ============================================================
-        renderCategories();
         applyFilters();
+        renderCategories();
         renderTags();
-        renderLatestKeys();
+        renderKeys();
+        updateStats();
+        updateAdminStats();
 
-        console.log('🚀 UpdateHub - مركز التحديثات الشامل');
+        console.log('🚀 UpDateNet - منصة التحديثات الشاملة');
         console.log(`📦 ${updatesData.length} تحديث متاح`);
         console.log(`📂 ${categories.length} قسم`);
+        console.log(`🔑 ${keysData.length} مفتاح مسجل`);
+        console.log('🛠️ اضغط على زر "لوحة التحكم" لإضافة تحديثات أو مفاتيح جديدة');
     </script>
 </body>
 </html>
