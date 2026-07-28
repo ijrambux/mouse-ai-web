@@ -12,7 +12,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0a0a0a; color: #fff; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
-        /* HEADER */
         header { background: #141414; padding: 12px 25px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; }
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand .icon { font-size: 26px; }
@@ -24,10 +23,7 @@
         .search-area input::placeholder { color: #666; }
         .search-area i { color: #666; }
 
-        /* LAYOUT */
         .app-container { display: flex; flex: 1; overflow: hidden; }
-        
-        /* SIDEBAR */
         .sidebar { width: 380px; background: #111; border-left: 1px solid #222; display: flex; flex-direction: column; }
         .sidebar-header { padding: 12px 15px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 14px; color: #aaa; }
         
@@ -47,7 +43,6 @@
         .channel-item .logo .fallback { font-size: 14px; color: #444; }
         .channel-item .name { flex: 1; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* MAIN PLAYER */
         .main-player { flex: 1; background: #000; display: flex; flex-direction: column; position: relative; }
         .video-wrapper { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; }
         #videoPlayer { width: 100%; height: 100%; }
@@ -59,7 +54,6 @@
         .info-overlay .tag { background: #c00; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: bold; display: inline-block; margin-bottom: 3px; }
         .info-overlay h2 { font-size: 18px; font-weight: bold; margin: 0; }
 
-        /* RIGHT INFO PANEL */
         .info-panel { width: 300px; background: #111; border-left: 1px solid #222; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .info-panel .empty { color: #444; text-align: center; }
         .info-panel .empty i { font-size: 50px; margin-bottom: 15px; }
@@ -120,36 +114,25 @@
     </div>
 
     <script>
-        // إعداد المشغل
         const player = videojs('videoPlayer', {
             controls: true, autoplay: true, preload: 'auto', fluid: true,
             html5: { vhs: { enableLowInitialPlaylist: true, smoothQualityChange: true } }
         });
 
-        // بيانات IPTV الخاصة بك
-        const M3U_URL = "http://melones.bollo.hofcepesp1.top:8080/get.php?username=ES0129178155217538&password=qfkt3nxdc5px&type=m3u_plus";
-        
-        // هذا هو البروكسي الجديد (الأقوى والأسرع)
-        const PROXY_URL = "https://corsproxy.io/?"; 
+        // هذا هو الرابط الجديد الذي سيذهب إلى خادم Vercel الخاص بك
+        const API_URL = "/api/proxy"; 
 
         let allChannels = [];
 
-        // تحميل القنوات
         async function loadChannels() {
             try {
-                // استخدام البروكسي الجديد
-                const response = await fetch(PROXY_URL + encodeURIComponent(M3U_URL));
+                const response = await fetch(API_URL);
                 
                 if (!response.ok) {
-                    throw new Error('فشل الاتصال');
+                    throw new Error('فشل الاتصال بالسيرفر');
                 }
                 
                 const data = await response.text();
-                
-                // في حال السيرفر أرسل صفحة HTML بدلاً من M3U (حماية)
-                if (data.trim().startsWith('<!DOCTYPE html>')) {
-                    throw new Error('السيرفر يرفض الاتصال. قد يكون الرابط غير صحيح.');
-                }
 
                 allChannels = parseM3U(data);
                 if(allChannels.length > 0){
@@ -159,18 +142,16 @@
                     document.getElementById('channelsList').innerHTML = '<div style="padding:30px; text-align:center; color:#666;">لا توجد قنوات متاحة.</div>';
                 }
             } catch (error) {
-                console.error(error);
                 document.getElementById('channelsList').innerHTML = `
                     <div style="padding:30px; text-align:center; color:#c00;">
                         <i class="fas fa-exclamation-triangle" style="font-size:30px; display:block; margin-bottom:10px;"></i>
                         خطأ في الاتصال بالسيرفر.<br>
-                        <span style="font-size:13px; color:#666;">السبب: ${error.message}</span>
+                        <span style="font-size:13px; color:#666;">${error.message}</span>
                     </div>
                 `;
             }
         }
 
-        // تحليل ملف M3U
         function parseM3U(content) {
             const lines = content.split('\n');
             const channels = [];
@@ -193,7 +174,6 @@
             return channels;
         }
 
-        // عرض القنوات
         function renderChannels(channels) {
             const listContainer = document.getElementById('channelsList');
             document.getElementById('channelCount').textContent = channels.length;
@@ -217,7 +197,6 @@
             });
         }
 
-        // بحث فوري
         function filterChannels() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const items = document.querySelectorAll('.channel-item');
@@ -235,7 +214,6 @@
             document.getElementById('channelCount').textContent = visibleCount;
         }
 
-        // تشغيل القناة
         function playChannel(url, name, logo) {
             if(!url) return;
             player.src({ type: 'application/x-mpegURL', src: url });
@@ -258,7 +236,6 @@
             event.target.closest('.channel-item')?.classList.add('active');
         }
 
-        // تشغيل التحميل
         loadChannels();
     </script>
 </body>
