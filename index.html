@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🐭 MOUSE AI - المدونة التقنية</title>
+    <title>🐭 MOUSE AI - Tech Blog</title>
     <meta name="description" content="مدونة تقنية شاملة - مقالات، تحديثات، مراجعات، نصائح" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐭</text></svg>" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -46,19 +46,40 @@
             overflow-x: hidden;
         }
 
-        /* ===== BACKGROUND ===== */
-        .bg-effect {
+        /* ===== TWINKLING BLUE STARS BACKGROUND ===== */
+        #stars-container {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
-            background:
-                radial-gradient(ellipse at 10% 20%, rgba(108, 92, 231, 0.05) 0%, transparent 60%),
-                radial-gradient(ellipse at 90% 80%, rgba(0, 184, 148, 0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(108, 92, 231, 0.03) 0%, transparent 70%),
-                var(--bg-dark);
             pointer-events: none;
+            overflow: hidden;
         }
 
+        .star {
+            position: absolute;
+            background: #00d4ff; /* Blue color */
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 40px #00d4ff;
+            animation: twinkle var(--duration) ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { 
+                opacity: 0.1; 
+                transform: scale(0.5); 
+                box-shadow: 0 0 5px #00d4ff;
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1.2); 
+                box-shadow: 0 0 20px #00d4ff, 0 0 40px #00d4ff;
+            }
+        }
+
+        /* Grid Overlay & Gradient */
         .grid-overlay {
             position: fixed;
             inset: 0;
@@ -1085,8 +1106,8 @@
 </head>
 <body>
 
-    <!-- ===== BACKGROUND ===== -->
-    <div class="bg-effect"></div>
+    <!-- ===== TWINKLING BLUE STARS BACKGROUND ===== -->
+    <div id="stars-container"></div>
     <div class="grid-overlay"></div>
 
     <!-- ============================================================
@@ -1097,24 +1118,24 @@
             <span class="logo-icon">🐭</span>
             <div>
                 <span class="logo-text">MOUSE <span class="highlight">AI</span></span>
-                <span class="logo-sub">• مدونة تقنية •</span>
+                <span class="logo-sub">• Tech Blog •</span>
             </div>
         </a>
 
         <div class="nav-links">
-            <a href="#" class="active" onclick="filterPosts('all')">🏠 الرئيسية</a>
-            <a href="#" onclick="filterPosts('all')">📰 المقالات <span class="badge new">جديد</span></a>
-            <a href="#" onclick="filterPosts('all')">💡 نصائح</a>
-            <a href="#" onclick="filterPosts('all')">🛠️ مراجعات</a>
-            <a href="#" onclick="filterPosts('all')">📱 تقنية</a>
+            <a href="#" class="active" onclick="filterPosts('all')">🏠 Home</a>
+            <a href="#" onclick="filterPosts('all')">📰 Articles <span class="badge new">New</span></a>
+            <a href="#" onclick="filterPosts('all')">💡 Tips</a>
+            <a href="#" onclick="filterPosts('all')">🛠️ Reviews</a>
+            <a href="#" onclick="filterPosts('all')">📱 Tech</a>
         </div>
 
         <div class="nav-right">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 بحث..." onkeyup="searchPosts()" />
+                <input type="text" id="searchInput" placeholder="🔍 Search..." onkeyup="searchPosts()" />
                 <button onclick="searchPosts()"><i class="fas fa-search"></i></button>
             </div>
-            <button class="nav-btn" onclick="refreshFrontend()"><i class="fas fa-sync-alt"></i> تحديث</button>
+            <button class="nav-btn" onclick="refreshFrontend()"><i class="fas fa-sync-alt"></i> Refresh</button>
         </div>
     </nav>
 
@@ -1129,28 +1150,28 @@
         <!-- ===== HERO ===== -->
         <div class="hero">
             <div class="hero-text">
-                <h1>🐭 مرحباً بك في <span class="highlight">MOUSE AI</span></h1>
-                <p>مدونة تقنية شاملة تجمع بين المعرفة والإبداع. مقالات، مراجعات، نصائح، وتحديثات يومية.</p>
+                <h1>🐭 Welcome to <span class="highlight">MOUSE AI</span></h1>
+                <p>Your Gateway to Artificial Intelligence &amp; Technology. Articles, Reviews, Tips, and Daily Updates.</p>
                 <div class="tags">
-                    <span class="active">🔥 الأحدث</span>
-                    <span>💻 برمجة</span>
-                    <span>🤖 ذكاء اصطناعي</span>
-                    <span>📱 تطبيقات</span>
-                    <span>🎮 ألعاب</span>
+                    <span class="active">🔥 Latest</span>
+                    <span>💻 Coding</span>
+                    <span>🤖 AI</span>
+                    <span>📱 Apps</span>
+                    <span>🎮 Gaming</span>
                 </div>
             </div>
             <div class="hero-stats">
                 <div class="stat">
                     <span class="num" id="frontTotalPosts">0</span>
-                    <span class="label">مقالات</span>
+                    <span class="label">Articles</span>
                 </div>
                 <div class="stat">
                     <span class="num" id="frontTotalViews">0</span>
-                    <span class="label">مشاهدات</span>
+                    <span class="label">Views</span>
                 </div>
                 <div class="stat">
                     <span class="num" id="frontTotalComments">0</span>
-                    <span class="label">تعليقات</span>
+                    <span class="label">Comments</span>
                 </div>
             </div>
         </div>
@@ -1159,29 +1180,29 @@
         <div class="posts-header">
             <div class="title">
                 <span class="live-dot"></span>
-                أحدث المقالات
+                Latest Articles
             </div>
             <div class="filter-tabs">
-                <button class="active" data-filter="all" onclick="filterPosts('all')">الكل</button>
-                <button data-filter="new" onclick="filterPosts('new')">جديد</button>
-                <button data-filter="popular" onclick="filterPosts('popular')">الأكثر مشاهدة</button>
+                <button class="active" data-filter="all" onclick="filterPosts('all')">All</button>
+                <button data-filter="new" onclick="filterPosts('new')">New</button>
+                <button data-filter="popular" onclick="filterPosts('popular')">Popular</button>
             </div>
         </div>
 
         <div class="posts-grid" id="postsGrid">
-            <!-- سيتم تعبئتها بواسطة JavaScript -->
+            <!-- Filled by JavaScript -->
         </div>
 
     </div>
 
     <!-- ============================================================
-    MODAL - نافذة عرض المقال كاملاً
+    MODAL - عرض المقال كاملاً
     ============================================================ -->
     <div class="modal-overlay" id="postModal">
         <div class="modal-content" id="modalContent">
             <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
             <div id="modalBody">
-                <!-- سيتم تعبئتها بواسطة JavaScript -->
+                <!-- Filled by JavaScript -->
             </div>
         </div>
     </div>
@@ -1193,39 +1214,39 @@
         <div class="footer-inner">
             <div class="footer-col">
                 <span class="brand">🐭 MOUSE <span class="highlight">AI</span></span>
-                <div class="brand-sub">مدونة تقنية شاملة</div>
+                <div class="brand-sub">Tech Blog</div>
                 <p style="margin-top:10px;color:var(--text-light);font-size:11px;">
-                    نقدم لك أحدث المقالات والنصائح التقنية<br>
-                    برمجة • تطبيقات • ذكاء اصطناعي • مراجعات
+                    Latest articles and tech tips for everyone.<br>
+                    Programming • Apps • AI • Reviews
                 </p>
                 <p style="color:var(--text-muted);font-size:10px;margin-top:6px;">
                     v3.0 • 2026
                 </p>
             </div>
             <div class="footer-col">
-                <h4>📂 الأقسام</h4>
-                <a href="#" onclick="filterPosts('all')">الرئيسية</a>
-                <a href="#" onclick="filterPosts('all')">برمجة</a>
-                <a href="#" onclick="filterPosts('all')">ذكاء اصطناعي</a>
-                <a href="#" onclick="filterPosts('all')">تطبيقات</a>
-                <a href="#" onclick="filterPosts('all')">مراجعات</a>
+                <h4>📂 Categories</h4>
+                <a href="#" onclick="filterPosts('all')">Home</a>
+                <a href="#" onclick="filterPosts('all')">Coding</a>
+                <a href="#" onclick="filterPosts('all')">AI</a>
+                <a href="#" onclick="filterPosts('all')">Apps</a>
+                <a href="#" onclick="filterPosts('all')">Reviews</a>
             </div>
             <div class="footer-col">
-                <h4>🔗 روابط</h4>
-                <a href="#">سياسة الخصوصية</a>
-                <a href="#">شروط الاستخدام</a>
-                <a href="#">اتصل بنا</a>
+                <h4>🔗 Links</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Us</a>
             </div>
             <div class="footer-col">
-                <h4>📱 تابعنا</h4>
-                <a href="#"><i class="fab fa-twitter"></i> تويتر</a>
-                <a href="#"><i class="fab fa-facebook"></i> فيسبوك</a>
-                <a href="#"><i class="fab fa-instagram"></i> إنستغرام</a>
-                <a href="#"><i class="fab fa-youtube"></i> يوتيوب</a>
+                <h4>📱 Follow Us</h4>
+                <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>🐭 MOUSE AI • 2026 • جميع الحقوق محفوظة <span class="heart">❤</span></p>
+            <p>🐭 MOUSE AI • 2026 • All Rights Reserved <span class="heart">❤</span></p>
         </div>
     </footer>
 
@@ -1237,7 +1258,39 @@
     ============================================================ -->
     <script>
         // ============================================================
-        //  DATA
+        //  1. GENERATE TWINKLING BLUE STARS
+        // ============================================================
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const numStars = 150; // عدد النجوم
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // حجم عشوائي بين 2px و 6px
+                const size = Math.random() * 4 + 2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                // موقع عشوائي في الشاشة
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+
+                // مدة التلألؤ العشوائية (بين 2 و 6 ثواني)
+                const duration = Math.random() * 4 + 2;
+                star.style.setProperty('--duration', `${duration}s`);
+
+                // تأخير عشوائي لتجنب التلألؤ المتزامن
+                star.style.animationDelay = `${Math.random() * 5}s`;
+
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        // ============================================================
+        //  2. DATA
         // ============================================================
         let posts = [];
         let comments = [];
@@ -1245,7 +1298,7 @@
         let currentPostId = null;
 
         // ============================================================
-        //  ARTICLE CONTENT - المقال الكامل عن الذكاء الاصطناعي
+        //  3. ARTICLE CONTENT (Full AI Article)
         // ============================================================
         const AI_ARTICLE = `🧠 الذكاء الاصطناعي: كيف يعمل؟ وكيف تحمي نفسك في عصر الآلات الذكية؟
 
@@ -1377,7 +1430,7 @@
         📅 28 يوليو 2026`;
 
         // ============================================================
-        //  LOAD DATA
+        //  4. LOAD DATA
         // ============================================================
         function loadData() {
             try {
@@ -1387,7 +1440,7 @@
                     posts = parsed.posts || [];
                     comments = parsed.comments || [];
                 } else {
-                    // المقال الافتراضي - مقال الذكاء الاصطناعي كاملاً
+                    // Default post
                     posts = [{
                         id: 1,
                         title: '🧠 الذكاء الاصطناعي: كيف يعمل؟ وكيف تحمي نفسك في عصر الآلات الذكية؟',
@@ -1407,7 +1460,7 @@
                 updateFrontStats();
             } catch (error) {
                 console.error(error);
-                showToast('⚠️ فشل في تحميل البيانات', 'error');
+                showToast('⚠️ Failed to load data', 'error');
             }
         }
 
@@ -1423,7 +1476,7 @@
         }
 
         // ============================================================
-        //  RENDER POSTS
+        //  5. RENDER POSTS
         // ============================================================
         function renderPosts() {
             const grid = document.getElementById('postsGrid');
@@ -1440,8 +1493,8 @@
                 grid.innerHTML = `
                     <div class="empty-state" style="grid-column:1/-1;">
                         <div class="empty-icon">📝</div>
-                        <h3>لا توجد مقالات</h3>
-                        <p>قم بإضافة مقال جديد من لوحة التحكم</p>
+                        <h3>No Articles</h3>
+                        <p>Add a new article from the admin panel</p>
                     </div>
                 `;
                 return;
@@ -1469,8 +1522,8 @@
                 return `
                     <div class="post-card" onclick="openPost(${post.id})">
                         ${mediaHtml}
-                        ${isNew ? '<span class="post-tag new">جديد</span>' : ''}
-                        ${isPopular && !isNew ? '<span class="post-tag featured">🔥 شائع</span>' : ''}
+                        ${isNew ? '<span class="post-tag new">New</span>' : ''}
+                        ${isPopular && !isNew ? '<span class="post-tag featured">🔥 Popular</span>' : ''}
                         <div class="post-title">${post.title}</div>
                         <div class="post-excerpt">${excerpt}</div>
                         <div class="post-meta">
@@ -1487,18 +1540,18 @@
         }
 
         // ============================================================
-        //  OPEN POST - عرض المقال كاملاً في النافذة المنبثقة
+        //  6. OPEN POST (Modal)
         // ============================================================
         function openPost(id) {
             const post = posts.find(p => p.id === id);
             if (!post) {
-                showToast('⚠️ المقال غير موجود', 'error');
+                showToast('⚠️ Article not found', 'error');
                 return;
             }
 
             currentPostId = id;
 
-            // زيادة عدد المشاهدات
+            // Increment views
             post.views = (post.views || 0) + 1;
             saveData();
             updateFrontStats();
@@ -1518,7 +1571,6 @@
                 }
             }
 
-            // تحويل النص إلى HTML مع الاحتفاظ بالفواصل
             const formattedBody = post.body
                 .replace(/\n/g, '<br>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -1529,14 +1581,14 @@
 
             body.innerHTML = `
                 <h1 class="modal-title">${post.title}</h1>
-                <span class="modal-date">📅 ${post.date} • 💬 ${commentCount} تعليق • 👁️ ${post.views || 0} مشاهدة</span>
+                <span class="modal-date">📅 ${post.date} • 💬 ${commentCount} Comments • 👁️ ${post.views || 0} Views</span>
                 ${mediaHtml}
                 <div class="modal-body">${formattedBody}</div>
                 ${tags.length > 0 ? `<div class="modal-tags">${tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>` : ''}
                 <div class="modal-actions">
-                    <button onclick="sharePost('twitter')" class="share-twitter"><i class="fab fa-twitter"></i> مشاركة في X</button>
-                    <button onclick="sharePost('whatsapp')" class="share-whatsapp"><i class="fab fa-whatsapp"></i> مشاركة في واتساب</button>
-                    <button onclick="copyPostLink()"><i class="fas fa-link"></i> نسخ الرابط</button>
+                    <button onclick="sharePost('twitter')" class="share-twitter"><i class="fab fa-twitter"></i> Share on X</button>
+                    <button onclick="sharePost('whatsapp')" class="share-whatsapp"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
+                    <button onclick="copyPostLink()"><i class="fas fa-link"></i> Copy Link</button>
                 </div>
             `;
 
@@ -1544,23 +1596,16 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // ============================================================
-        //  CLOSE MODAL
-        // ============================================================
         function closeModal() {
             document.getElementById('postModal').classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        // ============================================================
-        //  SHARE POST
-        // ============================================================
         function sharePost(platform) {
             const post = posts.find(p => p.id === currentPostId);
             if (!post) return;
-
             const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent(`📖 ${post.title}\n\nاقرأ المقال كاملاً على MOUSE AI`);
+            const text = encodeURIComponent(`📖 ${post.title}\n\nRead full article on MOUSE AI`);
 
             if (platform === 'twitter') {
                 window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=500');
@@ -1571,14 +1616,14 @@
 
         function copyPostLink() {
             navigator.clipboard.writeText(window.location.href).then(() => {
-                showToast('📋 تم نسخ الرابط', 'success');
+                showToast('📋 Link copied!', 'success');
             }).catch(() => {
-                showToast('⚠️ فشل النسخ', 'error');
+                showToast('⚠️ Failed to copy', 'error');
             });
         }
 
         // ============================================================
-        //  FILTER & SEARCH
+        //  7. FILTER & SEARCH
         // ============================================================
         function filterPosts(filter) {
             currentFilter = filter;
@@ -1606,8 +1651,8 @@
                 grid.innerHTML = `
                     <div class="empty-state" style="grid-column:1/-1;">
                         <div class="empty-icon">🔍</div>
-                        <h3>لا توجد نتائج</h3>
-                        <p>لم يتم العثور على مقالات تطابق "${term}"</p>
+                        <h3>No Results Found</h3>
+                        <p>No articles matching "${term}"</p>
                     </div>
                 `;
                 return;
@@ -1648,7 +1693,7 @@
         }
 
         // ============================================================
-        //  UPDATE FRONT STATS
+        //  8. UPDATE STATS
         // ============================================================
         function updateFrontStats() {
             document.getElementById('frontTotalPosts').textContent = posts.length;
@@ -1658,15 +1703,15 @@
         }
 
         // ============================================================
-        //  REFRESH
+        //  9. REFRESH
         // ============================================================
         function refreshFrontend() {
             loadData();
-            showToast('🔄 تم تحديث الصفحة', 'success');
+            showToast('🔄 Page refreshed', 'success');
         }
 
         // ============================================================
-        //  TOAST
+        //  10. TOAST NOTIFICATIONS
         // ============================================================
         function showToast(message, type = '') {
             const toast = document.getElementById('toast');
@@ -1680,13 +1725,11 @@
         }
 
         // ============================================================
-        //  إغلاق النافذة المنبثقة بالضغط على ESC أو خارجها
+        //  11. CLOSE MODAL WITH ESC / OUTSIDE CLICK
         // ============================================================
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-            // Ctrl+Shift+A لفتح لوحة التحكم
+            if (e.key === 'Escape') closeModal();
+            // Ctrl+Shift+A to access Admin
             if (e.ctrlKey && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
                 e.preventDefault();
                 window.location.href = 'admin-mouse-2026-secret.html';
@@ -1694,21 +1737,17 @@
         });
 
         document.getElementById('postModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
+            if (e.target === this) closeModal();
         });
 
         // ============================================================
-        //  INIT
+        //  12. INIT
         // ============================================================
         loadData();
 
-        console.log('🐭 MOUSE AI - المدونة التقنية');
-        console.log('🔐 لوحة التحكم: admin-mouse-2026-secret.html');
-        console.log('📌 اختصارات: Ctrl+Shift+A = فتح لوحة التحكم');
-        console.log('📌 اضغط على أي مقال لقراءته كاملاً');
-        console.log('📌 تم تحميل المقال الافتراضي عن الذكاء الاصطناعي');
+        console.log('🐭 MOUSE AI - Tech Blog');
+        console.log('🔐 Admin Panel: admin-mouse-2026-secret.html');
+        console.log('📌 Shortcut: Ctrl+Shift+A to open Admin Panel');
     </script>
 </body>
 </html>
