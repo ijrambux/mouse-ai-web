@@ -1,1 +1,1595 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MOUSE AI IPTV Pro v4.0 - Web Edition</title>
+    <meta name="description" content="MOUSE AI IPTV Pro - Universal Server Reader">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --bg-dark: #0a0c0f;
+            --bg-card: #111418;
+            --bg-input: #161a20;
+            --border: #1e242c;
+            --border-hover: #2a333f;
+            --green: #00ff88;
+            --green-dim: #00cc6a;
+            --red: #ff2a2a;
+            --red-dim: #cc2222;
+            --white: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #8b95a5;
+            --text-muted: #5a6470;
+            --fire-orange: #ff6b35;
+        }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+        body { background-color: var(--bg-dark); color: var(--text-primary); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: var(--bg-dark); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--green); }
+        @keyframes fireGlow {
+            0%, 100% { text-shadow: 0 0 10px #ff6b35, 0 0 20px #ff6b35, 0 0 40px #ff2a2a; color: #ff6b35; }
+            33% { text-shadow: 0 0 10px #ff2a2a, 0 0 20px #ff2a2a, 0 0 40px #ff6b35; color: #ff2a2a; }
+            66% { text-shadow: 0 0 10px #ffaa00, 0 0 20px #ff6b35, 0 0 40px #ff2a2a; color: #ffaa00; }
+        }
+        .fire-logo {
+            animation: fireGlow 2s ease-in-out infinite;
+            background: linear-gradient(90deg, #ff6b35, #ff2a2a, #ffaa00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .bg-dark { background-color: var(--bg-dark) !important; }
+        .bg-card { background-color: var(--bg-card) !important; }
+        .bg-input { background-color: var(--bg-input) !important; }
+        .border-border { border-color: var(--border) !important; }
+        .text-green { color: var(--green) !important; }
+        .text-red { color: var(--red) !important; }
+        .text-secondary { color: var(--text-secondary) !important; }
+        .text-muted { color: var(--text-muted) !important; }
+        .btn-fire {
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .btn-green {
+            background: linear-gradient(to bottom, var(--green), var(--green-dim));
+            border-color: var(--green);
+            color: var(--bg-dark);
+        }
+        .btn-green:hover {
+            background: linear-gradient(to bottom, var(--green-dim), var(--green));
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+        }
+        .btn-green:active { transform: translateY(0); }
+        .btn-white {
+            background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+            border-color: #ffffff;
+            color: var(--bg-dark);
+        }
+        .btn-white:hover {
+            background: linear-gradient(to bottom, #f0f0f0, #ffffff);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text-primary);
+        }
+        .btn-outline:hover {
+            border-color: var(--green);
+            background: rgba(0, 255, 136, 0.05);
+        }
+        .btn-outline.active {
+            background: var(--green);
+            border-color: var(--green-dim);
+            color: var(--bg-dark);
+        }
+        .ctrl-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            color: var(--green);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover {
+            background: var(--green);
+            border-color: var(--green);
+            color: var(--bg-dark);
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-input);
+            border-radius: 3px;
+            height: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--green);
+            border: 2px solid white;
+            cursor: pointer;
+            margin-top: -4.5px;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 5px;
+            border-radius: 3px;
+            background: var(--bg-input);
+        }
+        input[type="range"]:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .channel-item {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(22, 26, 32, 0.5);
+            margin-bottom: 4px;
+        }
+        .channel-item:hover {
+            background: var(--bg-input);
+            border-color: var(--border-hover);
+        }
+        .channel-item.active {
+            background: var(--green);
+            border-color: var(--green-dim);
+            color: var(--bg-dark);
+        }
+        .channel-item.active .channel-name { color: var(--bg-dark); font-weight: 700; }
+        .channel-item.active .channel-group { color: rgba(10, 12, 15, 0.7); }
+        .channel-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .channel-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .channel-group {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .modal-enter { animation: modalIn 0.2s ease-out; }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        video { outline: none; }
+        video::-webkit-media-controls { display: none !important; }
+        .server-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .server-item:hover { border-color: var(--border-hover); }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed !important;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                width: 85% !important;
+                max-width: 360px;
+            }
+            .fire-logo { font-size: 1.5rem; }
+            .ctrl-btn { width: 36px; height: 36px; }
+        }
+        ::selection { background: var(--green); color: var(--bg-dark); }
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+        }
+        .badge-xtream { background: var(--green); color: var(--bg-dark); }
+        .badge-cccam { background: var(--fire-orange); color: white; }
+        .badge-mac { background: #3b82f6; color: white; }
+        .badge-unknown { background: var(--red); color: white; }
+    </style>
+<base target="_blank">
+</head>
+<body class="bg-dark text-white overflow-hidden h-screen w-screen select-none">
 
+    <div id="loading-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-dark">
+        <div class="fire-logo text-5xl md:text-7xl font-black mb-4">MOUSE</div>
+        <div class="text-green text-sm md:text-base font-bold tracking-widest">MOUSE AI IPTV PRO v4.0</div>
+        <div class="mt-6 w-48 h-1 bg-card rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-green to-green-dim animate-pulse rounded-full" style="width: 80%"></div>
+        </div>
+    </div>
+
+    <div id="app" class="flex h-full w-full opacity-0 transition-opacity duration-700">
+
+        <aside id="sidebar" class="sidebar bg-card border-l border-border flex flex-col w-full md:w-[420px] lg:w-[460px] h-full absolute md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+
+            <div class="p-4 border-b border-border bg-dark/50 backdrop-blur">
+                <div class="flex items-center justify-center mb-2">
+                    <div class="fire-logo text-3xl font-black">MOUSE</div>
+                </div>
+                <div class="text-center text-green text-xs font-bold mb-1">MOUSE AI IPTV PRO</div>
+                <div class="text-center text-muted text-[10px]">v4.0 ULTIMATE WEB EDITION</div>
+            </div>
+
+            <div class="p-3 space-y-2 border-b border-border">
+                <label class="text-green text-xs font-bold block"><i class="fas fa-server ml-1"></i> اختر المصدر</label>
+                <select id="server-select" class="w-full bg-input border border-border hover:border-green rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none transition-colors">
+                    <option value="builtin">Islamic Algeria Tunisia Morocco</option>
+                    <option value="http://tv14s.xyz:8080/get.php?username=rossjohn88@hotmail.com&password=KCBKTCnWTU&type=m3u">TV14S (Main)</option>
+                    <option value="http://51.81.106.100:25461/get.php?username=sjzumbro7&password=7407045283&type=m3u">51.81.106.100 (Backup)</option>
+                    <option value="http://skytv4k.org:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus">SkyTV4K (Backup 2)</option>
+                    <option value="http://garaveli.123tv.to:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus">Garaveli (Backup 3)</option>
+                </select>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="app.loadChannels()" class="btn-fire btn-green text-sm py-2.5">
+                        <i class="fas fa-sync-alt ml-1"></i> تحميل القنوات
+                    </button>
+                    <button onclick="document.getElementById('file-input').click()" class="btn-fire btn-white text-sm py-2.5">
+                        <i class="fas fa-file-import ml-1"></i> ملف M3U
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="app.openAddCode()" class="btn-fire btn-green text-sm py-2.5">
+                        <i class="fas fa-plus ml-1"></i> إضافة كود
+                    </button>
+                    <button onclick="app.openManageServers()" class="btn-fire btn-white text-sm py-2.5">
+                        <i class="fas fa-cogs ml-1"></i> إدارة
+                    </button>
+                </div>
+                <input type="file" id="file-input" accept=".m3u,.m3u8" class="hidden" onchange="app.loadFromFile(this)">
+            </div>
+
+            <div id="progress-container" class="hidden px-3 py-2">
+                <div class="w-full h-1.5 bg-card rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-green rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div id="status-text" class="text-center text-muted text-[10px] mt-1">جاري التحميل...</div>
+            </div>
+
+            <div class="p-3 space-y-2 border-b border-border">
+                <select id="group-select" onchange="app.filterChannels()" class="w-full bg-input border border-border hover:border-green rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none transition-colors">
+                    <option value="all">جميع المجموعات</option>
+                </select>
+                <div class="relative">
+                    <input type="text" id="search-input" oninput="app.filterChannels()" placeholder="ابحث عن قناة..." 
+                        class="w-full bg-input border border-border hover:border-green rounded-xl px-3 py-2 pr-9 text-sm text-white focus:border-green focus:outline-none transition-colors">
+                    <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs"></i>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-2" id="channels-container">
+                <div id="channels-list" class="space-y-1"></div>
+            </div>
+
+            <div class="p-3 border-t border-border bg-dark/30">
+                <div class="flex gap-2 mb-2">
+                    <button id="fav-btn" onclick="app.toggleFavView()" class="flex-1 btn-fire btn-outline text-xs py-2">
+                        <i class="fas fa-heart ml-1"></i> المفضلة
+                    </button>
+                    <button onclick="app.openSettings()" class="flex-1 btn-fire btn-outline text-xs py-2">
+                        <i class="fas fa-cog ml-1"></i> الإعدادات
+                    </button>
+                </div>
+                <div id="count-label" class="text-center text-muted text-[10px] font-bold">0 قناة</div>
+                <div class="text-center text-muted text-[9px] mt-1">
+                    (c) 2025 MOUSE AI | <a href="https://x.com/0000000000388p" target="_blank" class="text-green hover:underline">@0000000000388p</a>
+                </div>
+            </div>
+        </aside>
+
+        <button id="sidebar-toggle" onclick="app.toggleSidebar()" class="md:hidden fixed top-4 left-4 z-40 w-10 h-10 bg-card border border-border rounded-xl flex items-center justify-center text-green shadow-lg">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div id="sidebar-overlay" onclick="app.toggleSidebar()" class="fixed inset-0 bg-black/60 z-20 hidden md:hidden backdrop-blur-sm"></div>
+
+        <main class="flex-1 flex flex-col h-full relative bg-black">
+
+            <div class="flex-1 relative flex items-center justify-center bg-black group" id="video-wrapper">
+                <video id="video-player" class="w-full h-full object-contain" playsinline webkit-playsinline></video>
+
+                <div id="play-overlay" class="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer" onclick="app.togglePlay()">
+                    <div class="w-20 h-20 rounded-full bg-green/20 flex items-center justify-center backdrop-blur border-2 border-green">
+                        <i class="fas fa-play text-3xl text-green ml-1"></i>
+                    </div>
+                </div>
+
+                <div id="video-loading" class="absolute inset-0 flex items-center justify-center bg-black/60 hidden">
+                    <div class="w-12 h-12 border-4 border-green/30 border-t-green rounded-full animate-spin"></div>
+                </div>
+
+                <div id="server-info" class="absolute top-4 right-4 left-4 md:left-auto md:w-auto bg-card/90 backdrop-blur border border-green/30 rounded-xl px-4 py-2 hidden">
+                    <div id="server-info-text" class="text-green text-xs font-bold"></div>
+                </div>
+            </div>
+
+            <div class="bg-card border-t border-border p-3 md:p-4 space-y-3">
+
+                <div class="relative group">
+                    <input type="range" id="progress-slider" min="0" max="1000" value="0" disabled
+                        class="w-full h-1.5 bg-input rounded-full appearance-none cursor-pointer accent-green disabled:opacity-30">
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <button onclick="app.playPrevious()" class="ctrl-btn" title="السابق">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button onclick="app.togglePlay()" id="play-btn" class="w-12 h-12 rounded-xl bg-gradient-to-b from-red to-red-dim border-2 border-red text-white text-xl flex items-center justify-center hover:brightness-110 active:scale-95 transition-all" title="تشغيل/إيقاف">
+                            <i class="fas fa-play ml-0.5"></i>
+                        </button>
+                        <button onclick="app.stopPlayback()" class="ctrl-btn border-red text-red hover:bg-red hover:text-dark" title="إيقاف">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button onclick="app.playNext()" class="ctrl-btn" title="التالي">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <button onclick="app.toggleMute()" id="mute-btn" class="ctrl-btn" title="كتم الصوت">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <div class="hidden md:flex items-center gap-2 w-32">
+                            <input type="range" id="volume-slider" min="0" max="100" value="100" oninput="app.setVolume(this.value)"
+                                class="flex-1 h-1 bg-input rounded-full appearance-none cursor-pointer accent-green">
+                        </div>
+                        <button onclick="app.toggleFullscreen()" class="ctrl-btn" title="ملء الشاشة">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="info-label" class="text-center text-secondary text-xs md:text-sm font-bold truncate px-4">
+                    جاهز - اختر قناة للتشغيل
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Code Modal -->
+    <div id="modal-add-code" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+            <div class="p-4 border-b border-border flex items-center justify-between">
+                <h2 class="text-green font-bold text-lg"><i class="fas fa-plus-circle ml-2"></i> إضافة كود IPTV</h2>
+                <button onclick="app.closeModal('modal-add-code')" class="w-8 h-8 rounded-lg bg-input hover:bg-border flex items-center justify-center text-muted hover:text-white transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div class="bg-dark rounded-xl p-4 border border-border">
+                    <label class="text-green text-xs font-bold block mb-2">الصق الكود هنا (يدعم جميع الأنواع):</label>
+                    <textarea id="code-input" rows="5" placeholder="[C: host.com 12000 user pass]
+[http://host:port | user | pass]
+[A0:BB:3E:18:9E:02 + http://host:port]
+[N: host.com 12000 user pass 01 02 03...]"
+                        class="w-full bg-input border border-border rounded-xl p-3 text-sm text-white font-mono focus:border-green focus:outline-none resize-none"></textarea>
+                    <button onclick="app.parseCode()" class="btn-fire btn-green w-full mt-3 py-3">
+                        <i class="fas fa-magic ml-1"></i> تحليل الكود تلقائياً
+                    </button>
+                    <div id="type-badge" class="mt-3 text-center py-2 rounded-xl bg-input border border-border text-muted text-sm font-bold">
+                        لم يتم التعرف بعد
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-secondary text-xs block mb-1">الاسم</label>
+                        <input type="text" id="manual-name" placeholder="اسم السيرفر" class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-secondary text-xs block mb-1">النوع</label>
+                        <select id="manual-type" class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                            <option value="m3u_plus">M3U Plus (مستحسن)</option>
+                            <option value="m3u">M3U قياسي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-secondary text-xs block mb-1">الخادم (Host)</label>
+                        <input type="text" id="manual-host" placeholder="http://host.com:8080" class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-secondary text-xs block mb-1">اسم المستخدم</label>
+                        <input type="text" id="manual-user" placeholder="username" class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-secondary text-xs block mb-1">كلمة المرور</label>
+                        <input type="text" id="manual-pass" placeholder="password" class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-secondary text-xs block mb-1">عنوان MAC (اختياري)</label>
+                        <input type="text" id="manual-mac" placeholder="A0:BB:3E:18:9E:02" class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="bg-dark rounded-xl p-3 border border-green/30">
+                    <label class="text-green text-xs font-bold block mb-1">الرابط النهائي:</label>
+                    <input type="text" id="preview-url" readonly placeholder="سيظهر الرابط هنا..." 
+                        class="w-full bg-dark border border-green rounded-xl px-3 py-2 text-sm text-green font-mono focus:outline-none">
+                </div>
+            </div>
+            <div class="p-4 border-t border-border flex gap-2">
+                <button onclick="app.addServer()" class="btn-fire btn-green flex-1 py-3">
+                    <i class="fas fa-check ml-1"></i> إضافة السيرفر
+                </button>
+                <button onclick="app.closeModal('modal-add-code')" class="btn-fire btn-white flex-1 py-3">
+                    <i class="fas fa-times ml-1"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Servers Modal -->
+    <div id="modal-manage" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-card border border-border rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl">
+            <div class="p-4 border-b border-border flex items-center justify-between">
+                <h2 class="text-green font-bold text-lg"><i class="fas fa-server ml-2"></i> إدارة السيرفرات</h2>
+                <button onclick="app.closeModal('modal-manage')" class="w-8 h-8 rounded-lg bg-input hover:bg-border flex items-center justify-center text-muted hover:text-white transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto p-4">
+                <div id="servers-table" class="space-y-2"></div>
+            </div>
+            <div class="p-4 border-t border-border">
+                <button onclick="app.closeModal('modal-manage')" class="btn-fire btn-green w-full py-3">
+                    <i class="fas fa-check ml-1"></i> إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="modal-settings" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-card border border-border rounded-2xl w-full max-w-md shadow-2xl">
+            <div class="p-4 border-b border-border flex items-center justify-between">
+                <h2 class="text-green font-bold text-lg"><i class="fas fa-cog ml-2"></i> الإعدادات</h2>
+                <button onclick="app.closeModal('modal-settings')" class="w-8 h-8 rounded-lg bg-input hover:bg-border flex items-center justify-center text-muted hover:text-white transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 space-y-4">
+                <div class="bg-dark rounded-xl p-3 border border-border">
+                    <label class="text-green text-xs font-bold block mb-2">إعدادات الصوت</label>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-secondary">الصوت</span>
+                        <input type="range" id="settings-volume" min="0" max="100" value="100" oninput="document.getElementById('vol-val').textContent=this.value+'%'"
+                            class="flex-1 h-1 bg-input rounded-full appearance-none cursor-pointer accent-green">
+                        <span id="vol-val" class="text-xs text-white font-mono w-10 text-left">100%</span>
+                    </div>
+                    <label class="flex items-center gap-2 mt-3 cursor-pointer">
+                        <input type="checkbox" id="mute-start" class="w-4 h-4 accent-green rounded">
+                        <span class="text-sm text-secondary">كتم الصوت عند البدء</span>
+                    </label>
+                </div>
+                <div class="bg-dark rounded-xl p-3 border border-border">
+                    <label class="text-green text-xs font-bold block mb-2">إعدادات الواجهة</label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="auto-load" class="w-4 h-4 accent-green rounded">
+                        <span class="text-sm text-secondary">تحميل تلقائي عند البدء</span>
+                    </label>
+                    <label class="flex items-center gap-2 mt-2 cursor-pointer">
+                        <input type="checkbox" id="show-info" checked class="w-4 h-4 accent-green rounded">
+                        <span class="text-sm text-secondary">عرض معلومات السيرفر</span>
+                    </label>
+                </div>
+                <div class="bg-dark rounded-xl p-3 border border-border">
+                    <label class="text-green text-xs font-bold block mb-2">الشبكة</label>
+                    <label class="text-secondary text-xs block mb-1">مهلة الاتصال (ثواني)</label>
+                    <input type="number" id="timeout-setting" value="45" min="5" max="120"
+                        class="w-full bg-input border border-border rounded-xl px-3 py-2 text-sm text-white focus:border-green focus:outline-none">
+                </div>
+            </div>
+            <div class="p-4 border-t border-border">
+                <button onclick="app.saveSettings()" class="btn-fire btn-green w-full py-3">
+                    <i class="fas fa-save ml-1"></i> حفظ الإعدادات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Channel Info Modal -->
+    <div id="modal-info" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="bg-card border border-border rounded-2xl w-full max-w-md shadow-2xl p-4">
+            <h2 class="text-green font-bold text-lg mb-3"><i class="fas fa-info-circle ml-2"></i> معلومات القناة</h2>
+            <div id="channel-info-content" class="space-y-2 text-sm"></div>
+            <button onclick="app.closeModal('modal-info')" class="btn-fire btn-green w-full mt-4 py-2.5">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+
+const APP_NAME = "MOUSE AI IPTV";
+const APP_VERSION = "4.0.0 WEB ULTIMATE";
+
+const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+
+const CUSTOM_M3U_BUILTIN = "#EXTM3U\n" +
+"#EXTINF:-1 group-title=\"Islamic\",QURAN ONE\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686148&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",QURAN TWO\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686147&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MISHARI AL AFASI\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686160&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL-SUDAIS\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686159&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL MUAQLY\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686158&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",FARES ABAD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686157&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AHMED ALAJMI\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686156&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",ABD AL BASET\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686155&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",M SIDIK ALMANCHAWI\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686154&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SAOUD SHURAIM\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686153&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",RAAD AL KURDI\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686152&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SALAH BUKHATIR\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686151&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MOHAMED GIBRIL\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686150&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL AFASY\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686149&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",ISLAM CHANNEL HD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660225&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MISR QURAN KAREEM\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660224&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SAUDI QURAN\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660223&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SAUDI QURAN HD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660222&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SAUDI SUNNAH\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660221&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SAUDI SUNNAH HD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660220&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",IQRAA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660219&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",RESALA HD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660218&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL RAHMA TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660217&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MECCA TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660216&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AHLU ALQURAN\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660215&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",ZAD TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660214&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL MAJD 1\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660213&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL MAJD 2\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660212&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL MAJD 3\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660211&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",BIN OUTHAYMINE\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660210&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",TANASOH\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660209&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SAFA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660208&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL RESALA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660207&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MTA AL ARABIA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660206&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MTA WORLD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660205&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL HAQIQA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660204&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL SIRAT\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660203&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",KAIFA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660202&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",DAWAAH TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660201&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",QURAN TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660200&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL ERTH NABAWI\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660199&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",MAKKAH TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660198&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",DUAA TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660197&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL FATEH QURAN\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660196&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",ALMAHDI TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660195&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL ISTIQAMA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660194&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",AL ZAHRA TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660193&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",SALAAM TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660192&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",ALIMAN TV\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660191&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Islamic\",ALFATH SONA\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660190&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Algeria\",ALGERIE EN TV 1\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=368773&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Tunisia\",TUNISIA 1\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=368799&extension=ts\n" +
+"#EXTINF:-1 group-title=\"Morocco\",AL JAZEERA MAROC HD\n" +
+"http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=853125&extension=ts";
+
+const DEFAULT_SERVERS = {
+    "Islamic Algeria Tunisia Morocco": "builtin",
+    "TV14S (Main)": "http://tv14s.xyz:8080/get.php?username=rossjohn88@hotmail.com&password=KCBKTCnWTU&type=m3u",
+    "51.81.106.100 (Backup)": "http://51.81.106.100:25461/get.php?username=sjzumbro7&password=7407045283&type=m3u",
+    "SkyTV4K (Backup 2)": "http://skytv4k.org:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus",
+    "Garaveli (Backup 3)": "http://garaveli.123tv.to:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus"
+};
+
+class UniversalCodeParser {
+    static parse(text) {
+        text = text.trim();
+        if (!text) return { type: "empty", data: {} };
+        const parsers = [
+            this._parseCccam, this._parseNewcamd, this._parseMgcamd,
+            this._parseXtream, this._parseMac, this._parsePortal,
+            this._parseStalker, this._parseM3uUrl, this._parseGenericHost
+        ];
+        for (const parser of parsers) {
+            const result = parser(text);
+            if (result && result.type !== "unknown") return result;
+        }
+        return { type: "unknown", data: { raw: text } };
+    }
+
+    static _parseCccam(text) {
+        const patterns = [
+            /^[Cc][:;]\s*(\S+)\s+(\d+)\s+(\S+)\s+(\S+)(?:\s+(\S+))?/,
+            /CCcam[:\s]+(\S+)[:\s]+(\d+)[:\s]+(\S+)[:\s]+(\S+)/,
+            /[Cc]\s*[:\s]\s*(\S+)\s+(\d+)\s+(\S+)\s+(\S+)/
+        ];
+        for (const pat of patterns) {
+            const m = text.match(pat);
+            if (m) return {
+                type: "cccam", data: {
+                    host: m[1], port: m[2], user: m[3], pass: m[4],
+                    deskey: m[5] || "01 02 03 04 05 06 07 08 09 10 11 12 13 14",
+                    raw: text
+                }
+            };
+        }
+        return null;
+    }
+
+    static _parseNewcamd(text) {
+        const patterns = [
+            /^[Nn][:;]\s*(\S+)\s+(\d+)\s+(\S+)\s+(\S+)\s+([0-9a-fA-F\s]+)/,
+            /Newcamd[:\s]+(\S+)[:\s]+(\d+)[:\s]+(\S+)[:\s]+(\S+)/
+        ];
+        for (const pat of patterns) {
+            const m = text.match(pat);
+            if (m) return {
+                type: "newcamd", data: {
+                    host: m[1], port: m[2], user: m[3], pass: m[4],
+                    deskey: m[5] || "", raw: text
+                }
+            };
+        }
+        return null;
+    }
+
+    static _parseMgcamd(text) {
+        const m = text.match(/[Mm][Gg][Cc][Aa][Mm][Dd]?[:\s]+(\S+)[:\s]+(\d+)[:\s]+(\S+)[:\s]+(\S+)/);
+        if (m) return { type: "mgcamd", data: { host: m[1], port: m[2], user: m[3], pass: m[4], raw: text } };
+        return null;
+    }
+
+    static _parseXtream(text) {
+        const m = text.match(/(https?:\/\/[^/\s]+(?::\d+)?)(?:\/[^\s]*)?\?.*username=([^&\s]+).*password=([^&\s]+)/i);
+        if (m) return { type: "xtream", data: { host: m[1], username: m[2], password: m[3], raw: text } };
+        const host = this._extractField(text, [/[Hh][Oo][Ss][Tt]\s*[:=]\s*(https?:\/\/\S+)/]);
+        const user = this._extractField(text, [
+            /[Uu][Ss][Ee][Rr][Nn][Aa][Mm][Ee]\s*[:=]\s*([^\s]+)/, /username=([^&\s]+)/
+        ]);
+        const pwd = this._extractField(text, [
+            /[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]\s*[:=]\s*([^\s]+)/, /password=([^&\s]+)/
+        ]);
+        if (host && user && pwd) return {
+            type: "xtream", data: {
+                host, username: user, password: pwd,
+                created: this._extractField(text, [/[Cc][Rr][Ee][Aa][Tt][Ee][Dd]\s*[:=]\s*([^\n]+)/]),
+                expire: this._extractField(text, [/[Ee][Xx][Pp][Ii][Rr][Ee]\s*[:=]\s*([^\n]+)/]),
+                duration: this._extractField(text, [/[Dd][Uu][Rr][Aa][Tt][Ii][Oo][Nn]\s*[:=]\s*([^\n]+)/, /(\d+)\s*[Dd]ays/]),
+                hits_by: this._extractField(text, [/[Hh][Ii][Tt][Ss]\s*[Bb][Yy]\s*[:=]\s*([^\n]+)/, /@[A-Za-z0-9_]+/]),
+                raw: text
+            }
+        };
+        return null;
+    }
+
+    static _parseMac(text) {
+        const macs = text.match(/[0-9A-Fa-f]{2}[:-][0-9A-Fa-f]{2}[:-][0-9A-Fa-f]{2}[:-][0-9A-Fa-f]{2}[:-][0-9A-Fa-f]{2}[:-][0-9A-Fa-f]{2}/g);
+        if (macs) {
+            const host = this._extractUrl(text);
+            return { type: "mac", data: { macs, host, raw: text } };
+        }
+        return null;
+    }
+
+    static _parsePortal(text) {
+        const m = text.match(/(https?:\/\/\S+?)(?:\/c\/|\/stalker_portal\/|\/portal\/|\/server\/|\/get\.php|\/player_api\.php)/i);
+        if (m) return { type: "portal", data: { host: m[1].replace(/\/$/, ""), raw: text } };
+        return null;
+    }
+
+    static _parseStalker(text) {
+        if (/stalker|portal/i.test(text)) {
+            const host = this._extractUrl(text);
+            if (host) return { type: "stalker", data: { host, raw: text } };
+        }
+        return null;
+    }
+
+    static _parseM3uUrl(text) {
+        const m = text.match(/(https?:\/\/\S+\.(?:m3u|m3u8)(?:\?\S+)?)/i);
+        if (m) return { type: "m3u_url", data: { url: m[1], raw: text } };
+        return null;
+    }
+
+    static _parseGenericHost(text) {
+        const host = this._extractUrl(text);
+        if (host) return { type: "generic", data: { host, raw: text } };
+        return null;
+    }
+
+    static _extractUrl(text) {
+        const m = text.match(/https?:\/\/[^\s<>"{}|^`\[\]]+/);
+        if (m) {
+            let url = m[0].trim().replace(/[)\]}>]+$/, "").replace(/[^a-zA-Z0-9_/:.-]$/, "");
+            return url;
+        }
+        return "";
+    }
+
+    static _extractField(text, patterns) {
+        for (const pat of patterns) {
+            const m = text.match(pat);
+            if (m) return m[1].trim();
+        }
+        return "";
+    }
+
+    static buildM3uUrl(host, username, password, type) {
+        if (!host || !username || !password) return "";
+        return host.replace(/\/$/, "") + "/get.php?username=" + username + "&password=" + password + "&type=" + type;
+    }
+
+    static buildStalkerUrl(host, mac) {
+        if (!host || !mac) return "";
+        return host.replace(/\/$/, "") + "/stalker_portal/server/load.php?type=stb&action=handshake&mac=" + mac;
+    }
+}
+
+class MouseAIApp {
+    constructor() {
+        this.channels = [];
+        this.filteredChannels = [];
+        this.favorites = new Set();
+        this.customServers = {};
+        this.settings = {};
+        this.currentChannelIndex = -1;
+        this.currentServerInfo = {};
+        this.hls = null;
+        this.isPlaying = false;
+        this.isMuted = false;
+        this.isFullscreen = false;
+        this.showFavOnly = false;
+        this.playHistory = [];
+        this.init();
+    }
+
+    init() {
+        this.loadSettings();
+        this.loadFavorites();
+        this.loadCustomServers();
+        this.loadHistory();
+        this.setupEventListeners();
+        this.setupKeyboardShortcuts();
+        this.setupDragDrop();
+        this.refreshServerCombo();
+
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.opacity = '0';
+            document.getElementById('loading-screen').style.pointerEvents = 'none';
+            document.getElementById('app').style.opacity = '1';
+            setTimeout(() => document.getElementById('loading-screen').remove(), 700);
+            if (this.settings.autoLoad) this.loadChannels();
+        }, 1500);
+    }
+
+    loadSettings() {
+        try {
+            const s = localStorage.getItem('mouse_ai_settings');
+            this.settings = s ? JSON.parse(s) : {};
+        } catch { this.settings = {}; }
+        this.settings = Object.assign({ volume: 100, muteOnStart: false, autoLoad: false, showServerInfo: true, timeout: 45 }, this.settings);
+        document.getElementById('settings-volume').value = this.settings.volume;
+        document.getElementById('vol-val').textContent = this.settings.volume + '%';
+        document.getElementById('mute-start').checked = this.settings.muteOnStart;
+        document.getElementById('auto-load').checked = this.settings.autoLoad;
+        document.getElementById('show-info').checked = this.settings.showServerInfo;
+        document.getElementById('timeout-setting').value = this.settings.timeout;
+        document.getElementById('volume-slider').value = this.settings.volume;
+    }
+
+    saveSettings() {
+        localStorage.setItem('mouse_ai_settings', JSON.stringify(this.settings));
+    }
+
+    loadFavorites() {
+        try {
+            const f = localStorage.getItem('mouse_ai_favorites');
+            this.favorites = new Set(f ? JSON.parse(f).favorites : []);
+        } catch { this.favorites = new Set(); }
+    }
+
+    saveFavorites() {
+        localStorage.setItem('mouse_ai_favorites', JSON.stringify({ favorites: Array.from(this.favorites) }));
+    }
+
+    loadCustomServers() {
+        try {
+            const s = localStorage.getItem('mouse_ai_servers');
+            this.customServers = s ? JSON.parse(s) : {};
+        } catch { this.customServers = {}; }
+    }
+
+    saveCustomServers() {
+        localStorage.setItem('mouse_ai_servers', JSON.stringify(this.customServers));
+    }
+
+    loadHistory() {
+        try {
+            const h = localStorage.getItem('mouse_ai_history');
+            this.playHistory = h ? JSON.parse(h).history.slice(-50) : [];
+        } catch { this.playHistory = []; }
+    }
+
+    saveHistory() {
+        localStorage.setItem('mouse_ai_history', JSON.stringify({ history: this.playHistory.slice(-50) }));
+    }
+
+    setLoading(loading) {
+        const buttons = document.querySelectorAll('.btn-fire');
+        buttons.forEach(btn => { if(!btn.onclick || !btn.onclick.toString().includes('closeModal')) btn.disabled = loading; });
+        document.getElementById('server-select').disabled = loading;
+        document.getElementById('search-input').disabled = loading;
+    }
+
+    showProgress(show, value, text) {
+        const container = document.getElementById('progress-container');
+        const bar = document.getElementById('progress-bar');
+        const status = document.getElementById('status-text');
+        container.classList.toggle('hidden', !show);
+        if (value !== undefined) bar.style.width = value + '%';
+        if (text !== undefined) status.textContent = text;
+    }
+
+    refreshServerCombo() {
+        const sel = document.getElementById('server-select');
+        const current = sel.value;
+        sel.innerHTML = '';
+        for (const [name, url] of Object.entries(DEFAULT_SERVERS)) {
+            const opt = document.createElement('option');
+            opt.value = url;
+            opt.textContent = name;
+            sel.appendChild(opt);
+        }
+        if (Object.keys(this.customServers).length > 0) {
+            const sep = document.createElement('option');
+            sep.disabled = true;
+            sep.textContent = '--- سيرفراتي ---';
+            sel.appendChild(sep);
+        }
+        for (const [name, data] of Object.entries(this.customServers)) {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = '📌 ' + name;
+            sel.appendChild(opt);
+        }
+        if (current && Array.from(sel.options).some(o => o.value === current)) {
+            sel.value = current;
+        }
+    }
+
+    parseM3U(content) {
+        const lines = content.split(/\r?\n/);
+        const channels = [];
+        let current = {};
+        for (const raw of lines) {
+            const line = raw.trim();
+            if (!line) continue;
+            if (line.startsWith('#EXTINF:')) {
+                const parts = line.split(',', 1);
+                const name = line.substring(parts[0].length + 1).trim() || 'قناة بدون اسم';
+                let logo = '';
+                const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                if (logoMatch) logo = logoMatch[1].trim();
+                let group = 'عام';
+                const groupMatch = line.match(/group-title="([^"]*)"/);
+                if (groupMatch) group = groupMatch[1].trim();
+                current = { name, logo, group };
+            } else if (line.startsWith('http') && current.name) {
+                current.url = line;
+                channels.push(Object.assign({}, current));
+                current = {};
+            }
+        }
+        return channels.filter(c => c.url);
+    }
+
+    async loadChannels() {
+        const sel = document.getElementById('server-select');
+        const selectedText = sel.options[sel.selectedIndex].text;
+        const value = sel.value;
+
+        this.channels = [];
+        this.filteredChannels = [];
+        this.currentServerInfo = {};
+        document.getElementById('channels-list').innerHTML = '';
+        document.getElementById('group-select').innerHTML = '<option value="all">جميع المجموعات</option>';
+        this.setLoading(true);
+        this.showProgress(true, 10, 'جاري الاتصال...');
+
+        try {
+            let content = '';
+            if (value === 'builtin') {
+                content = CUSTOM_M3U_BUILTIN;
+                this.showProgress(true, 50, 'قراءة البيانات...');
+            } else if (DEFAULT_SERVERS[selectedText]) {
+                this.showProgress(true, 30, 'جاري التحميل من الخادم...');
+                const res = await fetch(CORS_PROXY + encodeURIComponent(value), { 
+                    signal: AbortSignal.timeout((this.settings.timeout || 45) * 1000) 
+                });
+                if (!res.ok) throw new Error('خطأ في الاتصال: ' + res.status);
+                content = await res.text();
+                this.showProgress(true, 70, 'تحليل القنوات...');
+            } else if (this.customServers[value]) {
+                const data = this.customServers[value];
+                this.currentServerInfo = data.info || {};
+                this.showProgress(true, 30, 'جاري التحميل...');
+                const res = await fetch(CORS_PROXY + encodeURIComponent(data.url), {
+                    signal: AbortSignal.timeout((this.settings.timeout || 45) * 1000)
+                });
+                if (!res.ok) throw new Error('خطأ في الاتصال: ' + res.status);
+                content = await res.text();
+                this.showProgress(true, 70, 'تحليل القنوات...');
+            } else {
+                throw new Error('الرابط غير متوفر');
+            }
+
+            this.channels = this.parseM3U(content);
+            this.filteredChannels = this.channels.slice();
+            this.showProgress(true, 90, 'تحديث القائمة...');
+
+            const groups = new Set();
+            this.channels.forEach(ch => groups.add(ch.group || 'عام'));
+            const gsel = document.getElementById('group-select');
+            gsel.innerHTML = '<option value="all">جميع المجموعات</option>';
+            Array.from(groups).sort().forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                gsel.appendChild(opt);
+            });
+
+            this.filterChannels();
+            this.showProgress(true, 100, 'تم تحميل ' + this.channels.length + ' قناة');
+            setTimeout(() => this.showProgress(false), 1500);
+
+            if (this.settings.showServerInfo && Object.keys(this.currentServerInfo).length > 0) {
+                const info = this.currentServerInfo;
+                const parts = [];
+                if (info.created) parts.push('الإنشاء: ' + info.created);
+                if (info.expire) parts.push('الانتهاء: ' + info.expire);
+                if (info.duration) parts.push('المدة: ' + info.duration);
+                if (info.hits_by) parts.push('بواسطة: ' + info.hits_by);
+                if (parts.length > 0) {
+                    document.getElementById('server-info-text').innerHTML = parts.join(' | ');
+                    document.getElementById('server-info').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('server-info').classList.add('hidden');
+            }
+        } catch (err) {
+            this.showProgress(false);
+            alert('خطأ: ' + err.message);
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async loadFromFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        input.value = '';
+
+        this.showProgress(true, 20, 'قراءة الملف...');
+        try {
+            const text = await file.text();
+            this.showProgress(true, 60, 'تحليل القنوات...');
+            this.channels = this.parseM3U(text);
+            this.filteredChannels = this.channels.slice();
+
+            const groups = new Set();
+            this.channels.forEach(ch => groups.add(ch.group || 'عام'));
+            const gsel = document.getElementById('group-select');
+            gsel.innerHTML = '<option value="all">جميع المجموعات</option>';
+            Array.from(groups).sort().forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                gsel.appendChild(opt);
+            });
+
+            this.filterChannels();
+            this.showProgress(true, 100, 'تم تحميل ' + this.channels.length + ' قناة من الملف');
+            setTimeout(() => this.showProgress(false), 1500);
+            document.getElementById('server-info').classList.add('hidden');
+        } catch (err) {
+            this.showProgress(false);
+            alert('خطأ في قراءة الملف: ' + err.message);
+        }
+    }
+
+    filterChannels() {
+        const search = (document.getElementById('search-input').value || '').toLowerCase().trim();
+        const group = document.getElementById('group-select').value;
+
+        this.filteredChannels = this.channels.filter(ch => {
+            const name = (ch.name || '').toLowerCase();
+            const chGroup = ch.group || 'عام';
+            if (group !== 'all' && chGroup !== group) return false;
+            if (search && !name.includes(search)) return false;
+            if (this.showFavOnly && !this.favorites.has(ch.url)) return false;
+            return true;
+        });
+
+        this.renderChannels();
+        document.getElementById('count-label').textContent = this.filteredChannels.length + ' قناة';
+    }
+
+    renderChannels() {
+        const list = document.getElementById('channels-list');
+        list.innerHTML = '';
+
+        this.filteredChannels.forEach((ch, idx) => {
+            const isFav = this.favorites.has(ch.url);
+            const div = document.createElement('div');
+            div.className = 'channel-item' + (idx === this.currentChannelIndex ? ' active' : '');
+            const defaultImg = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect fill=%22%23161a20%22 width=%2240%22 height=%2240%22/%3E%3Ctext fill=%22%235a6470%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2210%22%3ETV%3C/text%3E%3C/svg%3E';
+            div.innerHTML = '<img src="' + (ch.logo || defaultImg) + '" class="channel-logo" alt="" onerror="this.src='' + defaultImg + ''">' +
+                '<div class="flex-1 min-w-0"><div class="channel-name">' + (isFav ? '❤️ ' : '') + ch.name + '</div>' +
+                '<div class="channel-group">' + (ch.group || 'عام') + '</div></div>';
+            div.onclick = () => this.playChannel(idx);
+            div.oncontextmenu = (e) => {
+                e.preventDefault();
+                this.showChannelContext(e, ch, idx);
+            };
+            list.appendChild(div);
+        });
+    }
+
+    playChannel(index) {
+        if (index < 0 || index >= this.filteredChannels.length) return;
+        this.currentChannelIndex = index;
+        const ch = this.filteredChannels[index];
+        const url = ch.url;
+        const name = ch.name;
+
+        this.renderChannels();
+        const items = document.querySelectorAll('.channel-item');
+        if (items[index]) items[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        document.getElementById('info-label').textContent = 'جاري التشغيل: ' + name;
+        document.getElementById('play-overlay').classList.add('hidden');
+        document.getElementById('video-loading').classList.remove('hidden');
+
+        if (this.hls) { this.hls.destroy(); this.hls = null; }
+        const video = document.getElementById('video-player');
+        video.pause();
+        video.src = '';
+        video.load();
+
+        if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('.ts') || url.includes('extension=ts'))) {
+            this.hls = new Hls({ enableWorker: true, maxBufferLength: 30, maxMaxBufferLength: 60 });
+            this.hls.loadSource(url);
+            this.hls.attachMedia(video);
+            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                video.play().catch(() => {});
+                this.isPlaying = true;
+                this.updatePlayButton();
+                document.getElementById('video-loading').classList.add('hidden');
+                document.getElementById('info-label').textContent = 'يعمل الآن: ' + name;
+            });
+            this.hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    document.getElementById('info-label').textContent = 'خطأ في التشغيل: ' + name;
+                    document.getElementById('video-loading').classList.add('hidden');
+                }
+            });
+        } else {
+            video.src = url;
+            video.play().then(() => {
+                this.isPlaying = true;
+                this.updatePlayButton();
+                document.getElementById('video-loading').classList.add('hidden');
+                document.getElementById('info-label').textContent = 'يعمل الآن: ' + name;
+            }).catch(err => {
+                document.getElementById('info-label').textContent = 'خطأ: ' + name;
+                document.getElementById('video-loading').classList.add('hidden');
+            });
+        }
+
+        video.volume = this.settings.volume / 100;
+        if (this.settings.muteOnStart) {
+            video.muted = true;
+            this.isMuted = true;
+        }
+        this.updateVolumeUI();
+
+        if (!this.playHistory.includes(url)) {
+            this.playHistory.push(url);
+            this.saveHistory();
+        }
+
+        if (window.innerWidth < 768) {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar-overlay').classList.add('hidden');
+        }
+    }
+
+    togglePlay() {
+        const video = document.getElementById('video-player');
+        if (!video.src) return;
+        if (video.paused) {
+            video.play().catch(() => {});
+            this.isPlaying = true;
+        } else {
+            video.pause();
+            this.isPlaying = false;
+        }
+        this.updatePlayButton();
+    }
+
+    stopPlayback() {
+        const video = document.getElementById('video-player');
+        if (this.hls) { this.hls.destroy(); this.hls = null; }
+        video.pause();
+        video.src = '';
+        video.load();
+        this.isPlaying = false;
+        this.updatePlayButton();
+        document.getElementById('info-label').textContent = 'تم الإيقاف';
+        document.getElementById('play-overlay').classList.remove('hidden');
+        document.getElementById('progress-slider').value = 0;
+    }
+
+    playNext() {
+        if (!this.filteredChannels.length) return;
+        let n = this.currentChannelIndex + 1;
+        if (n >= this.filteredChannels.length) n = 0;
+        this.playChannel(n);
+    }
+
+    playPrevious() {
+        if (!this.filteredChannels.length) return;
+        let n = this.currentChannelIndex - 1;
+        if (n < 0) n = this.filteredChannels.length - 1;
+        this.playChannel(n);
+    }
+
+    updatePlayButton() {
+        const btn = document.getElementById('play-btn');
+        const icon = btn.querySelector('i');
+        if (this.isPlaying) {
+            icon.className = 'fas fa-pause';
+            btn.classList.remove('from-red', 'to-red-dim', 'border-red');
+            btn.classList.add('from-green', 'to-green-dim', 'border-green');
+        } else {
+            icon.className = 'fas fa-play ml-0.5';
+            btn.classList.remove('from-green', 'to-green-dim', 'border-green');
+            btn.classList.add('from-red', 'to-red-dim', 'border-red');
+        }
+    }
+
+    setVolume(val) {
+        const video = document.getElementById('video-player');
+        video.volume = val / 100;
+        this.settings.volume = parseInt(val);
+        this.saveSettings();
+        this.updateVolumeUI();
+    }
+
+    toggleMute() {
+        const video = document.getElementById('video-player');
+        video.muted = !video.muted;
+        this.isMuted = video.muted;
+        this.updateVolumeUI();
+    }
+
+    updateVolumeUI() {
+        const video = document.getElementById('video-player');
+        const btn = document.getElementById('mute-btn');
+        const slider = document.getElementById('volume-slider');
+        if (video.muted) {
+            btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            btn.classList.add('text-red');
+            btn.classList.remove('text-green');
+        } else if (video.volume < 0.3) {
+            btn.innerHTML = '<i class="fas fa-volume-down"></i>';
+            btn.classList.remove('text-red');
+            btn.classList.add('text-green');
+        } else {
+            btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            btn.classList.remove('text-red');
+            btn.classList.add('text-green');
+        }
+        if (!video.muted) slider.value = Math.round(video.volume * 100);
+    }
+
+    volumeUp() {
+        const s = document.getElementById('volume-slider');
+        s.value = Math.min(parseInt(s.value) + 10, 100);
+        this.setVolume(s.value);
+    }
+
+    volumeDown() {
+        const s = document.getElementById('volume-slider');
+        s.value = Math.max(parseInt(s.value) - 10, 0);
+        this.setVolume(s.value);
+    }
+
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+            this.isFullscreen = true;
+        } else {
+            document.exitFullscreen();
+            this.isFullscreen = false;
+        }
+    }
+
+    toggleFavView() {
+        this.showFavOnly = !this.showFavOnly;
+        const btn = document.getElementById('fav-btn');
+        btn.classList.toggle('active', this.showFavOnly);
+        btn.innerHTML = this.showFavOnly ? '<i class="fas fa-heart ml-1"></i> المفضلة (مفعل)' : '<i class="fas fa-heart ml-1"></i> المفضلة';
+        this.filterChannels();
+    }
+
+    toggleFavorite(ch) {
+        const url = ch.url;
+        if (this.favorites.has(url)) {
+            this.favorites.delete(url);
+        } else {
+            this.favorites.add(url);
+        }
+        this.saveFavorites();
+        this.renderChannels();
+    }
+
+    showChannelContext(e, ch, idx) {
+        const items = [
+            { label: '▶️ تشغيل', action: () => this.playChannel(idx) },
+            { label: this.favorites.has(ch.url) ? '💔 إزالة من المفضلة' : '❤️ إضافة للمفضلة', action: () => { this.toggleFavorite(ch); this.renderChannels(); } },
+            { label: '📋 نسخ الرابط', action: () => navigator.clipboard.writeText(ch.url).then(() => alert('تم النسخ!')) },
+            { label: 'ℹ️ معلومات القناة', action: () => this.showChannelInfo(ch) }
+        ];
+
+        const existing = document.querySelector('.context-menu');
+        if (existing) existing.remove();
+
+        const menu = document.createElement('div');
+        menu.className = 'context-menu fixed z-50 bg-card border border-border rounded-xl shadow-2xl py-1 min-w-[180px]';
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+
+        items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'px-4 py-2.5 text-sm text-white hover:bg-green hover:text-dark cursor-pointer transition-colors';
+            div.textContent = item.label;
+            div.onclick = () => { menu.remove(); item.action(); };
+            menu.appendChild(div);
+        });
+
+        document.body.appendChild(menu);
+        setTimeout(() => {
+            document.addEventListener('click', () => menu.remove(), { once: true });
+        }, 10);
+    }
+
+    showChannelInfo(ch) {
+        const content = document.getElementById('channel-info-content');
+        content.innerHTML = '<div class="bg-dark rounded-lg p-3 border border-border"><b class="text-green">الاسم:</b> <span class="text-white">' + ch.name + '</span></div>' +
+            '<div class="bg-dark rounded-lg p-3 border border-border"><b class="text-green">المجموعة:</b> <span class="text-white">' + (ch.group || 'غير محدد') + '</span></div>' +
+            '<div class="bg-dark rounded-lg p-3 border border-border"><b class="text-green">الرابط:</b> <span class="text-green break-all text-xs">' + ch.url + '</span></div>' +
+            '<div class="bg-dark rounded-lg p-3 border border-border"><b class="text-green">الشعار:</b> <span class="text-secondary">' + (ch.logo || 'غير متوفر') + '</span></div>';
+        this.openModal('modal-info');
+    }
+
+    openAddCode() {
+        document.getElementById('code-input').value = '';
+        document.getElementById('type-badge').textContent = 'لم يتم التعرف بعد';
+        document.getElementById('type-badge').className = 'mt-3 text-center py-2 rounded-xl bg-input border border-border text-muted text-sm font-bold';
+        document.getElementById('manual-name').value = '';
+        document.getElementById('manual-host').value = '';
+        document.getElementById('manual-user').value = '';
+        document.getElementById('manual-pass').value = '';
+        document.getElementById('manual-mac').value = '';
+        document.getElementById('preview-url').value = '';
+        this.openModal('modal-add-code');
+    }
+
+    parseCode() {
+        const text = document.getElementById('code-input').value.trim();
+        if (!text) { alert('الصق الكود أولاً'); return; }
+
+        const result = UniversalCodeParser.parse(text);
+        const data = result.data || {};
+        const badge = document.getElementById('type-badge');
+        const typeNames = {
+            cccam: 'CCcam', newcamd: 'Newcamd', mgcamd: 'Mgcamd',
+            xtream: 'Xtream Codes', mac: 'MAC Address',
+            portal: 'Portal', stalker: 'Stalker Portal',
+            m3u_url: 'M3U مباشر', generic: 'عام', unknown: 'غير معروف'
+        };
+
+        badge.textContent = typeNames[result.type] || result.type;
+        if (result.type !== 'unknown') {
+            badge.className = 'mt-3 text-center py-2 rounded-xl badge-xtream text-sm font-bold border-2 border-green-dim';
+        } else {
+            badge.className = 'mt-3 text-center py-2 rounded-xl badge-unknown text-sm font-bold border-2 border-red-dim';
+        }
+
+        let url = '';
+        if (result.type === 'xtream') {
+            const h = data.host || '', u = data.username || '', p = data.password || '';
+            if (h && u && p) {
+                url = UniversalCodeParser.buildM3uUrl(h, u, p, 'm3u_plus');
+                document.getElementById('manual-host').value = h;
+                document.getElementById('manual-user').value = u;
+                document.getElementById('manual-pass').value = p;
+            }
+        } else if (result.type === 'cccam') {
+            const h = data.host || '', port = data.port || '', u = data.user || '', p = data.pass || '';
+            if (h && port && u && p) url = 'http://' + h + ':' + port + '/get.php?username=' + u + '&password=' + p + '&type=m3u_plus';
+        } else if (result.type === 'mac') {
+            const h = data.host || '', macs = data.macs || [];
+            if (h && macs.length) {
+                url = UniversalCodeParser.buildStalkerUrl(h, macs[0]);
+                document.getElementById('manual-host').value = h;
+                document.getElementById('manual-mac').value = macs[0];
+            }
+        } else if (result.type === 'portal' || result.type === 'stalker') {
+            const h = data.host || '';
+            if (h) url = h + '/get.php?type=m3u_plus';
+        } else if (result.type === 'm3u_url') {
+            url = data.url || '';
+        } else if (result.type === 'generic') {
+            url = data.host || '';
+        }
+
+        document.getElementById('preview-url').value = url || 'لا يمكن بناء الرابط - أدخل البيانات يدوياً';
+        if (url && !document.getElementById('manual-name').value) {
+            const hits = data.hits_by || '';
+            document.getElementById('manual-name').value = (typeNames[result.type] || 'سيرفر') + (hits ? ' (' + hits + ')' : '');
+        }
+    }
+
+    addServer() {
+        const name = document.getElementById('manual-name').value.trim();
+        let url = document.getElementById('preview-url').value.trim();
+
+        if (!name) { alert('أدخل اسم السيرفر'); return; }
+        if (!url || url.startsWith('لا يمكن')) {
+            const h = document.getElementById('manual-host').value.trim();
+            const u = document.getElementById('manual-user').value.trim();
+            const p = document.getElementById('manual-pass').value.trim();
+            const mac = document.getElementById('manual-mac').value.trim();
+            if (h && u && p) {
+                const t = document.getElementById('manual-type').value;
+                url = UniversalCodeParser.buildM3uUrl(h, u, p, t);
+            } else if (h && mac) {
+                url = h + '/stalker_portal/server/load.php?type=stb&action=handshake&mac=' + mac;
+            } else {
+                alert('أدخل البيانات كاملة'); return;
+            }
+        }
+
+        this.customServers[name] = { url, info: { type: 'xtream', host: document.getElementById('manual-host').value.trim() } };
+        this.saveCustomServers();
+        this.refreshServerCombo();
+
+        const sel = document.getElementById('server-select');
+        sel.value = name;
+
+        this.closeModal('modal-add-code');
+        alert('تم إضافة \'' + name + '\' بنجاح!\n\nاضغط \'تحميل القنوات\' للتحميل.');
+    }
+
+    openManageServers() {
+        const container = document.getElementById('servers-table');
+        container.innerHTML = '';
+
+        Object.entries(this.customServers).forEach(([name, data]) => {
+            const div = document.createElement('div');
+            div.className = 'server-item';
+            const urlShort = data.url.length > 60 ? data.url.substring(0, 60) + '...' : data.url;
+            div.innerHTML = '<div class="flex-1 min-w-0"><div class="text-green font-bold text-sm">' + name + '</div>' +
+                '<div class="text-muted text-xs mt-1 break-all">' + urlShort + '</div></div>' +
+                '<button onclick="app.deleteServer(' + JSON.stringify(name).replace(/"/g, '&quot;') + ')" class="w-8 h-8 rounded-lg bg-red text-white flex items-center justify-center hover:brightness-110 transition-all flex-shrink-0">' +
+                '<i class="fas fa-trash text-xs"></i></button>';
+            container.appendChild(div);
+        });
+
+        if (!Object.keys(this.customServers).length) {
+            container.innerHTML = '<div class="text-center text-muted py-8">لا توجد سيرفرات مخصصة</div>';
+        }
+
+        this.openModal('modal-manage');
+    }
+
+    deleteServer(name) {
+        if (!confirm('حذف \'' + name + '\'؟')) return;
+        delete this.customServers[name];
+        this.saveCustomServers();
+        this.refreshServerCombo();
+        this.openManageServers();
+    }
+
+    openSettings() {
+        this.openModal('modal-settings');
+    }
+
+    saveSettings() {
+        this.settings = {
+            volume: parseInt(document.getElementById('settings-volume').value),
+            muteOnStart: document.getElementById('mute-start').checked,
+            autoLoad: document.getElementById('auto-load').checked,
+            showServerInfo: document.getElementById('show-info').checked,
+            timeout: parseInt(document.getElementById('timeout-setting').value) || 45
+        };
+        this.saveSettings();
+        document.getElementById('volume-slider').value = this.settings.volume;
+        this.closeModal('modal-settings');
+        alert('تم حفظ الإعدادات');
+    }
+
+    openModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex', 'modal-enter');
+    }
+
+    closeModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.add('hidden');
+        modal.classList.remove('flex', 'modal-enter');
+    }
+
+    toggleSidebar() {
+        const sb = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isOpen = !sb.classList.contains('-translate-x-full');
+        if (isOpen) {
+            sb.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        } else {
+            sb.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+    }
+
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            switch(e.key) {
+                case 'f': case 'F': this.toggleFullscreen(); break;
+                case ' ': e.preventDefault(); this.togglePlay(); break;
+                case 's': case 'S': this.stopPlayback(); break;
+                case 'm': case 'M': this.toggleMute(); break;
+                case 'ArrowRight': this.playNext(); break;
+                case 'ArrowLeft': this.playPrevious(); break;
+                case 'ArrowUp': e.preventDefault(); this.volumeUp(); break;
+                case 'ArrowDown': e.preventDefault(); this.volumeDown(); break;
+                case 'Escape': if (document.fullscreenElement) document.exitFullscreen(); break;
+            }
+        });
+    }
+
+    setupDragDrop() {
+        const appEl = document.getElementById('app');
+        appEl.addEventListener('dragover', (e) => { e.preventDefault(); appEl.style.opacity = '0.7'; });
+        appEl.addEventListener('dragleave', () => { appEl.style.opacity = '1'; });
+        appEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            appEl.style.opacity = '1';
+            const files = e.dataTransfer.files;
+            if (files.length && files[0].name.match(/\.(m3u|m3u8)$/i)) {
+                const input = document.getElementById('file-input');
+                const dt = new DataTransfer();
+                dt.items.add(files[0]);
+                input.files = dt.files;
+                this.loadFromFile(input);
+            }
+        });
+    }
+
+    setupEventListeners() {
+        const video = document.getElementById('video-player');
+        video.addEventListener('timeupdate', () => {
+            if (video.duration) {
+                const slider = document.getElementById('progress-slider');
+                slider.value = (video.currentTime / video.duration) * 1000;
+            }
+        });
+        video.addEventListener('click', () => this.togglePlay());
+        video.addEventListener('dblclick', () => this.toggleFullscreen());
+
+        document.getElementById('progress-slider').addEventListener('input', (e) => {
+            if (video.duration) {
+                video.currentTime = (e.target.value / 1000) * video.duration;
+            }
+        });
+
+        ['modal-add-code', 'modal-manage', 'modal-settings', 'modal-info'].forEach(id => {
+            document.getElementById(id).addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) this.closeModal(id);
+            });
+        });
+    }
+}
+
+const app = new MouseAIApp();
+    </script>
+</body>
+</html>
