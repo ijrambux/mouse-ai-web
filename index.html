@@ -1,108 +1,80 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOUSE AI IPTV Pro v4.0 - شهار</title>
+    <title>MOUSE AI IPTV - شهار</title>
     <style>
-        /* ===== CSS Variables ===== */
-        :root {
-            --bg-dark: #0a0c0f;
-            --bg-card: #111418;
-            --bg-input: #161a20;
-            --border: #1e242c;
-            --border-hover: #2a333f;
-            --green: #00ff88;
-            --green-dim: #00cc6a;
-            --red: #ff2a2a;
-            --red-dim: #cc2222;
-            --white: #ffffff;
-            --text-primary: #ffffff;
-            --text-secondary: #8b95a5;
-            --text-muted: #5a6470;
-            --shadow-color: rgba(0, 255, 136, 0.4);
-            --glow-red: rgba(255, 42, 42, 0.4);
-            --glow-white: rgba(255, 255, 255, 0.3);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
+            font-family: Arial, sans-serif;
+            background: #0a0c0f;
+            color: #fff;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ff2a2a, #00ff88, #ffffff);
+            background-size: 300% 300%;
+            animation: gradientMove 4s ease infinite;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #0a0c0f;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+        .header .sub {
+            font-size: 14px;
+            color: #0a0c0f;
+            font-weight: bold;
+        }
+        
+        /* Main Layout */
+        .main {
+            display: flex;
+            flex: 1;
+            padding: 10px;
+            gap: 10px;
+            height: calc(100vh - 80px);
             overflow: hidden;
         }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-card); }
-        ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 10px; }
-
-        @keyframes fireGlow {
-            0% { text-shadow: 0 0 20px rgba(255,42,42,0.6), 0 0 40px rgba(255,42,42,0.3); }
-            33% { text-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.3); }
-            66% { text-shadow: 0 0 20px rgba(0,255,136,0.6), 0 0 40px rgba(0,255,136,0.3); }
-            100% { text-shadow: 0 0 20px rgba(255,42,42,0.6), 0 0 40px rgba(255,42,42,0.3); }
-        }
-        @keyframes logoColorShift {
-            0% { color: #ff2a2a; }
-            33% { color: #ffffff; }
-            66% { color: #00ff88; }
-            100% { color: #ff2a2a; }
-        }
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes progressGlow {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 300% 0%; }
-        }
-
-        .animated-logo {
-            font-size: 42px;
-            font-weight: 900;
-            animation: logoColorShift 3s ease-in-out infinite, fireGlow 3s ease-in-out infinite, logoPulse 2s ease-in-out infinite;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-
-        #app { display: flex; height: 100vh; overflow: hidden; }
-
-        .left-panel {
+        
+        /* Video Player */
+        .video-section {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 12px 12px 12px 6px;
             min-width: 0;
         }
-
-        .video-container {
+        .video-wrapper {
             flex: 1;
             background: #000;
-            border-radius: 14px;
-            border: 3px solid var(--green);
+            border-radius: 12px;
+            border: 3px solid #00ff88;
             position: relative;
             overflow: hidden;
             min-height: 300px;
-            transition: border-color 0.3s ease;
         }
-        .video-container:hover { border-color: var(--white); }
-
         #videoPlayer {
             width: 100%;
             height: 100%;
             background: #000;
-            display: block;
         }
-
         .video-placeholder {
             position: absolute;
             top: 50%;
@@ -110,433 +82,332 @@
             transform: translate(-50%, -50%);
             text-align: center;
             pointer-events: none;
-            z-index: 10;
+            color: #5a6470;
         }
-        .video-placeholder .logo-text {
-            font-size: 48px;
-            font-weight: 900;
-            animation: logoColorShift 3s ease-in-out infinite, fireGlow 3s ease-in-out infinite;
-            letter-spacing: 2px;
+        .video-placeholder h2 {
+            font-size: 36px;
+            color: #00ff88;
+            animation: pulse 2s ease-in-out infinite;
         }
-        .video-placeholder p {
-            margin-top: 10px;
-            font-size: 14px;
-            color: var(--text-muted);
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
-
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 20;
-            color: var(--green);
-            font-weight: bold;
-        }
-        .loading-overlay.active { display: flex; }
-        .loading-overlay .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--bg-input);
-            border-top-color: var(--green);
-            border-radius: 50%;
-            animation: spin 0.8s ease-in-out infinite;
-        }
-
-        .server-info {
-            background: var(--bg-card);
-            border-left: 4px solid var(--green);
-            border-radius: 8px;
-            padding: 8px 14px;
-            margin-top: 8px;
-            display: none;
-            font-size: 12px;
-            color: var(--green);
-            font-weight: bold;
-        }
-        .server-info.active { display: block; animation: fadeSlideIn 0.4s ease; }
-
+        
+        /* Controls */
         .controls {
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            padding: 10px 14px;
-            margin-top: 10px;
-            transition: border-color 0.3s ease;
+            background: #111418;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #1e242c;
         }
-        .controls:hover { border-color: var(--green); }
-
-        .progress-slider {
-            width: 100%;
-            height: 5px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: var(--bg-input);
-            border-radius: 3px;
-            outline: none;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-        .progress-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--green);
-            border-radius: 50%;
-            border: 2px solid white;
-            cursor: pointer;
-            box-shadow: 0 0 20px var(--shadow-color);
-        }
-
-        .btn-row {
+        .controls .row {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
-
-        .ctrl-btn {
-            background: var(--bg-input);
-            border: 2px solid var(--green);
-            border-radius: 10px;
-            color: var(--green);
-            font-weight: bold;
-            font-size: 14px;
-            padding: 6px 12px;
-            min-width: 40px;
-            height: 40px;
+        .controls button {
+            background: #161a20;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            color: #00ff88;
+            padding: 8px 14px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-size: 14px;
         }
-        .ctrl-btn:hover {
-            background: var(--green);
+        .controls button:hover {
+            background: #00ff88;
             color: #0a0c0f;
             transform: scale(1.05);
-            box-shadow: 0 0 25px var(--shadow-color);
         }
-        .ctrl-btn.red { border-color: var(--red); color: var(--red); }
-        .ctrl-btn.red:hover { background: var(--red); color: white; box-shadow: 0 0 25px var(--glow-red); }
-        .ctrl-btn.white { border-color: var(--white); color: var(--white); }
-        .ctrl-btn.white:hover { background: var(--white); color: #0a0c0f; box-shadow: 0 0 25px var(--glow-white); }
-
-        .ctrl-btn.play-btn {
-            background: linear-gradient(135deg, var(--red), var(--red-dim));
-            border-color: var(--red);
-            color: white;
+        .controls button.red {
+            border-color: #ff2a2a;
+            color: #ff2a2a;
+        }
+        .controls button.red:hover {
+            background: #ff2a2a;
+            color: #fff;
+        }
+        .controls button.play {
+            background: linear-gradient(135deg, #ff2a2a, #cc2222);
+            border-color: #ff2a2a;
+            color: #fff;
             font-size: 18px;
-            min-width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            padding: 8px 20px;
         }
-        .ctrl-btn.play-btn:hover { border-color: white; transform: scale(1.08); box-shadow: 0 0 30px var(--glow-red); }
-        .ctrl-btn.play-btn.playing {
-            background: linear-gradient(135deg, var(--green), var(--green-dim));
-            border-color: var(--green);
-            box-shadow: 0 0 30px var(--glow-green);
+        .controls button.play.playing {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border-color: #00ff88;
         }
-
-        .vol-slider {
+        .controls input[type="range"] {
             width: 100px;
-            height: 5px;
+            height: 4px;
             -webkit-appearance: none;
-            appearance: none;
-            background: var(--bg-input);
-            border-radius: 3px;
-            outline: none;
-            cursor: pointer;
+            background: #161a20;
+            border-radius: 2px;
         }
-        .vol-slider::-webkit-slider-thumb {
+        .controls input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
             width: 14px;
             height: 14px;
-            background: var(--green);
+            background: #00ff88;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 15px var(--shadow-color);
         }
-
         .info-label {
             text-align: center;
-            color: var(--text-secondary);
+            color: #8b95a5;
             font-size: 13px;
-            font-weight: bold;
             margin-top: 6px;
             min-height: 20px;
+            font-weight: bold;
         }
-        .info-label.active { color: var(--green); }
-
-        .right-panel {
-            width: 420px;
-            min-width: 320px;
+        .info-label.active {
+            color: #00ff88;
+        }
+        
+        /* Right Panel */
+        .channels-section {
+            width: 380px;
+            min-width: 280px;
             display: flex;
             flex-direction: column;
-            padding: 12px 12px 12px 6px;
-            border-left: 2px solid var(--border);
-            overflow: hidden;
-            background: var(--bg-dark);
-        }
-        .right-panel .logo { text-align: center; padding: 4px 0; }
-        .right-panel .subtitle {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--green);
-            margin: -4px 0 2px 0;
-            letter-spacing: 3px;
-            animation: fireGlow 2s ease-in-out infinite;
-        }
-        .right-panel .version {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            margin-bottom: 10px;
-        }
-
-        .server-section {
-            background: var(--bg-card);
+            background: #111418;
             border-radius: 12px;
-            border: 2px solid var(--border);
-            padding: 12px;
-            margin-bottom: 10px;
+            border: 1px solid #1e242c;
+            padding: 10px;
+            overflow: hidden;
         }
-        .server-section label {
-            color: var(--green);
+        .channels-section .title {
+            color: #00ff88;
+            font-size: 16px;
             font-weight: bold;
-            font-size: 13px;
-            display: block;
             margin-bottom: 6px;
+            text-align: center;
         }
-
-        .server-select {
+        .channels-section select,
+        .channels-section input {
             width: 100%;
-            padding: 10px 12px;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
+            padding: 8px 12px;
+            background: #161a20;
+            border: 2px solid #1e242c;
+            border-radius: 8px;
+            color: #fff;
             font-size: 13px;
             outline: none;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M6 8L0 0h12z' fill='%2300ff88'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
+            margin-bottom: 6px;
         }
-        .server-select:focus { border-color: var(--green); box-shadow: 0 0 20px var(--shadow-color); }
-
-        .btn-grid {
+        .channels-section select:focus,
+        .channels-section input:focus {
+            border-color: #00ff88;
+        }
+        .channels-section .btn-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
-            margin-top: 8px;
+            margin-bottom: 6px;
         }
-        .btn-grid .full { grid-column: 1 / -1; }
-
-        .action-btn {
-            padding: 10px 16px;
-            border-radius: 10px;
-            border: 2px solid var(--border);
-            background: var(--bg-input);
-            color: var(--text-primary);
+        .channels-section .btn-row .full {
+            grid-column: 1 / -1;
+        }
+        .channels-section .action-btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #1e242c;
+            background: #161a20;
+            color: #fff;
             font-weight: bold;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s;
             text-align: center;
         }
-        .action-btn:hover {
-            border-color: var(--green);
-            background: var(--bg-card);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        .channels-section .action-btn:hover {
+            border-color: #00ff88;
         }
-        .action-btn.green { border-color: var(--green); color: var(--green); }
-        .action-btn.green:hover { background: var(--green); color: #0a0c0f; box-shadow: 0 0 30px var(--shadow-color); }
-        .action-btn.white { border-color: var(--white); color: var(--white); }
-        .action-btn.white:hover { background: var(--white); color: #0a0c0f; box-shadow: 0 0 30px var(--glow-white); }
-        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
+        .channels-section .action-btn.green {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        .channels-section .action-btn.green:hover {
+            background: #00ff88;
+            color: #0a0c0f;
+        }
+        .channels-section .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
         .progress-bar {
             width: 100%;
-            height: 6px;
-            background: var(--bg-input);
-            border-radius: 3px;
+            height: 4px;
+            background: #161a20;
+            border-radius: 2px;
             overflow: hidden;
-            margin: 6px 0;
+            margin: 4px 0;
             display: none;
         }
-        .progress-bar.active { display: block; animation: fadeSlideIn 0.3s ease; }
+        .progress-bar.active {
+            display: block;
+        }
         .progress-bar .fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--red), var(--green), var(--white));
+            background: linear-gradient(90deg, #ff2a2a, #00ff88, #ffffff);
             background-size: 300% 100%;
-            border-radius: 3px;
             width: 0%;
-            transition: width 0.3s;
-            animation: progressGlow 2s linear infinite;
+            animation: progressAnim 2s linear infinite;
         }
-
-        .status-label {
+        @keyframes progressAnim {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
+        }
+        
+        .status-text {
             text-align: center;
-            color: var(--text-secondary);
+            color: #8b95a5;
             font-size: 12px;
+            min-height: 18px;
             font-weight: bold;
-            min-height: 20px;
         }
-        .status-label.success { color: var(--green); }
-        .status-label.error { color: var(--red); }
-
-        .group-select {
-            width: 100%;
-            padding: 8px 12px;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 13px;
-            outline: none;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M6 8L0 0h12z' fill='%2300ff88'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            margin-bottom: 6px;
-        }
-        .group-select:focus { border-color: var(--green); box-shadow: 0 0 20px var(--shadow-color); }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 13px;
-            outline: none;
-            transition: all 0.3s ease;
-            margin-bottom: 6px;
-        }
-        .search-input:focus { border-color: var(--green); box-shadow: 0 0 20px var(--shadow-color); }
-        .search-input::placeholder { color: var(--text-muted); }
-
+        .status-text.success { color: #00ff88; }
+        .status-text.error { color: #ff2a2a; }
+        
         .channel-list {
             flex: 1;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 2px solid var(--border);
             overflow-y: auto;
-            padding: 6px;
-            min-height: 200px;
-        }
-
-        .channel-item {
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--border);
+            background: #0a0c0f;
             border-radius: 8px;
-            margin: 3px 5px;
+            padding: 4px;
+            min-height: 150px;
+            border: 1px solid #1e242c;
+        }
+        .channel-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1e242c;
+            border-radius: 6px;
+            margin: 2px 0;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s;
             font-size: 13px;
-            color: var(--text-primary);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
         .channel-item:hover {
-            background: var(--bg-input);
-            border: 1px solid var(--border-hover);
-            transform: translateX(4px);
+            background: #161a20;
         }
         .channel-item.active {
-            background: linear-gradient(135deg, var(--green), var(--green-dim));
+            background: #00ff88;
             color: #0a0c0f;
             font-weight: bold;
-            border: 2px solid var(--green-dim);
-            box-shadow: 0 0 30px var(--shadow-color);
         }
-        .channel-item .fav-star { color: #ffd700; margin-right: 8px; }
-        .channel-item .channel-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .channel-item .channel-group {
+        .channel-item .fav {
+            color: #ffd700;
+        }
+        .channel-item .group-tag {
             font-size: 10px;
-            color: var(--text-muted);
-            background: var(--bg-input);
-            padding: 2px 8px;
+            color: #5a6470;
+            background: #161a20;
+            padding: 1px 8px;
             border-radius: 10px;
-            margin-left: 8px;
-            white-space: nowrap;
         }
-        .channel-item.active .channel-group { background: rgba(0,0,0,0.2); color: #0a0c0f; }
-
+        .channel-item.active .group-tag {
+            background: rgba(0,0,0,0.2);
+            color: #0a0c0f;
+        }
         .channel-count {
             text-align: center;
-            color: var(--text-muted);
-            font-size: 12px;
+            color: #5a6470;
+            font-size: 11px;
+            padding: 4px 0;
             font-weight: bold;
-            padding: 6px 0;
         }
-
-        .bottom-btns {
+        
+        .bottom-row {
             display: flex;
             gap: 6px;
-            margin-top: 6px;
+            margin-top: 4px;
         }
-        .bottom-btns .action-btn { flex: 1; font-size: 11px; padding: 8px 10px; }
-        .bottom-btns .action-btn.fav-active {
-            background: var(--green);
+        .bottom-row .action-btn {
+            flex: 1;
+            font-size: 11px;
+            padding: 6px 8px;
+        }
+        .bottom-row .action-btn.fav-active {
+            background: #00ff88;
             color: #0a0c0f;
-            border-color: var(--green);
-            box-shadow: 0 0 30px var(--shadow-color);
+            border-color: #00ff88;
         }
-
-        .x-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: #000;
-            border: 2px solid var(--white);
-            border-radius: 30px;
-            color: var(--white);
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            margin-top: 6px;
-            width: 100%;
-        }
-        .x-btn:hover {
-            background: var(--white);
-            color: #000;
-            transform: scale(1.02);
-            box-shadow: 0 0 30px var(--glow-white);
-        }
-        .x-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
+        
         .footer {
             text-align: center;
-            color: var(--text-muted);
+            color: #5a6470;
             font-size: 10px;
-            margin-top: 6px;
             padding: 4px 0;
         }
-        .footer a { color: var(--green); text-decoration: none; }
-        .footer a:hover { color: var(--white); text-decoration: underline; }
-
+        .footer a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+        .x-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #000;
+            border: 2px solid #fff;
+            border-radius: 20px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            text-decoration: none;
+            margin-top: 4px;
+            transition: all 0.2s;
+        }
+        .x-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+        .x-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #111418;
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 10px 24px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 999;
+            opacity: 0;
+            transition: all 0.4s;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.error {
+            border-color: #ff2a2a;
+        }
+        
+        /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -548,1394 +419,1099 @@
             z-index: 999;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
-            backdrop-filter: blur(8px);
         }
-        .modal-overlay.active { display: flex; }
-
+        .modal-overlay.active {
+            display: flex;
+        }
         .modal {
-            background: var(--bg-card);
-            border: 2px solid var(--green);
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 700px;
+            background: #111418;
+            border: 2px solid #00ff88;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 600px;
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            animation: slideUp 0.4s ease;
-            box-shadow: 0 0 60px var(--shadow-color);
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideUp {
-            from { transform: translateY(30px) scale(0.95); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-
-        .modal-title {
-            font-size: 22px;
-            font-weight: 900;
+        .modal h2 {
+            color: #00ff88;
             text-align: center;
-            margin-bottom: 16px;
-            animation: logoColorShift 3s ease-in-out infinite, fireGlow 3s ease-in-out infinite;
+            margin-bottom: 12px;
         }
-
         .modal textarea {
             width: 100%;
-            min-height: 150px;
-            padding: 12px;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-family: 'Courier New', monospace;
+            min-height: 120px;
+            padding: 10px;
+            background: #0a0c0f;
+            border: 2px solid #1e242c;
+            border-radius: 8px;
+            color: #fff;
+            font-family: monospace;
             font-size: 12px;
             resize: vertical;
             outline: none;
         }
-        .modal textarea:focus { border-color: var(--green); box-shadow: 0 0 20px var(--shadow-color); }
-
-        .modal .form-group { margin-bottom: 12px; }
+        .modal textarea:focus {
+            border-color: #00ff88;
+        }
+        .modal .form-group {
+            margin-bottom: 10px;
+        }
         .modal .form-group label {
-            display: block;
-            color: var(--green);
+            color: #00ff88;
             font-weight: bold;
             font-size: 13px;
+            display: block;
             margin-bottom: 4px;
         }
-        .modal .form-group input,
-        .modal .form-group select {
+        .modal .form-group input {
             width: 100%;
-            padding: 10px 14px;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
+            padding: 8px 12px;
+            background: #0a0c0f;
+            border: 2px solid #1e242c;
+            border-radius: 8px;
+            color: #fff;
             font-size: 13px;
             outline: none;
         }
-        .modal .form-group input:focus,
-        .modal .form-group select:focus { border-color: var(--green); box-shadow: 0 0 20px var(--shadow-color); }
-        .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        .modal .btn-row-modal {
+        .modal .form-group input:focus {
+            border-color: #00ff88;
+        }
+        .modal .modal-btns {
             display: flex;
             gap: 10px;
-            margin-top: 16px;
+            margin-top: 12px;
             justify-content: flex-end;
         }
-        .modal .btn-row-modal .action-btn { min-width: 100px; padding: 12px 24px; font-size: 14px; }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--bg-card);
-            border: 2px solid var(--green);
-            border-radius: 12px;
-            padding: 12px 24px;
-            color: var(--text-primary);
-            font-weight: bold;
-            font-size: 14px;
-            z-index: 1000;
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            pointer-events: none;
-            box-shadow: 0 0 40px var(--shadow-color);
-            max-width: 90%;
-            text-align: center;
+        .modal .modal-btns .action-btn {
+            min-width: 80px;
+            padding: 10px 20px;
+            font-size: 13px;
         }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .toast.error { border-color: var(--red); box-shadow: 0 0 40px var(--glow-red); }
-        .toast.success { border-color: var(--green); box-shadow: 0 0 40px var(--glow-green); }
-
-        @media (max-width: 900px) {
-            #app { flex-direction: column; height: 100vh; overflow: hidden; }
-            .left-panel { padding: 8px; flex: 0 0 50vh; min-height: 250px; }
-            .video-container { min-height: 150px; flex: 1; }
-            .right-panel { width: 100%; min-width: 0; border-left: none; border-top: 2px solid var(--border); padding: 6px 8px; flex: 1; }
-            .right-panel .logo .animated-logo { font-size: 28px; }
-            .controls { padding: 6px 10px; }
-            .btn-row { gap: 4px; }
-            .ctrl-btn { height: 32px; min-width: 32px; font-size: 12px; padding: 4px 8px; }
-            .ctrl-btn.play-btn { height: 38px; min-width: 38px; font-size: 14px; }
-            .vol-slider { width: 60px; }
-            .modal .form-row { grid-template-columns: 1fr; }
+        
+        @media (max-width: 768px) {
+            .main {
+                flex-direction: column;
+                height: auto;
+            }
+            .video-wrapper {
+                min-height: 200px;
+            }
+            .channels-section {
+                width: 100%;
+                min-width: 0;
+                max-height: 50vh;
+            }
+            .controls .row {
+                gap: 4px;
+            }
+            .controls button {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            .controls input[type="range"] {
+                width: 60px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
         }
-
         @media (max-width: 480px) {
-            .left-panel { flex: 0 0 40vh; min-height: 180px; }
-            .video-placeholder .logo-text { font-size: 28px; }
-            .right-panel .logo .animated-logo { font-size: 22px; }
-            .right-panel .subtitle { font-size: 14px; }
-            .ctrl-btn { height: 28px; min-width: 28px; font-size: 10px; border-radius: 6px; }
-            .ctrl-btn.play-btn { height: 32px; min-width: 32px; font-size: 12px; }
-            .vol-slider { width: 40px; }
-            .channel-item { font-size: 11px; padding: 6px 8px; }
-            .x-btn { padding: 6px 14px; font-size: 11px; }
-            .x-btn svg { width: 16px; height: 16px; }
-            .modal { padding: 12px; }
+            .header h1 {
+                font-size: 16px;
+            }
+            .video-wrapper {
+                min-height: 150px;
+            }
+            .channels-section {
+                max-height: 40vh;
+            }
+            .controls button {
+                padding: 4px 8px;
+                font-size: 10px;
+                min-width: 30px;
+            }
+            .controls button.play {
+                font-size: 14px;
+                padding: 4px 14px;
+            }
+            .controls input[type="range"] {
+                width: 40px;
+            }
+            .channel-item {
+                font-size: 11px;
+                padding: 5px 8px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="app">
-        <!-- ===== LEFT PANEL ===== -->
-        <div class="left-panel">
-            <div class="video-container" id="videoContainer">
-                <video id="videoPlayer" controls playsinline></video>
-                <div class="video-placeholder" id="videoPlaceholder">
-                    <div class="logo-text">🐭 MOUSE AI</div>
-                    <p>🎬 اختر قناة للمشاهدة</p>
-                </div>
-                <div class="loading-overlay" id="loadingOverlay">
-                    <div class="spinner"></div>
-                    <span>جاري التحميل...</span>
-                </div>
-            </div>
+<!-- ===== HEADER ===== -->
+<div class="header">
+    <h1>🐭 MOUSE AI IPTV</h1>
+    <div class="sub">⚡ شهار IPTV - PRO ULTIMATE</div>
+</div>
 
-            <div class="server-info" id="serverInfo"></div>
+<!-- ===== MAIN ===== -->
+<div class="main">
 
-            <div class="controls">
-                <input type="range" class="progress-slider" id="progressSlider" min="0" max="1000" value="0">
-                <div class="btn-row">
-                    <button class="ctrl-btn" id="prevBtn">⏮</button>
-                    <button class="ctrl-btn play-btn" id="playBtn">▶</button>
-                    <button class="ctrl-btn red" id="stopBtn">⏹</button>
-                    <button class="ctrl-btn" id="nextBtn">⏭</button>
-                    <span style="flex:1;"></span>
-                    <button class="ctrl-btn white" id="muteBtn">🔊</button>
-                    <input type="range" class="vol-slider" id="volSlider" min="0" max="200" value="100">
-                    <button class="ctrl-btn white" id="fullscreenBtn">⛶</button>
-                </div>
-                <div class="info-label" id="infoLabel">🎯 جاهز - اختر قناة للمشاهدة</div>
+    <!-- ===== VIDEO SECTION ===== -->
+    <div class="video-section">
+        <div class="video-wrapper">
+            <video id="videoPlayer" controls playsinline></video>
+            <div class="video-placeholder" id="placeholder">
+                <h2>🐭 MOUSE AI</h2>
+                <p>🎬 اختر قناة للمشاهدة</p>
             </div>
+            <div class="loading-overlay" id="loadingOverlay" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:20;color:#00ff88;font-weight:bold;">
+                <div style="width:40px;height:40px;border:4px solid #161a20;border-top-color:#00ff88;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+                <span style="margin-top:10px;">جاري التحميل...</span>
+            </div>
+            <style>
+                .loading-overlay { display: none; }
+                .loading-overlay.active { display: flex !important; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+            </style>
         </div>
 
-        <!-- ===== RIGHT PANEL ===== -->
-        <div class="right-panel">
-            <div class="logo"><div class="animated-logo">🐭 MOUSE AI</div></div>
-            <div class="subtitle">⚡ IPTV PRO</div>
-            <div class="version">v4.0.0 ULTIMATE 🔥</div>
-
-            <div class="server-section">
-                <label>📡 اختر المصدر:</label>
-                <select class="server-select" id="serverSelect">
-                    <option value="">-- لا يوجد سيرفرات --</option>
-                </select>
-                <div class="btn-grid">
-                    <button class="action-btn green" id="loadBtn">📡 تحميل القنوات</button>
-                    <button class="action-btn white" id="fileBtn">📁 ملف M3U</button>
-                    <button class="action-btn green full" id="addCodeBtn">➕ إضافة سيرفر</button>
-                    <button class="action-btn white full" id="manageBtn">⚙️ إدارة السيرفرات</button>
-                </div>
-                <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
-                <div class="status-label" id="statusLabel">🚀 جاهز. اضغط تحميل للبدء.</div>
+        <div class="controls">
+            <div class="row">
+                <button id="prevBtn">⏮</button>
+                <button class="play" id="playBtn">▶</button>
+                <button class="red" id="stopBtn">⏹</button>
+                <button id="nextBtn">⏭</button>
+                <span style="flex:1"></span>
+                <button id="muteBtn">🔊</button>
+                <input type="range" id="volSlider" min="0" max="200" value="100">
+                <button id="fullscreenBtn">⛶</button>
             </div>
-
-            <select class="group-select" id="groupSelect"><option value="All Groups">📂 كل المجموعات</option></select>
-            <input type="text" class="search-input" id="searchInput" placeholder="🔍 بحث عن قناة...">
-
-            <div class="channel-list" id="channelList">
-                <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
-                    📺 لا توجد قنوات<br>
-                    <span style="font-size:12px;">أضف سيرفر واضغط تحميل</span>
-                </div>
-            </div>
-
-            <div class="channel-count" id="countLabel">0 قناة</div>
-
-            <div class="bottom-btns">
-                <button class="action-btn" id="favBtn">⭐ المفضلة</button>
-                <button class="action-btn white" id="settingsBtn">⚙️ الإعدادات</button>
-            </div>
-
-            <a href="https://x.com/mouse0000000" target="_blank" class="x-btn">
-                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                @mouse0000000
-            </a>
-
-            <div class="footer">
-                © 2025 MOUSE AI | <a href="https://x.com/mouse0000000" target="_blank">🐭 @mouse0000000</a>
-            </div>
+            <div class="info-label" id="infoLabel">🎯 جاهز - اختر قناة</div>
         </div>
     </div>
 
-    <!-- ===== MODAL ===== -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent">
-            <div class="modal-title" id="modalTitle">🐭 MOUSE AI</div>
-            <div id="modalBody"></div>
+    <!-- ===== CHANNELS SECTION ===== -->
+    <div class="channels-section">
+        <div class="title">📡 سيرفر شهار</div>
+        
+        <select id="serverSelect"></select>
+        
+        <div class="btn-row">
+            <button class="action-btn green" id="loadBtn">📡 تحميل</button>
+            <button class="action-btn" id="fileBtn">📁 ملف</button>
+            <button class="action-btn green full" id="addBtn">➕ إضافة سيرفر</button>
         </div>
+        
+        <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+        <div class="status-text" id="statusText">🚀 اضغط تحميل للبدء</div>
+        
+        <select id="groupSelect"><option value="All">📂 كل المجموعات</option></select>
+        <input type="text" id="searchInput" placeholder="🔍 بحث...">
+        
+        <div class="channel-list" id="channelList">
+            <div style="text-align:center;padding:30px 10px;color:#5a6470;font-size:13px;">
+                📺 لا توجد قنوات<br>
+                <span style="font-size:11px;">اضغط تحميل</span>
+            </div>
+        </div>
+        
+        <div class="channel-count" id="countLabel">0 قناة</div>
+        
+        <div class="bottom-row">
+            <button class="action-btn" id="favBtn">⭐ المفضلة</button>
+            <button class="action-btn" id="settingsBtn">⚙️ إعدادات</button>
+        </div>
+        
+        <a href="https://x.com/mouse0000000" target="_blank" class="x-btn">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @mouse0000000
+        </a>
+        
+        <div class="footer">© 2025 MOUSE AI | <a href="https://x.com/mouse0000000">🐭 @mouse0000000</a></div>
     </div>
+</div>
 
-    <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast"></div>
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
 
-    <script>
-        // ============================================================
-        // MOUSE AI IPTV PRO - مع سيرفر شهار المدمج
-        // ============================================================
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContent">
+        <h2 id="modalTitle">🐭 MOUSE AI</h2>
+        <div id="modalBody"></div>
+    </div>
+</div>
 
-        (function() {
-            'use strict';
+<script>
+// ============================================================
+// MOUSE AI IPTV - الحل النهائي البسيط
+// ============================================================
 
-            // ===== CONSTANTS =====
-            const APP_NAME = 'MOUSE AI IPTV';
-            const APP_VERSION = '4.0.0 ULTIMATE';
-            const STORAGE_KEY = 'mouse_ai_settings_v4';
-            const FAV_KEY = 'mouse_ai_favorites_v4';
-            const SERVERS_KEY = 'mouse_ai_servers_v4';
-            const HISTORY_KEY = 'mouse_ai_history_v4';
+(function() {
+    'use strict';
 
-            // ===== سيرفر شهار المدمج =====
-            const SHAHAR_SERVER = {
-                name: '📺 شهار IPTV',
-                url: 'http://81.31.194.66:8080/get.php?username=pro4451769801014&password=f734a8f19cf5&type=m3u_plus&output=ts'
-            };
+    // ===== سيرفر شهار =====
+    const SHAHAR = {
+        name: '📺 شهار IPTV',
+        url: 'http://81.31.194.66:8080/get.php?username=pro4451769801014&password=f734a8f19cf5&type=m3u_plus&output=ts'
+    };
 
-            // ===== STATE =====
-            let state = {
-                channels: [],
-                filtered: [],
-                favorites: new Set(),
-                customServers: {},
-                settings: { volume: 100, muteOnStart: false, autoLoad: true, showServerInfo: true, timeout: 45 },
-                currentIndex: -1,
-                isPlaying: false,
-                isMuted: false,
-                isFullscreen: false,
-                loading: false,
-                favView: false,
-                currentGroup: 'All Groups',
-                searchQuery: '',
-                videoLoaded: false,
-                currentChannelUrl: ''
-            };
+    // ===== STATE =====
+    let state = {
+        channels: [],
+        filtered: [],
+        favorites: new Set(),
+        servers: {},
+        settings: { volume: 100, autoLoad: true },
+        currentIndex: -1,
+        isPlaying: false,
+        loading: false,
+        favView: false,
+        currentGroup: 'All',
+        search: '',
+        videoLoaded: false
+    };
 
-            // ===== DOM REFS =====
-            const video = document.getElementById('videoPlayer');
-            const placeholder = document.getElementById('videoPlaceholder');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const serverInfo = document.getElementById('serverInfo');
-            const progressSlider = document.getElementById('progressSlider');
-            const playBtn = document.getElementById('playBtn');
-            const stopBtn = document.getElementById('stopBtn');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const muteBtn = document.getElementById('muteBtn');
-            const volSlider = document.getElementById('volSlider');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            const infoLabel = document.getElementById('infoLabel');
-            const serverSelect = document.getElementById('serverSelect');
-            const loadBtn = document.getElementById('loadBtn');
-            const fileBtn = document.getElementById('fileBtn');
-            const addCodeBtn = document.getElementById('addCodeBtn');
-            const manageBtn = document.getElementById('manageBtn');
-            const progressBar = document.getElementById('progressBar');
-            const progressFill = document.getElementById('progressFill');
-            const statusLabel = document.getElementById('statusLabel');
-            const groupSelect = document.getElementById('groupSelect');
-            const searchInput = document.getElementById('searchInput');
-            const channelList = document.getElementById('channelList');
-            const countLabel = document.getElementById('countLabel');
-            const favBtn = document.getElementById('favBtn');
-            const settingsBtn = document.getElementById('settingsBtn');
-            const modalOverlay = document.getElementById('modalOverlay');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalBody = document.getElementById('modalBody');
-            const toast = document.getElementById('toast');
+    // ===== DOM =====
+    const video = document.getElementById('videoPlayer');
+    const placeholder = document.getElementById('placeholder');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const progressSlider = document.getElementById('progressSlider');
+    const playBtn = document.getElementById('playBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const volSlider = document.getElementById('volSlider');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const infoLabel = document.getElementById('infoLabel');
+    const serverSelect = document.getElementById('serverSelect');
+    const loadBtn = document.getElementById('loadBtn');
+    const fileBtn = document.getElementById('fileBtn');
+    const addBtn = document.getElementById('addBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const statusText = document.getElementById('statusText');
+    const groupSelect = document.getElementById('groupSelect');
+    const searchInput = document.getElementById('searchInput');
+    const channelList = document.getElementById('channelList');
+    const countLabel = document.getElementById('countLabel');
+    const favBtn = document.getElementById('favBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const toast = document.getElementById('toast');
 
-            // ===== STORAGE =====
-            function loadData() {
-                try {
-                    const s = localStorage.getItem(STORAGE_KEY);
-                    if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
-                } catch (e) {}
-
-                try {
-                    const f = localStorage.getItem(FAV_KEY);
-                    if (f) state.favorites = new Set(JSON.parse(f));
-                } catch (e) {}
-
-                try {
-                    const c = localStorage.getItem(SERVERS_KEY);
-                    if (c) {
-                        state.customServers = JSON.parse(c);
-                    } else {
-                        // إضافة سيرفر شهار افتراضياً
-                        state.customServers = {};
-                        state.customServers[SHAHAR_SERVER.name] = {
-                            url: SHAHAR_SERVER.url,
-                            info: { type: 'xtream', host: 'شهار IPTV', username: 'pro4451769801014' }
-                        };
-                        saveServers();
-                    }
-                } catch (e) {
-                    state.customServers = {};
-                    state.customServers[SHAHAR_SERVER.name] = {
-                        url: SHAHAR_SERVER.url,
-                        info: { type: 'xtream', host: 'شهار IPTV', username: 'pro4451769801014' }
-                    };
-                    saveServers();
-                }
-
-                try {
-                    const h = localStorage.getItem(HISTORY_KEY);
-                    if (h) state.history = JSON.parse(h);
-                } catch (e) {}
+    // ===== STORAGE =====
+    function loadData() {
+        try {
+            const s = localStorage.getItem('mouse_settings');
+            if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
+        } catch(e) {}
+        try {
+            const f = localStorage.getItem('mouse_favs');
+            if (f) state.favorites = new Set(JSON.parse(f));
+        } catch(e) {}
+        try {
+            const sv = localStorage.getItem('mouse_servers');
+            if (sv) {
+                state.servers = JSON.parse(sv);
+            } else {
+                state.servers = {};
+                state.servers[SHAHAR.name] = SHAHAR.url;
+                saveServers();
             }
+        } catch(e) {
+            state.servers = {};
+            state.servers[SHAHAR.name] = SHAHAR.url;
+            saveServers();
+        }
+    }
 
-            function saveSettings() {
-                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.settings)); } catch (e) {}
+    function saveSettings() {
+        try { localStorage.setItem('mouse_settings', JSON.stringify(state.settings)); } catch(e) {}
+    }
+
+    function saveFavorites() {
+        try { localStorage.setItem('mouse_favs', JSON.stringify([...state.favorites])); } catch(e) {}
+    }
+
+    function saveServers() {
+        try { localStorage.setItem('mouse_servers', JSON.stringify(state.servers)); } catch(e) {}
+    }
+
+    // ===== TOAST =====
+    let toastTimer = null;
+    function showToast(msg, type = '') {
+        toast.textContent = msg;
+        toast.className = 'toast' + (type ? ' ' + type : '');
+        clearTimeout(toastTimer);
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    // ===== PARSER =====
+    function parseM3U(text) {
+        const lines = text.split(/\r?\n/);
+        const channels = [];
+        let cur = {};
+        for (const raw of lines) {
+            const line = raw.trim();
+            if (!line) continue;
+            if (line.startsWith('#EXTINF:')) {
+                let name = 'Unnamed';
+                const nm = line.match(/#EXTINF:[^,]*,\s*(.+?)\s*$/);
+                if (nm) name = nm[1].trim();
+                let logo = '';
+                const lm = line.match(/tvg-logo="([^"]*)"/);
+                if (lm) logo = lm[1];
+                let group = 'General';
+                const gm = line.match(/group-title="([^"]*)"/);
+                if (gm) group = gm[1];
+                cur = { name, logo, group, url: '' };
+            } else if ((line.startsWith('http://') || line.startsWith('https://')) && cur && !cur.url) {
+                cur.url = line;
+                channels.push({ ...cur });
+                cur = {};
             }
-
-            function saveFavorites() {
-                try { localStorage.setItem(FAV_KEY, JSON.stringify([...state.favorites])); } catch (e) {}
+        }
+        // Handle orphan URLs
+        for (const line of lines) {
+            const t = line.trim();
+            if ((t.startsWith('http://') || t.startsWith('https://')) && !channels.some(c => c.url === t)) {
+                channels.push({ name: 'قناة ' + (channels.length + 1), url: t, group: 'General', logo: '' });
             }
+        }
+        return channels;
+    }
 
-            function saveServers() {
-                try { localStorage.setItem(SERVERS_KEY, JSON.stringify(state.customServers)); } catch (e) {}
+    // ===== LOAD CHANNELS =====
+    function loadChannels(source) {
+        if (state.loading) return;
+        
+        let url = source || serverSelect.value;
+        if (!url || url === '-- لا يوجد --') {
+            showToast('❌ لا يوجد سيرفر', 'error');
+            return;
+        }
+        
+        // Check if it's a server name
+        if (state.servers[url]) {
+            url = state.servers[url];
+        }
+        
+        if (!url.startsWith('http')) {
+            showToast('❌ رابط غير صالح', 'error');
+            return;
+        }
+
+        // Clear
+        state.channels = [];
+        state.filtered = [];
+        state.currentIndex = -1;
+        state.videoLoaded = false;
+        video.pause();
+        video.src = '';
+        placeholder.style.display = 'block';
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+
+        state.loading = true;
+        loadBtn.disabled = true;
+        loadBtn.textContent = '⏳ جاري...';
+        progressBar.classList.add('active');
+        progressFill.style.width = '0%';
+        statusText.textContent = '🔄 جاري الاتصال...';
+        statusText.className = 'status-text';
+        loadingOverlay.classList.add('active');
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 45000);
+
+        fetch(url, {
+            signal: controller.signal,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': '*/*'
             }
-
-            function saveHistory() {
-                try { localStorage.setItem(HISTORY_KEY, JSON.stringify(state.history.slice(-50))); } catch (e) {}
+        })
+        .then(res => {
+            clearTimeout(timeout);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            progressFill.style.width = '40%';
+            statusText.textContent = '📥 جاري القراءة...';
+            return res.text();
+        })
+        .then(text => {
+            progressFill.style.width = '60%';
+            statusText.textContent = '🔍 جاري التحليل...';
+            
+            if (!text || text.length < 10) throw new Error('استجابة فارغة');
+            if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                throw new Error('تم استقبال HTML بدلاً من القنوات');
             }
+            
+            const chs = parseM3U(text);
+            progressFill.style.width = '90%';
+            if (chs.length === 0) throw new Error('لا توجد قنوات');
+            
+            onChannelsLoaded(chs);
+        })
+        .catch(err => {
+            clearTimeout(timeout);
+            state.loading = false;
+            loadBtn.disabled = false;
+            loadBtn.textContent = '📡 تحميل';
+            progressBar.classList.remove('active');
+            loadingOverlay.classList.remove('active');
+            
+            let msg = err.message;
+            if (err.name === 'AbortError') msg = 'انتهت المهلة';
+            else if (msg.includes('403')) msg = '⛔ ممنوع الوصول - جرب رابط آخر';
+            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة';
+            
+            statusText.textContent = '❌ ' + msg;
+            statusText.className = 'status-text error';
+            showToast('❌ ' + msg, 'error');
+            console.error(err);
+            
+            // Try with proxy
+            tryProxy(url);
+        });
+    }
 
-            // ===== TOAST =====
-            let toastTimeout = null;
+    function tryProxy(url) {
+        statusText.textContent = '🔄 محاولة عبر وكيل...';
+        showToast('🔄 محاولة عبر وكيل...');
+        
+        const proxy = 'https://cors-anywhere.herokuapp.com/' + url;
+        fetch(proxy, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+        })
+        .then(text => {
+            const chs = parseM3U(text);
+            if (chs.length === 0) throw new Error('لا توجد قنوات');
+            onChannelsLoaded(chs);
+            showToast('✅ تم التحميل عبر الوكيل');
+        })
+        .catch(err => {
+            state.loading = false;
+            loadBtn.disabled = false;
+            loadBtn.textContent = '📡 تحميل';
+            progressBar.classList.remove('active');
+            loadingOverlay.classList.remove('active');
+            statusText.textContent = '❌ فشل التحميل: ' + err.message;
+            statusText.className = 'status-text error';
+            showToast('❌ فشل التحميل: ' + err.message, 'error');
+        });
+    }
 
-            function showToast(msg, type = 'success') {
-                toast.textContent = msg;
-                toast.className = 'toast ' + type;
-                clearTimeout(toastTimeout);
-                void toast.offsetWidth;
-                toast.classList.add('show');
-                toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
-            }
+    function onChannelsLoaded(channels) {
+        state.channels = channels;
+        state.filtered = [...channels];
+        state.currentIndex = -1;
+        state.loading = false;
+        loadBtn.disabled = false;
+        loadBtn.textContent = '📡 تحميل';
+        progressBar.classList.remove('active');
+        progressFill.style.width = '100%';
+        loadingOverlay.classList.remove('active');
 
-            // ===== PARSER =====
-            function parseM3U(content) {
-                const lines = content.split(/\r?\n/);
-                const channels = [];
-                let current = {};
-                
-                for (const raw of lines) {
-                    const line = raw.trim();
-                    if (!line) continue;
-                    
-                    if (line.startsWith('#EXTINF:')) {
-                        let name = 'Unnamed';
-                        const nameMatch = line.match(/#EXTINF:[^,]*,\s*(.+?)\s*$/);
-                        if (nameMatch) name = nameMatch[1].trim();
-                        
-                        let logo = '';
-                        const logoMatch = line.match(/tvg-logo="([^"]*)"/);
-                        if (logoMatch) logo = logoMatch[1];
-                        
-                        let group = 'General';
-                        const groupMatch = line.match(/group-title="([^"]*)"/);
-                        if (groupMatch) group = groupMatch[1];
-                        
-                        current = { name, logo, group, url: '' };
-                    } else if ((line.startsWith('http://') || line.startsWith('https://')) && current && !current.url) {
-                        current.url = line;
-                        channels.push({ ...current });
-                        current = {};
-                    }
-                }
-                
-                // Handle URLs without EXTINF
-                for (const line of lines) {
-                    const trimmed = line.trim();
-                    if ((trimmed.startsWith('http://') || trimmed.startsWith('https://')) && 
-                        !channels.some(c => c.url === trimmed)) {
-                        channels.push({ 
-                            name: 'قناة ' + (channels.length + 1), 
-                            url: trimmed, 
-                            group: 'General', 
-                            logo: '' 
-                        });
-                    }
-                }
-                
-                return channels.filter(c => c.url);
-            }
+        // Groups
+        const groups = new Set();
+        for (const ch of channels) {
+            if (ch.group) groups.add(ch.group);
+        }
+        groupSelect.innerHTML = '<option value="All">📂 كل المجموعات</option>';
+        for (const g of [...groups].sort()) {
+            const opt = document.createElement('option');
+            opt.value = g;
+            opt.textContent = g;
+            groupSelect.appendChild(opt);
+        }
+        state.currentGroup = 'All';
+        groupSelect.value = 'All';
 
-            // ===== LOAD CHANNELS =====
-            function loadChannels(source) {
-                if (state.loading) return;
-                
-                let url = source || serverSelect.value;
+        renderChannels();
+        statusText.textContent = `✅ تم التحميل: ${channels.length} قناة`;
+        statusText.className = 'status-text success';
+        countLabel.textContent = channels.length + ' قناة';
+        showToast(`✅ تم تحميل ${channels.length} قناة`);
 
-                if (!url || url === '' || url === '-- لا يوجد سيرفرات --') {
-                    showToast('❌ لا يوجد سيرفر. أضف سيرفر أولاً.', 'error');
-                    return;
-                }
+        // Auto play first
+        if (channels.length > 0) {
+            setTimeout(() => {
+                const first = channelList.querySelector('.channel-item');
+                if (first) first.click();
+            }, 500);
+        }
+    }
 
-                // Check custom server
-                if (state.customServers[url]) {
-                    const data = state.customServers[url];
-                    state.serverInfo = data.info || {};
-                    url = data.url;
-                }
+    // ===== RENDER =====
+    function renderChannels() {
+        const search = state.search.toLowerCase().trim();
+        const group = state.currentGroup;
+        const favOnly = state.favView;
 
-                if (!url || !url.startsWith('http')) {
-                    showToast('❌ رابط سيرفر غير صالح', 'error');
-                    return;
-                }
+        let filtered = state.channels;
+        if (group !== 'All') {
+            filtered = filtered.filter(c => (c.group || 'General') === group);
+        }
+        if (search) {
+            filtered = filtered.filter(c => (c.name || '').toLowerCase().includes(search));
+        }
+        if (favOnly) {
+            filtered = filtered.filter(c => state.favorites.has(c.url));
+        }
+        state.filtered = filtered;
 
-                // Clear previous
-                state.channels = [];
-                state.filtered = [];
-                state.currentIndex = -1;
-                state.videoLoaded = false;
-                video.pause();
-                video.src = '';
-                placeholder.style.display = 'block';
-                updatePlayButton();
-                
-                state.loading = true;
-                loadBtn.disabled = true;
-                loadBtn.innerHTML = '⏳ جاري التحميل...';
-                progressBar.classList.add('active');
-                progressFill.style.width = '0%';
-                statusLabel.textContent = '🔄 جاري الاتصال بسيرفر شهار...';
-                statusLabel.className = 'status-label';
-                loadingOverlay.classList.add('active');
+        channelList.innerHTML = '';
+        if (filtered.length === 0) {
+            channelList.innerHTML = '<div style="text-align:center;padding:30px 10px;color:#5a6470;font-size:13px;">📺 لا توجد قنوات</div>';
+            countLabel.textContent = '0 قناة';
+            return;
+        }
 
-                const timeout = (state.settings.timeout || 45) * 1000;
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
+        for (let i = 0; i < filtered.length; i++) {
+            const ch = filtered[i];
+            const div = document.createElement('div');
+            div.className = 'channel-item' + (i === state.currentIndex ? ' active' : '');
+            const isFav = state.favorites.has(ch.url);
+            div.innerHTML = `
+                <span>${isFav ? '<span class="fav">⭐</span>' : ''} ${ch.name || 'Unnamed'}</span>
+                ${ch.group ? `<span class="group-tag">${ch.group}</span>` : ''}
+            `;
+            div.dataset.index = i;
+            div.addEventListener('click', () => playChannel(i));
+            channelList.appendChild(div);
+        }
+        countLabel.textContent = filtered.length + ' قناة';
+    }
 
-                // محاولة التحميل مباشرة مع Headers مناسبة
-                fetch(url, {
-                    signal: controller.signal,
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        'Accept': '*/*',
-                        'Accept-Encoding': 'gzip, deflate, br',
-                        'Accept-Language': 'ar,en;q=0.9',
-                        'Connection': 'keep-alive',
-                        'Referer': 'https://www.google.com/',
-                        'Origin': 'https://www.google.com'
-                    }
-                })
-                .then(res => {
-                    clearTimeout(timeoutId);
-                    if (!res.ok) {
-                        throw new Error(`HTTP ${res.status} - ${res.statusText}`);
-                    }
-                    progressFill.style.width = '40%';
-                    statusLabel.textContent = '📥 جاري قراءة البيانات...';
-                    return res.text();
-                })
-                .then(text => {
-                    progressFill.style.width = '60%';
-                    statusLabel.textContent = '🔍 جاري تحليل القنوات...';
-                    
-                    if (!text || text.length < 10) {
-                        throw new Error('استجابة فارغة من السيرفر');
-                    }
-                    
-                    // Check if we got HTML instead of M3U
-                    if (text.includes('<!DOCTYPE html>') || text.includes('<html')) {
-                        throw new Error('السيرفر أرجاع صفحة HTML بدلاً من قائمة القنوات');
-                    }
-                    
-                    const channels = parseM3U(text);
-                    progressFill.style.width = '90%';
-                    
-                    if (channels.length === 0) {
-                        throw new Error('لم يتم العثور على قنوات');
-                    }
-                    
-                    onChannelsLoaded(channels);
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    state.loading = false;
-                    loadBtn.disabled = false;
-                    loadBtn.textContent = '📡 تحميل القنوات';
-                    progressBar.classList.remove('active');
-                    loadingOverlay.classList.remove('active');
-                    
-                    let errorMsg = err.message;
-                    if (err.name === 'AbortError') {
-                        errorMsg = 'انتهت المهلة - السيرفر لم يستجب';
-                    } else if (err.message.includes('403')) {
-                        errorMsg = '⛔ ممنوع الوصول (403) - السيرفر يمنع الطلبات';
-                    } else if (err.message.includes('Failed to fetch')) {
-                        errorMsg = '🌐 خطأ في الشبكة - تأكد من اتصال الإنترنت';
-                    }
-                    
-                    statusLabel.textContent = '❌ ' + errorMsg;
-                    statusLabel.className = 'status-label error';
-                    showToast('❌ ' + errorMsg, 'error');
-                    console.error('Load error:', err);
-                    
-                    // محاولة عبر وكيل CORS
-                    tryProxyLoad(url);
-                });
-            }
+    // ===== PLAY =====
+    function playChannel(index) {
+        const ch = state.filtered[index];
+        if (!ch || !ch.url) {
+            showToast('❌ لا يوجد رابط', 'error');
+            return;
+        }
 
-            function tryProxyLoad(url) {
-                statusLabel.textContent = '🔄 محاولة عبر وكيل CORS...';
-                showToast('🔄 محاولة عبر وكيل...', 'success');
-                
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + url;
-                
-                fetch(proxyUrl, {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                        'Accept': '*/*'
-                    }
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    progressFill.style.width = '50%';
-                    statusLabel.textContent = '📥 جاري قراءة البيانات...';
-                    return res.text();
-                })
-                .then(text => {
-                    const channels = parseM3U(text);
-                    if (channels.length === 0) {
-                        throw new Error('لم يتم العثور على قنوات');
-                    }
-                    onChannelsLoaded(channels);
-                    showToast('✅ تم التحميل عبر الوكيل', 'success');
-                })
-                .catch(err => {
-                    state.loading = false;
-                    loadBtn.disabled = false;
-                    loadBtn.textContent = '📡 تحميل القنوات';
-                    progressBar.classList.remove('active');
-                    loadingOverlay.classList.remove('active');
-                    statusLabel.textContent = '❌ فشل التحميل: ' + err.message;
-                    statusLabel.className = 'status-label error';
-                    showToast('❌ فشل التحميل: ' + err.message, 'error');
-                });
-            }
+        state.currentIndex = index;
+        state.videoLoaded = true;
+        state.isPlaying = true;
 
-            function onChannelsLoaded(channels) {
-                state.channels = channels;
-                state.filtered = [...channels];
-                state.currentIndex = -1;
-                state.loading = false;
-                loadBtn.disabled = false;
-                loadBtn.textContent = '📡 تحميل القنوات';
-                progressBar.classList.remove('active');
-                progressFill.style.width = '100%';
+        document.querySelectorAll('.channel-item').forEach((el, i) => {
+            el.classList.toggle('active', i === index);
+        });
+
+        placeholder.style.display = 'none';
+        loadingOverlay.classList.add('active');
+
+        video.src = ch.url;
+        video.load();
+        
+        const promise = video.play();
+        if (promise !== undefined) {
+            promise.then(() => {
                 loadingOverlay.classList.remove('active');
-
-                // Update groups
-                const groups = new Set();
-                for (const ch of channels) {
-                    if (ch.group) groups.add(ch.group);
-                }
-                groupSelect.innerHTML = '<option value="All Groups">📂 كل المجموعات</option>';
-                for (const g of [...groups].sort()) {
-                    const opt = document.createElement('option');
-                    opt.value = g;
-                    opt.textContent = g;
-                    groupSelect.appendChild(opt);
-                }
-                state.currentGroup = 'All Groups';
-                groupSelect.value = 'All Groups';
-
-                renderChannels();
-                statusLabel.textContent = `✅ تم التحميل: ${channels.length} قناة من شهار`;
-                statusLabel.className = 'status-label success';
-                countLabel.textContent = `${channels.length} قناة`;
-                showToast(`✅ تم تحميل ${channels.length} قناة من شهار`, 'success');
-
-                if (state.settings.autoLoad && channels.length > 0) {
-                    setTimeout(() => {
-                        const firstItem = channelList.querySelector('.channel-item');
-                        if (firstItem) firstItem.click();
-                    }, 500);
-                }
-            }
-
-            // ===== RENDER CHANNELS =====
-            function renderChannels() {
-                const search = state.searchQuery.toLowerCase().trim();
-                const group = state.currentGroup;
-                const favOnly = state.favView;
-
-                let filtered = state.channels;
-                if (group !== 'All Groups') {
-                    filtered = filtered.filter(c => (c.group || 'General') === group);
-                }
-                if (search) {
-                    filtered = filtered.filter(c => (c.name || '').toLowerCase().includes(search));
-                }
-                if (favOnly) {
-                    filtered = filtered.filter(c => state.favorites.has(c.url));
-                }
-                state.filtered = filtered;
-
-                channelList.innerHTML = '';
-                if (filtered.length === 0) {
-                    const empty = document.createElement('div');
-                    empty.style.cssText = 'text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;';
-                    empty.innerHTML = '📺 لا توجد قنوات<br><span style="font-size:12px;">غير الفلتر أو أضف سيرفر جديد</span>';
-                    channelList.appendChild(empty);
-                    countLabel.textContent = '0 قناة';
-                    return;
-                }
-
-                for (let i = 0; i < filtered.length; i++) {
-                    const ch = filtered[i];
-                    const div = document.createElement('div');
-                    div.className = 'channel-item' + (i === state.currentIndex ? ' active' : '');
-                    const isFav = state.favorites.has(ch.url);
-                    div.innerHTML = `
-                        <span class="channel-name">${isFav ? '<span class="fav-star">⭐</span>' : ''}${ch.name || 'Unnamed'}</span>
-                        ${ch.group ? `<span class="channel-group">${ch.group}</span>` : ''}
-                    `;
-                    div.dataset.index = i;
-                    div.addEventListener('click', () => playChannel(i));
-                    div.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                        showChannelMenu(e.clientX, e.clientY, i);
-                    });
-                    channelList.appendChild(div);
-                }
-
-                countLabel.textContent = `${filtered.length} قناة`;
-            }
-
-            // ===== PLAY CHANNEL =====
-            function playChannel(index) {
-                const ch = state.filtered[index];
-                if (!ch || !ch.url) {
-                    showToast('❌ القناة لا تحتوي على رابط', 'error');
-                    return;
-                }
-
-                state.currentIndex = index;
-                state.currentChannelUrl = ch.url;
                 state.isPlaying = true;
-                state.videoLoaded = true;
-
-                document.querySelectorAll('.channel-item').forEach((el, i) => {
-                    el.classList.toggle('active', i === index);
-                });
-
-                placeholder.style.display = 'none';
-                loadingOverlay.classList.add('active');
-
-                video.src = ch.url;
-                video.load();
-                
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        loadingOverlay.classList.remove('active');
-                        state.isPlaying = true;
-                        updatePlayButton();
-                        infoLabel.textContent = `▶️ جاري التشغيل: ${ch.name || 'Unnamed'}`;
-                        infoLabel.className = 'info-label active';
-                        statusLabel.textContent = `▶️ جاري التشغيل: ${ch.name || 'Unnamed'}`;
-                        statusLabel.className = 'status-label success';
-                    }).catch(err => {
-                        loadingOverlay.classList.remove('active');
-                        console.warn('Play error:', err);
-                        // Try alternative loading
-                        tryAlternativePlay(ch);
-                    });
-                }
-
-                updatePlayButton();
-                infoLabel.textContent = `▶️ جاري التشغيل: ${ch.name || 'Unnamed'}`;
+                playBtn.textContent = '⏸';
+                playBtn.classList.add('playing');
+                infoLabel.textContent = '▶️ ' + ch.name;
                 infoLabel.className = 'info-label active';
-
-                if (!state.history.includes(ch.url)) {
-                    state.history.push(ch.url);
-                    saveHistory();
-                }
-            }
-
-            function tryAlternativePlay(ch) {
-                // Try with proxy for video
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + ch.url;
-                video.src = proxyUrl;
+                statusText.textContent = '▶️ ' + ch.name;
+                statusText.className = 'status-text success';
+            }).catch(err => {
+                loadingOverlay.classList.remove('active');
+                console.warn('Play error:', err);
+                showToast('❌ لا يمكن تشغيل هذه القناة', 'error');
+                // Try proxy
+                const proxy = 'https://cors-anywhere.herokuapp.com/' + ch.url;
+                video.src = proxy;
                 video.load();
-                video.play().catch(() => {
-                    showToast('❌ لا يمكن تشغيل هذه القناة', 'error');
-                });
+                video.play().catch(() => {});
+            });
+        }
+
+        playBtn.textContent = '⏸';
+        playBtn.classList.add('playing');
+        infoLabel.textContent = '▶️ ' + ch.name;
+        infoLabel.className = 'info-label active';
+    }
+
+    // ===== CONTROLS =====
+    function togglePlay() {
+        if (!state.videoLoaded) {
+            const first = channelList.querySelector('.channel-item');
+            if (first) first.click();
+            return;
+        }
+        if (video.paused) {
+            video.play().catch(() => {});
+            state.isPlaying = true;
+            playBtn.textContent = '⏸';
+            playBtn.classList.add('playing');
+        } else {
+            video.pause();
+            state.isPlaying = false;
+            playBtn.textContent = '▶';
+            playBtn.classList.remove('playing');
+        }
+    }
+
+    function stopPlay() {
+        video.pause();
+        video.currentTime = 0;
+        state.isPlaying = false;
+        state.videoLoaded = false;
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+        infoLabel.textContent = '⏹️ تم الإيقاف';
+        infoLabel.className = 'info-label';
+        progressSlider.value = 0;
+        placeholder.style.display = 'block';
+        video.src = '';
+    }
+
+    function playNext() {
+        if (state.filtered.length === 0) return;
+        const n = (state.currentIndex + 1) % state.filtered.length;
+        playChannel(n);
+        scrollTo(n);
+    }
+
+    function playPrev() {
+        if (state.filtered.length === 0) return;
+        const n = state.currentIndex <= 0 ? state.filtered.length - 1 : state.currentIndex - 1;
+        playChannel(n);
+        scrollTo(n);
+    }
+
+    function scrollTo(index) {
+        const items = channelList.querySelectorAll('.channel-item');
+        if (items[index]) items[index].scrollIntoView({ block: 'nearest' });
+    }
+
+    function toggleMute() {
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+    }
+
+    function setVolume(val) {
+        const v = parseInt(val);
+        video.volume = Math.min(v / 200, 1);
+        state.settings.volume = v;
+        saveSettings();
+        if (v === 0) muteBtn.textContent = '🔇';
+        else if (v < 50) muteBtn.textContent = '🔉';
+        else if (v < 100) muteBtn.textContent = '🔊';
+        else muteBtn.textContent = '🔊';
+    }
+
+    function toggleFullscreen() {
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        } else {
+            document.documentElement.requestFullscreen().catch(() => {});
+        }
+    }
+
+    function toggleFavView() {
+        state.favView = !state.favView;
+        favBtn.classList.toggle('fav-active');
+        favBtn.textContent = state.favView ? '⭐ مفضلة (نشط)' : '⭐ المفضلة';
+        renderChannels();
+    }
+
+    function toggleFavorite(index) {
+        const ch = state.filtered[index];
+        if (!ch) return;
+        if (state.favorites.has(ch.url)) {
+            state.favorites.delete(ch.url);
+            showToast('⭐ تم الإزالة');
+        } else {
+            state.favorites.add(ch.url);
+            showToast('⭐ تم الإضافة');
+        }
+        saveFavorites();
+        renderChannels();
+        const items = channelList.querySelectorAll('.channel-item');
+        if (items[state.currentIndex]) items[state.currentIndex].classList.add('active');
+    }
+
+    // ===== MODAL =====
+    function openModal(title, html) {
+        modalTitle.textContent = title;
+        modalBody.innerHTML = html;
+        modalOverlay.classList.add('active');
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+    }
+
+    function openAddServer() {
+        openModal('➕ إضافة سيرفر', `
+            <div class="form-group">
+                <label>🏷️ اسم السيرفر</label>
+                <input type="text" id="newServerName" placeholder="مثال: سيرفر جديد">
+            </div>
+            <div class="form-group">
+                <label>🔗 رابط السيرفر</label>
+                <input type="text" id="newServerUrl" placeholder="http://...">
+            </div>
+            <div class="modal-btns">
+                <button class="action-btn" onclick="closeModal()">إلغاء</button>
+                <button class="action-btn green" id="saveServerBtn">💾 حفظ</button>
+            </div>
+        `);
+        document.getElementById('saveServerBtn').addEventListener('click', () => {
+            const name = document.getElementById('newServerName').value.trim();
+            const url = document.getElementById('newServerUrl').value.trim();
+            if (!name || !url) {
+                showToast('❌ أدخل الاسم والرابط', 'error');
+                return;
             }
+            state.servers[name] = url;
+            saveServers();
+            refreshServers();
+            serverSelect.value = name;
+            showToast('✅ تم الإضافة: ' + name);
+            closeModal();
+            setTimeout(() => loadChannels(name), 300);
+        });
+    }
 
-            // ===== VIDEO CONTROLS =====
-            function togglePlayPause() {
-                if (!state.videoLoaded) {
-                    const first = channelList.querySelector('.channel-item');
-                    if (first) first.click();
-                    return;
-                }
-                if (video.paused) {
-                    video.play().catch(() => {});
-                    state.isPlaying = true;
-                } else {
-                    video.pause();
-                    state.isPlaying = false;
-                }
-                updatePlayButton();
-            }
+    function openSettings() {
+        openModal('⚙️ الإعدادات', `
+            <div class="form-group">
+                <label>🔊 مستوى الصوت</label>
+                <input type="range" id="volSetting" min="0" max="200" value="${state.settings.volume || 100}" style="width:100%;">
+                <span id="volDisplay" style="color:#00ff88;font-weight:bold;">${state.settings.volume || 100}%</span>
+            </div>
+            <div class="form-group">
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                    <input type="checkbox" id="autoLoadSetting" ${state.settings.autoLoad !== false ? 'checked' : ''}>
+                    🚀 تحميل تلقائي عند البدء
+                </label>
+            </div>
+            <div class="modal-btns">
+                <button class="action-btn" onclick="closeModal()">إلغاء</button>
+                <button class="action-btn green" id="saveSettingsBtn">💾 حفظ</button>
+            </div>
+        `);
+        const volSlider = document.getElementById('volSetting');
+        const volDisplay = document.getElementById('volDisplay');
+        volSlider.addEventListener('input', () => {
+            volDisplay.textContent = volSlider.value + '%';
+        });
+        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+            state.settings.volume = parseInt(document.getElementById('volSetting').value);
+            state.settings.autoLoad = document.getElementById('autoLoadSetting').checked;
+            saveSettings();
+            setVolume(state.settings.volume);
+            showToast('✅ تم الحفظ');
+            closeModal();
+        });
+    }
 
-            function stopPlayback() {
-                video.pause();
-                video.currentTime = 0;
-                state.isPlaying = false;
-                state.videoLoaded = false;
-                updatePlayButton();
-                infoLabel.textContent = '⏹️ تم الإيقاف';
-                infoLabel.className = 'info-label';
-                progressSlider.value = 0;
-                placeholder.style.display = 'block';
-                video.src = '';
-            }
-
-            function playNext() {
-                if (state.filtered.length === 0) return;
-                const next = (state.currentIndex + 1) % state.filtered.length;
-                playChannel(next);
-                scrollToChannel(next);
-            }
-
-            function playPrev() {
-                if (state.filtered.length === 0) return;
-                const prev = state.currentIndex <= 0 ? state.filtered.length - 1 : state.currentIndex - 1;
-                playChannel(prev);
-                scrollToChannel(prev);
-            }
-
-            function scrollToChannel(index) {
-                const items = channelList.querySelectorAll('.channel-item');
-                if (items[index]) {
-                    items[index].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                }
-            }
-
-            function updatePlayButton() {
-                if (state.isPlaying && !video.paused) {
-                    playBtn.textContent = '⏸';
-                    playBtn.classList.add('playing');
-                } else {
-                    playBtn.textContent = '▶';
-                    playBtn.classList.remove('playing');
-                }
-            }
-
-            function toggleMute() {
-                video.muted = !video.muted;
-                state.isMuted = video.muted;
-                muteBtn.textContent = video.muted ? '🔇' : '🔊';
-            }
-
-            function setVolume(val) {
-                const v = parseInt(val);
-                video.volume = Math.min(v / 200, 1);
-                state.settings.volume = v;
-                saveSettings();
-                if (v === 0) muteBtn.textContent = '🔇';
-                else if (v < 50) muteBtn.textContent = '🔉';
-                else if (v < 100) muteBtn.textContent = '🔊';
-                else muteBtn.textContent = '🔊';
-            }
-
-            function toggleFullscreen() {
-                if (document.fullscreenElement) {
-                    document.exitFullscreen().catch(() => {});
-                    state.isFullscreen = false;
-                } else {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                    state.isFullscreen = true;
-                }
-            }
-
-            // ===== CONTEXT MENU =====
-            function showChannelMenu(x, y, index) {
-                const ch = state.filtered[index];
-                if (!ch) return;
-                const isFav = state.favorites.has(ch.url);
-
-                const items = [
-                    { label: '▶ تشغيل', action: () => playChannel(index) },
-                    { label: isFav ? '⭐ إزالة من المفضلة' : '⭐ إضافة للمفضلة', action: () => toggleFavorite(index) },
-                    { label: '📋 نسخ الرابط', action: () => { navigator.clipboard.writeText(ch.url).then(() => showToast('📋 تم النسخ!', 'success')); } },
-                    { label: 'ℹ️ معلومات القناة', action: () => showChannelInfo(index) }
-                ];
-
-                const menuHtml = items.map((item, i) =>
-                    `<div class="action-btn" style="width:100%;text-align:right;padding:8px 16px;margin:2px 0;border-radius:6px;border:1px solid var(--border);cursor:pointer;" data-action="${i}">${item.label}</div>`
-                ).join('');
-
-                modalTitle.textContent = '📺 قائمة القناة';
-                modalBody.innerHTML = `
-                    <div style="margin-bottom:12px;font-size:14px;color:var(--text-secondary);">
-                        <strong style="color:var(--green);">${ch.name || 'Unnamed'}</strong>
-                        ${ch.group ? ` · ${ch.group}` : ''}
+    function openManageServers() {
+        const names = Object.keys(state.servers);
+        let html = `<div style="margin-bottom:10px;color:#8b95a5;">${names.length} سيرفر(ات)</div>`;
+        for (const name of names) {
+            const url = state.servers[name];
+            html += `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0a0c0f;border-radius:6px;margin-bottom:4px;border:1px solid #1e242c;">
+                    <div style="flex:1;overflow:hidden;">
+                        <div style="color:#00ff88;font-weight:bold;">${name}</div>
+                        <div style="font-size:11px;color:#5a6470;word-break:break-all;">${url.substring(0, 50)}...</div>
                     </div>
-                    <div style="display:flex;flex-direction:column;gap:4px;">
-                        ${menuHtml}
-                    </div>
-                    <div class="btn-row-modal">
-                        <button class="action-btn white" onclick="closeModal()">إغلاق</button>
-                    </div>
-                `;
-                modalOverlay.classList.add('active');
-
-                setTimeout(() => {
-                    const btns = modalBody.querySelectorAll('[data-action]');
-                    btns.forEach((btn, i) => {
-                        btn.addEventListener('click', () => {
-                            items[i].action();
-                            closeModal();
-                        });
-                    });
-                }, 50);
-            }
-
-            function showChannelInfo(index) {
-                const ch = state.filtered[index];
-                if (!ch) return;
-                const info = `
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">📺 الاسم:</strong> ${ch.name || 'Unknown'}</div>
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">📂 المجموعة:</strong> ${ch.group || 'غير محددة'}</div>
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">🔗 الرابط:</strong> <span style="color:var(--green-dim);word-break:break-all;font-size:12px;">${ch.url}</span></div>
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">🖼️ الشعار:</strong> ${ch.logo || 'غير متوفر'}</div>
-                `;
-                modalTitle.textContent = 'ℹ️ معلومات القناة';
-                modalBody.innerHTML = `
-                    ${info}
-                    <div class="btn-row-modal">
-                        <button class="action-btn white" onclick="closeModal()">إغلاق</button>
-                    </div>
-                `;
-                modalOverlay.classList.add('active');
-            }
-
-            function toggleFavorite(index) {
-                const ch = state.filtered[index];
-                if (!ch) return;
-                if (state.favorites.has(ch.url)) {
-                    state.favorites.delete(ch.url);
-                    showToast('⭐ تم الإزالة من المفضلة', 'success');
-                } else {
-                    state.favorites.add(ch.url);
-                    showToast('⭐ تم الإضافة للمفضلة', 'success');
-                }
-                saveFavorites();
-                renderChannels();
-                const items = channelList.querySelectorAll('.channel-item');
-                if (items[state.currentIndex]) {
-                    items[state.currentIndex].classList.add('active');
-                }
-            }
-
-            // ===== MODAL =====
-            window.closeModal = function() {
-                modalOverlay.classList.remove('active');
-            };
-
-            function openAddCodeModal() {
-                modalTitle.textContent = '🐭 إضافة سيرفر IPTV';
-                modalBody.innerHTML = `
-                    <div style="margin-bottom:12px;color:var(--text-secondary);font-size:13px;">
-                        🔥 الصق أي كود سيرفر - يدعم CCcam, Newcamd, MAC, Xtream, Portal, Stalker, M3U
-                    </div>
-                    <div class="form-group">
-                        <label>📝 الصق الكود:</label>
-                        <textarea id="codeInput" placeholder="مثال: http://host.com:8080/get.php?username=user&password=pass&type=m3u_plus"></textarea>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>🏷️ اسم السيرفر</label>
-                            <input type="text" id="serverNameInput" placeholder="اسم السيرفر">
-                        </div>
-                        <div class="form-group">
-                            <label>📦 النوع</label>
-                            <select id="serverTypeInput">
-                                <option value="m3u_plus">m3u_plus (مفضل)</option>
-                                <option value="m3u">m3u (قياسي)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="previewUrl" style="margin-top:12px;padding:12px;background:var(--bg-dark);border:2px solid var(--border);border-radius:10px;color:var(--text-muted);font-family:monospace;font-size:12px;word-break:break-all;min-height:40px;">
-                        ⚡ الرابط النهائي سيظهر هنا...
-                    </div>
-                    <div class="btn-row-modal">
-                        <button class="action-btn white" onclick="closeModal()">إلغاء</button>
-                        <button class="action-btn green" id="addServerBtn">➕ إضافة سيرفر</button>
-                    </div>
-                `;
-                modalOverlay.classList.add('active');
-
-                const codeInput = document.getElementById('codeInput');
-                const nameInput = document.getElementById('serverNameInput');
-                const preview = document.getElementById('previewUrl');
-                const addBtn = document.getElementById('addServerBtn');
-
-                function parseAndPreview() {
-                    const text = codeInput.value.trim();
-                    if (!text) {
-                        preview.textContent = '⚡ الصق الكود للتحليل...';
-                        preview.style.borderColor = 'var(--border)';
-                        preview.style.color = 'var(--text-muted)';
-                        return;
-                    }
-                    
-                    // Check if it's a URL
-                    if (text.startsWith('http://') || text.startsWith('https://')) {
-                        preview.textContent = text;
-                        preview.style.borderColor = 'var(--green)';
-                        preview.style.color = 'var(--green)';
-                        if (!nameInput.value.trim()) {
-                            const urlParts = text.split('/');
-                            const host = urlParts.length > 2 ? urlParts[2] : 'server';
-                            nameInput.value = `سيرفر (${host})`;
-                        }
-                    } else {
-                        preview.textContent = '⚠️ يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://';
-                        preview.style.borderColor = 'var(--fire-orange)';
-                        preview.style.color = 'var(--fire-orange)';
-                    }
-                }
-
-                codeInput.addEventListener('input', parseAndPreview);
-                nameInput.addEventListener('input', parseAndPreview);
-
-                addBtn.addEventListener('click', () => {
-                    const name = nameInput.value.trim();
-                    const url = preview.textContent.trim();
-                    if (!name) {
-                        showToast('❌ يرجى إدخال اسم السيرفر', 'error');
-                        return;
-                    }
-                    if (!url || url.startsWith('⚡') || url.startsWith('⚠️')) {
-                        showToast('❌ رابط غير صالح. تأكد من الكود.', 'error');
-                        return;
-                    }
-                    state.customServers[name] = {
-                        url: url,
-                        info: { type: 'custom', host: name }
-                    };
+                    <button class="action-btn red" style="border-color:#ff2a2a;color:#ff2a2a;padding:4px 12px;font-size:11px;" data-name="${name}">🗑️</button>
+                </div>
+            `;
+        }
+        html += `<div class="modal-btns"><button class="action-btn" onclick="closeModal()">إغلاق</button></div>`;
+        openModal('📡 إدارة السيرفرات', html);
+        modalBody.querySelectorAll('[data-name]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const name = btn.dataset.name;
+                if (confirm('حذف "' + name + '"؟')) {
+                    delete state.servers[name];
                     saveServers();
-                    refreshServerSelect();
-                    serverSelect.value = name;
-                    showToast(`✅ تم الإضافة: ${name}`, 'success');
-                    closeModal();
-                    setTimeout(() => loadChannels(name), 300);
-                });
-
-                setTimeout(() => codeInput.focus(), 100);
-            }
-
-            function openSettingsModal() {
-                modalTitle.textContent = '⚙️ الإعدادات';
-                const s = state.settings;
-                modalBody.innerHTML = `
-                    <div class="form-group">
-                        <label>🔊 مستوى الصوت الافتراضي</label>
-                        <input type="range" id="volSetting" min="0" max="200" value="${s.volume || 100}" style="width:100%;">
-                        <span id="volDisplay" style="color:var(--green);font-weight:bold;">${s.volume || 100}%</span>
-                    </div>
-                    <div class="form-group">
-                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-                            <input type="checkbox" id="autoLoadSetting" ${s.autoLoad !== undefined ? (s.autoLoad ? 'checked' : '') : 'checked'}>
-                            🚀 تحميل تلقائي عند البدء
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>⏱️ مهلة الاتصال (ثواني)</label>
-                        <input type="number" id="timeoutSetting" value="${s.timeout || 45}" min="10" max="120">
-                    </div>
-                    <div class="btn-row-modal">
-                        <button class="action-btn white" onclick="closeModal()">إلغاء</button>
-                        <button class="action-btn green" id="saveSettingsBtn">💾 حفظ</button>
-                    </div>
-                `;
-                modalOverlay.classList.add('active');
-
-                const volSlider = document.getElementById('volSetting');
-                const volDisplay = document.getElementById('volDisplay');
-                volSlider.addEventListener('input', () => {
-                    volDisplay.textContent = volSlider.value + '%';
-                });
-
-                document.getElementById('saveSettingsBtn').addEventListener('click', () => {
-                    state.settings.volume = parseInt(volSlider.value);
-                    state.settings.autoLoad = document.getElementById('autoLoadSetting').checked;
-                    state.settings.timeout = parseInt(document.getElementById('timeoutSetting').value) || 45;
-                    saveSettings();
-                    setVolume(state.settings.volume);
-                    showToast('✅ تم حفظ الإعدادات!', 'success');
-                    closeModal();
-                });
-            }
-
-            function openManageServers() {
-                const servers = { ...state.customServers };
-                const names = Object.keys(servers);
-
-                if (names.length === 0) {
-                    showToast('📭 لا توجد سيرفرات. أضف واحداً أولاً!', 'error');
-                    return;
+                    refreshServers();
+                    showToast('🗑️ تم الحذف: ' + name);
+                    openManageServers();
                 }
+            });
+        });
+    }
 
-                let html = `<div style="margin-bottom:12px;color:var(--text-secondary);font-size:13px;">📡 ${names.length} سيرفر(ات) تم تكوينها</div>`;
-                for (const name of names) {
-                    const data = servers[name];
-                    const shortUrl = data.url ? data.url.substring(0, 50) + (data.url.length > 50 ? '...' : '') : '';
-                    html += `
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg-input);border-radius:10px;margin-bottom:6px;border:1px solid var(--border);">
-                            <div style="flex:1;overflow:hidden;">
-                                <div style="font-weight:bold;color:var(--green);">${name}</div>
-                                <div style="font-size:11px;color:var(--text-muted);word-break:break-all;">${shortUrl}</div>
-                            </div>
-                            <button class="action-btn red" style="padding:4px 14px;font-size:11px;border-color:var(--red);color:var(--red);" data-name="${name}">🗑️ حذف</button>
-                        </div>
-                    `;
-                }
-                html += `<div class="btn-row-modal"><button class="action-btn white" onclick="closeModal()">إغلاق</button></div>`;
-
-                modalTitle.textContent = '📡 إدارة السيرفرات';
-                modalBody.innerHTML = html;
-                modalOverlay.classList.add('active');
-
-                modalBody.querySelectorAll('[data-name]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const name = btn.dataset.name;
-                        if (confirm(`⚠️ حذف السيرفر '${name}'؟`)) {
-                            delete state.customServers[name];
-                            saveServers();
-                            refreshServerSelect();
-                            showToast(`🗑️ تم الحذف: ${name}`, 'success');
-                            openManageServers();
-                        }
-                    });
-                });
+    // ===== REFRESH =====
+    function refreshServers() {
+        const current = serverSelect.value;
+        serverSelect.innerHTML = '';
+        const names = Object.keys(state.servers);
+        if (names.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '-- لا يوجد --';
+            serverSelect.appendChild(opt);
+        } else {
+            for (const name of names) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                serverSelect.appendChild(opt);
             }
+        }
+        if (current && [...serverSelect.options].some(o => o.value === current)) {
+            serverSelect.value = current;
+        }
+    }
 
-            // ===== SERVER SELECT =====
-            function refreshServerSelect() {
-                const current = serverSelect.value;
-                serverSelect.innerHTML = '';
-                const customNames = Object.keys(state.customServers);
-
-                if (customNames.length === 0) {
-                    const opt = document.createElement('option');
-                    opt.value = '';
-                    opt.textContent = '-- لا يوجد سيرفرات --';
-                    serverSelect.appendChild(opt);
-                } else {
-                    for (const name of customNames) {
+    // ===== FILE =====
+    function loadFile() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.m3u,.m3u8';
+        input.onchange = () => {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const text = e.target.result;
+                    const chs = parseM3U(text);
+                    if (chs.length === 0) throw new Error('لا توجد قنوات');
+                    state.channels = chs;
+                    state.filtered = [...chs];
+                    state.currentIndex = -1;
+                    renderChannels();
+                    // Update groups
+                    const groups = new Set();
+                    for (const ch of chs) {
+                        if (ch.group) groups.add(ch.group);
+                    }
+                    groupSelect.innerHTML = '<option value="All">📂 كل المجموعات</option>';
+                    for (const g of [...groups].sort()) {
                         const opt = document.createElement('option');
-                        opt.value = name;
-                        opt.textContent = name;
-                        serverSelect.appendChild(opt);
+                        opt.value = g;
+                        opt.textContent = g;
+                        groupSelect.appendChild(opt);
                     }
+                    state.currentGroup = 'All';
+                    groupSelect.value = 'All';
+                    statusText.textContent = `✅ تم التحميل: ${chs.length} قناة`;
+                    statusText.className = 'status-text success';
+                    countLabel.textContent = chs.length + ' قناة';
+                    showToast(`✅ تم تحميل ${chs.length} قناة من الملف`);
+                } catch(err) {
+                    showToast('❌ ' + err.message, 'error');
                 }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    }
 
-                if (current && [...serverSelect.options].some(o => o.value === current)) {
-                    serverSelect.value = current;
-                }
-            }
+    // ===== VIDEO EVENTS =====
+    video.addEventListener('timeupdate', () => {
+        if (video.duration) {
+            progressSlider.value = Math.min((video.currentTime / video.duration) * 1000, 1000);
+        }
+    });
 
-            // ===== FILE LOAD =====
-            function loadFile() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.m3u,.m3u8';
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        try {
-                            const content = ev.target.result;
-                            state.loading = true;
-                            loadBtn.disabled = true;
-                            loadBtn.innerHTML = '⏳ جاري التحميل...';
-                            progressBar.classList.add('active');
-                            progressFill.style.width = '30%';
-                            statusLabel.textContent = `📁 جاري التحميل: ${file.name}`;
-                            statusLabel.className = 'status-label';
-                            setTimeout(() => {
-                                const channels = parseM3U(content);
-                                if (channels.length === 0) {
-                                    throw new Error('لم يتم العثور على قنوات في الملف');
-                                }
-                                progressFill.style.width = '90%';
-                                state.serverInfo = {};
-                                onChannelsLoaded(channels);
-                                statusLabel.textContent = `✅ تم التحميل من الملف: ${file.name}`;
-                                statusLabel.className = 'status-label success';
-                                showToast(`✅ تم تحميل ${channels.length} قناة من الملف`, 'success');
-                            }, 200);
-                        } catch (err) {
-                            showToast('❌ خطأ في قراءة الملف: ' + err.message, 'error');
-                            state.loading = false;
-                            loadBtn.disabled = false;
-                            loadBtn.textContent = '📡 تحميل القنوات';
-                            progressBar.classList.remove('active');
-                            statusLabel.textContent = '❌ خطأ في قراءة الملف';
-                            statusLabel.className = 'status-label error';
-                        }
-                    };
-                    reader.readAsText(file);
-                };
-                input.click();
-            }
+    video.addEventListener('play', () => {
+        state.isPlaying = true;
+        playBtn.textContent = '⏸';
+        playBtn.classList.add('playing');
+        placeholder.style.display = 'none';
+        loadingOverlay.classList.remove('active');
+    });
 
-            // ===== VIDEO EVENTS =====
-            video.addEventListener('timeupdate', () => {
-                if (video.duration) {
-                    const pct = (video.currentTime / video.duration) * 1000;
-                    progressSlider.value = Math.min(pct, 1000);
-                }
-            });
+    video.addEventListener('pause', () => {
+        state.isPlaying = false;
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+    });
 
-            video.addEventListener('play', () => {
-                state.isPlaying = true;
-                updatePlayButton();
-                infoLabel.className = 'info-label active';
-                placeholder.style.display = 'none';
-                loadingOverlay.classList.remove('active');
-            });
+    video.addEventListener('ended', () => {
+        state.isPlaying = false;
+        playBtn.textContent = '▶';
+        playBtn.classList.remove('playing');
+        playNext();
+    });
 
-            video.addEventListener('pause', () => {
-                state.isPlaying = false;
-                updatePlayButton();
-            });
+    video.addEventListener('error', () => {
+        loadingOverlay.classList.remove('active');
+        showToast('⚠️ مشكلة في التشغيل', 'error');
+    });
 
-            video.addEventListener('ended', () => {
-                state.isPlaying = false;
-                updatePlayButton();
-                playNext();
-            });
+    progressSlider.addEventListener('input', (e) => {
+        if (video.duration) {
+            video.currentTime = (e.target.value / 1000) * video.duration;
+        }
+    });
 
-            video.addEventListener('error', (e) => {
-                console.warn('Video error:', e);
-                loadingOverlay.classList.remove('active');
-                showToast('⚠️ مشكلة في تشغيل القناة', 'error');
-            });
+    // ===== KEYBOARD =====
+    document.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+        switch(e.key) {
+            case ' ': e.preventDefault(); togglePlay(); break;
+            case 's': case 'S': stopPlay(); break;
+            case 'ArrowRight': playNext(); break;
+            case 'ArrowLeft': playPrev(); break;
+            case 'ArrowUp': volSlider.value = Math.min(parseInt(volSlider.value) + 10, 200); setVolume(volSlider.value); break;
+            case 'ArrowDown': volSlider.value = Math.max(parseInt(volSlider.value) - 10, 0); setVolume(volSlider.value); break;
+            case 'm': case 'M': toggleMute(); break;
+            case 'f': case 'F': toggleFullscreen(); break;
+            case 'Escape': if (modalOverlay.classList.contains('active')) closeModal(); break;
+        }
+    });
 
-            // ===== DRAG & DROP =====
-            document.addEventListener('dragover', (e) => e.preventDefault());
-            document.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    const file = files[0];
-                    if (file.name.match(/\.m3u8?$/i)) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                            try {
-                                const content = ev.target.result;
-                                state.loading = true;
-                                loadBtn.disabled = true;
-                                loadBtn.innerHTML = '⏳ جاري التحميل...';
-                                progressBar.classList.add('active');
-                                progressFill.style.width = '30%';
-                                statusLabel.textContent = `📁 جاري التحميل: ${file.name}`;
-                                statusLabel.className = 'status-label';
-                                setTimeout(() => {
-                                    const channels = parseM3U(content);
-                                    if (channels.length === 0) {
-                                        throw new Error('لم يتم العثور على قنوات');
-                                    }
-                                    progressFill.style.width = '90%';
-                                    state.serverInfo = {};
-                                    onChannelsLoaded(channels);
-                                    statusLabel.textContent = `✅ تم التحميل من الملف: ${file.name}`;
-                                    statusLabel.className = 'status-label success';
-                                    showToast(`✅ تم تحميل ${channels.length} قناة من الملف`, 'success');
-                                }, 200);
-                            } catch (err) {
-                                showToast('❌ خطأ في قراءة الملف: ' + err.message, 'error');
-                                state.loading = false;
-                                loadBtn.disabled = false;
-                                loadBtn.textContent = '📡 تحميل القنوات';
-                                progressBar.classList.remove('active');
-                                statusLabel.textContent = '❌ خطأ في قراءة الملف';
-                                statusLabel.className = 'status-label error';
-                            }
-                        };
-                        reader.readAsText(file);
-                        showToast(`📁 جاري التحميل: ${file.name}`, 'success');
-                    }
-                }
-            });
+    // ===== EVENTS =====
+    loadBtn.addEventListener('click', () => {
+        const sel = serverSelect.value;
+        if (!sel || sel === '-- لا يوجد --') {
+            showToast('❌ لا يوجد سيرفر', 'error');
+            return;
+        }
+        loadChannels(sel);
+    });
 
-            // ===== KEYBOARD SHORTCUTS =====
-            document.addEventListener('keydown', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
-                switch (e.key) {
-                    case ' ':
-                        e.preventDefault();
-                        togglePlayPause();
-                        break;
-                    case 's':
-                    case 'S':
-                        stopPlayback();
-                        break;
-                    case 'ArrowRight':
-                        playNext();
-                        break;
-                    case 'ArrowLeft':
-                        playPrev();
-                        break;
-                    case 'ArrowUp':
-                        volSlider.value = Math.min(parseInt(volSlider.value) + 10, 200);
-                        setVolume(volSlider.value);
-                        break;
-                    case 'ArrowDown':
-                        volSlider.value = Math.max(parseInt(volSlider.value) - 10, 0);
-                        setVolume(volSlider.value);
-                        break;
-                    case 'm':
-                    case 'M':
-                        toggleMute();
-                        break;
-                    case 'f':
-                    case 'F':
-                        toggleFullscreen();
-                        break;
-                    case 'Escape':
-                        if (document.fullscreenElement) {
-                            document.exitFullscreen().catch(() => {});
-                        }
-                        if (modalOverlay.classList.contains('active')) {
-                            closeModal();
-                        }
-                        break;
-                }
-            });
+    fileBtn.addEventListener('click', loadFile);
+    addBtn.addEventListener('click', openAddServer);
+    settingsBtn.addEventListener('click', openSettings);
 
-            // ===== MODAL CLOSE =====
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) closeModal();
-            });
+    document.querySelector('#manageBtn')?.addEventListener('click', openManageServers);
+    // Add manage button if needed
+    const manageBtn = document.createElement('button');
+    manageBtn.className = 'action-btn full';
+    manageBtn.textContent = '⚙️ إدارة السيرفرات';
+    manageBtn.style.marginTop = '4px';
+    manageBtn.addEventListener('click', openManageServers);
+    document.querySelector('.btn-row').appendChild(manageBtn);
 
-            // ===== INIT =====
-            function init() {
-                loadData();
-                refreshServerSelect();
+    playBtn.addEventListener('click', togglePlay);
+    stopBtn.addEventListener('click', stopPlay);
+    prevBtn.addEventListener('click', playPrev);
+    nextBtn.addEventListener('click', playNext);
+    muteBtn.addEventListener('click', toggleMute);
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+    volSlider.addEventListener('input', (e) => setVolume(e.target.value));
+    favBtn.addEventListener('click', toggleFavView);
 
-                setVolume(state.settings.volume || 100);
+    searchInput.addEventListener('input', (e) => {
+        state.search = e.target.value;
+        renderChannels();
+    });
 
-                const serverCount = Object.keys(state.customServers).length;
-                if (serverCount > 0) {
-                    statusLabel.textContent = '🚀 جاهز. اختر سيرفر واضغط تحميل.';
-                    statusLabel.className = 'status-label';
-                    showToast(`🐭 ${APP_NAME} v${APP_VERSION} - سيرفر شهار جاهز`, 'success');
-                } else {
-                    statusLabel.textContent = '📭 لا توجد سيرفرات. اضغط "إضافة سيرفر" للبدء!';
-                    statusLabel.className = 'status-label';
-                }
+    groupSelect.addEventListener('change', (e) => {
+        state.currentGroup = e.target.value;
+        renderChannels();
+    });
 
-                // Auto load شهار
-                if (state.settings.autoLoad !== false) {
-                    setTimeout(() => {
-                        const shaharKey = Object.keys(state.customServers).find(k => k.includes('شهار'));
-                        if (shaharKey) {
-                            serverSelect.value = shaharKey;
-                            showToast('🔄 جاري تحميل سيرفر شهار...', 'success');
-                            setTimeout(() => loadChannels(shaharKey), 500);
-                        } else if (Object.keys(state.customServers).length > 0) {
-                            const firstServer = Object.keys(state.customServers)[0];
-                            serverSelect.value = firstServer;
-                            loadChannels(firstServer);
-                        }
-                    }, 800);
-                }
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
 
-                // ===== EVENTS =====
-                serverSelect.addEventListener('change', () => {
-                    state.selectedServer = serverSelect.value;
-                });
+    // Context menu on channels
+    channelList.addEventListener('contextmenu', (e) => {
+        const item = e.target.closest('.channel-item');
+        if (!item) return;
+        const index = parseInt(item.dataset.index);
+        const ch = state.filtered[index];
+        if (!ch) return;
+        e.preventDefault();
+        const isFav = state.favorites.has(ch.url);
+        const menu = [
+            { label: '▶ تشغيل', action: () => playChannel(index) },
+            { label: isFav ? '⭐ إزالة مفضلة' : '⭐ إضافة مفضلة', action: () => toggleFavorite(index) },
+            { label: '📋 نسخ الرابط', action: () => { navigator.clipboard.writeText(ch.url).then(() => showToast('📋 تم النسخ')); } }
+        ];
+        let html = menu.map((m, i) =>
+            `<div class="action-btn" style="width:100%;text-align:right;padding:6px 12px;margin:2px 0;border-radius:4px;border:1px solid #1e242c;cursor:pointer;" data-action="${i}">${m.label}</div>`
+        ).join('');
+        html += `<div class="modal-btns"><button class="action-btn" onclick="closeModal()">إغلاق</button></div>`;
+        openModal('📺 القناة: ' + ch.name, html);
+        modalBody.querySelectorAll('[data-action]').forEach((btn, i) => {
+            btn.addEventListener('click', () => { menu[i].action(); closeModal(); });
+        });
+    });
 
-                loadBtn.addEventListener('click', () => {
-                    const selected = serverSelect.value;
-                    if (!selected || selected === '-- لا يوجد سيرفرات --') {
-                        showToast('❌ يرجى إضافة سيرفر أولاً', 'error');
-                        return;
-                    }
-                    loadChannels(selected);
-                });
-
-                fileBtn.addEventListener('click', loadFile);
-                addCodeBtn.addEventListener('click', openAddCodeModal);
-                manageBtn.addEventListener('click', openManageServers);
-                settingsBtn.addEventListener('click', openSettingsModal);
-
-                favBtn.addEventListener('click', () => {
-                    state.favView = !state.favView;
-                    favBtn.classList.toggle('fav-active');
-                    favBtn.textContent = state.favView ? '⭐ المفضلة (نشط)' : '⭐ المفضلة';
+    // ===== DRAG & DROP =====
+    document.addEventListener('dragover', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].name.match(/\.m3u8?$/i)) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const text = ev.target.result;
+                    const chs = parseM3U(text);
+                    if (chs.length === 0) throw new Error('لا توجد قنوات');
+                    state.channels = chs;
+                    state.filtered = [...chs];
+                    state.currentIndex = -1;
                     renderChannels();
-                });
-
-                searchInput.addEventListener('input', (e) => {
-                    state.searchQuery = e.target.value;
-                    renderChannels();
-                });
-
-                groupSelect.addEventListener('change', (e) => {
-                    state.currentGroup = e.target.value;
-                    renderChannels();
-                });
-
-                playBtn.addEventListener('click', togglePlayPause);
-                stopBtn.addEventListener('click', stopPlayback);
-                prevBtn.addEventListener('click', playPrev);
-                nextBtn.addEventListener('click', playNext);
-                muteBtn.addEventListener('click', toggleMute);
-                fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-                volSlider.addEventListener('input', (e) => {
-                    setVolume(e.target.value);
-                });
-
-                progressSlider.addEventListener('input', (e) => {
-                    if (video.duration) {
-                        const pos = (e.target.value / 1000) * video.duration;
-                        video.currentTime = pos;
+                    const groups = new Set();
+                    for (const ch of chs) {
+                        if (ch.group) groups.add(ch.group);
                     }
-                });
+                    groupSelect.innerHTML = '<option value="All">📂 كل المجموعات</option>';
+                    for (const g of [...groups].sort()) {
+                        const opt = document.createElement('option');
+                        opt.value = g;
+                        opt.textContent = g;
+                        groupSelect.appendChild(opt);
+                    }
+                    state.currentGroup = 'All';
+                    groupSelect.value = 'All';
+                    statusText.textContent = `✅ تم التحميل: ${chs.length} قناة`;
+                    statusText.className = 'status-text success';
+                    countLabel.textContent = chs.length + ' قناة';
+                    showToast(`✅ تم تحميل ${chs.length} قناة`);
+                } catch(err) {
+                    showToast('❌ ' + err.message, 'error');
+                }
+            };
+            reader.readAsText(files[0]);
+            showToast('📁 جاري التحميل...');
+        }
+    });
 
-                console.log(`🐭 ${APP_NAME} v${APP_VERSION} initialized with شهار server`);
+    // ===== INIT =====
+    function init() {
+        loadData();
+        refreshServers();
+        setVolume(state.settings.volume || 100);
+
+        if (state.settings.autoLoad !== false) {
+            const first = Object.keys(state.servers)[0];
+            if (first) {
+                serverSelect.value = first;
+                setTimeout(() => loadChannels(first), 500);
             }
+        }
 
-            // ===== START =====
-            document.addEventListener('DOMContentLoaded', init);
+        // Make functions global for inline onclick
+        window.closeModal = closeModal;
+        window.showToast = showToast;
 
-            // Expose
-            window.closeModal = closeModal;
-            window.showToast = showToast;
-            window.loadChannels = loadChannels;
-            window.playChannel = playChannel;
-            window.toggleFavorite = toggleFavorite;
-            window.openAddCodeModal = openAddCodeModal;
-            window.openSettingsModal = openSettingsModal;
-            window.openManageServers = openManageServers;
-            window.toggleFullscreen = toggleFullscreen;
-            window.togglePlayPause = togglePlayPause;
-            window.stopPlayback = stopPlayback;
-            window.playNext = playNext;
-            window.playPrev = playPrev;
-            window.toggleMute = toggleMute;
-            window.setVolume = setVolume;
+        console.log('🐭 MOUSE AI IPTV جاهز مع سيرفر شهار');
+    }
 
-        })();
-    </script>
+    document.addEventListener('DOMContentLoaded', init);
+
+})();
+</script>
+
 </body>
 </html>
