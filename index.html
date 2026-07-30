@@ -21,7 +21,10 @@
             --text-secondary: #8b95a5;
             --text-muted: #5a6470;
             --fire-orange: #ff6b35;
-            --shadow-color: rgba(0, 255, 136, 0.3);
+            --shadow-color: rgba(0, 255, 136, 0.4);
+            --glow-red: rgba(255, 42, 42, 0.4);
+            --glow-green: rgba(0, 255, 136, 0.4);
+            --glow-white: rgba(255, 255, 255, 0.3);
         }
 
         /* ===== Reset & Base ===== */
@@ -55,6 +58,42 @@
             background: var(--green-dim);
         }
 
+        /* ===== Animated Logo ===== */
+        @keyframes fireGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 42, 42, 0.6), 0 0 40px rgba(255, 42, 42, 0.3), 0 0 60px rgba(255, 42, 42, 0.1); }
+            33% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1); }
+            66% { text-shadow: 0 0 20px rgba(0, 255, 136, 0.6), 0 0 40px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.1); }
+            100% { text-shadow: 0 0 20px rgba(255, 42, 42, 0.6), 0 0 40px rgba(255, 42, 42, 0.3), 0 0 60px rgba(255, 42, 42, 0.1); }
+        }
+
+        @keyframes logoColorShift {
+            0% { color: #ff2a2a; }
+            33% { color: #ffffff; }
+            66% { color: #00ff88; }
+            100% { color: #ff2a2a; }
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animated-logo {
+            font-size: 42px;
+            font-weight: 900;
+            animation: logoColorShift 3s ease-in-out infinite, fireGlow 3s ease-in-out infinite, logoPulse 2s ease-in-out infinite;
+            background: none;
+            -webkit-text-fill-color: initial;
+            text-align: center;
+            letter-spacing: 2px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .animated-logo span {
+            display: inline-block;
+            animation: logoColorShift 3s ease-in-out infinite;
+        }
+
         /* ===== App Container ===== */
         .app-container {
             display: flex;
@@ -79,6 +118,11 @@
             position: relative;
             overflow: hidden;
             min-height: 300px;
+            transition: border-color 0.3s ease;
+        }
+
+        .video-container:hover {
+            border-color: var(--white);
         }
 
         #videoPlayer {
@@ -94,18 +138,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: var(--text-muted);
             pointer-events: none;
         }
 
         .video-placeholder .logo-text {
             font-size: 48px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00ff88, #ff6b35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 60px rgba(0, 255, 136, 0.3);
+            font-weight: 900;
+            animation: logoColorShift 3s ease-in-out infinite, fireGlow 3s ease-in-out infinite;
+            letter-spacing: 2px;
         }
 
         .video-placeholder p {
@@ -125,9 +165,16 @@
             font-size: 12px;
             color: var(--green);
             font-weight: bold;
+            transition: all 0.3s ease;
         }
         .server-info.active {
             display: block;
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ===== Controls ===== */
@@ -137,6 +184,11 @@
             border: 2px solid var(--border);
             padding: 10px 14px;
             margin-top: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .controls:hover {
+            border-color: var(--green);
         }
 
         .progress-slider {
@@ -159,7 +211,12 @@
             border-radius: 50%;
             border: 2px solid white;
             cursor: pointer;
-            box-shadow: 0 0 10px var(--shadow-color);
+            box-shadow: 0 0 20px var(--shadow-color);
+            transition: all 0.2s;
+        }
+        .progress-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 30px var(--shadow-color);
         }
         .progress-slider::-moz-range-thumb {
             width: 16px;
@@ -188,7 +245,7 @@
             min-width: 40px;
             height: 40px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -196,6 +253,8 @@
         .ctrl-btn:hover {
             background: var(--green);
             color: #0a0c0f;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--shadow-color);
         }
         .ctrl-btn:active {
             transform: scale(0.95);
@@ -207,6 +266,7 @@
         .ctrl-btn.red:hover {
             background: var(--red);
             color: white;
+            box-shadow: 0 0 25px var(--glow-red);
         }
         .ctrl-btn.white {
             border-color: var(--white);
@@ -215,6 +275,7 @@
         .ctrl-btn.white:hover {
             background: var(--white);
             color: #0a0c0f;
+            box-shadow: 0 0 25px var(--glow-white);
         }
         .ctrl-btn.play-btn {
             background: linear-gradient(135deg, var(--red), var(--red-dim));
@@ -224,13 +285,20 @@
             min-width: 50px;
             height: 50px;
             border-radius: 12px;
+            transition: all 0.3s ease;
         }
         .ctrl-btn.play-btn:hover {
             border-color: white;
+            transform: scale(1.08);
+            box-shadow: 0 0 30px var(--glow-red);
         }
         .ctrl-btn.play-btn.playing {
             background: linear-gradient(135deg, var(--green), var(--green-dim));
             border-color: var(--green);
+            box-shadow: 0 0 30px var(--glow-green);
+        }
+        .ctrl-btn.play-btn.playing:hover {
+            box-shadow: 0 0 40px var(--glow-green);
         }
 
         .vol-slider {
@@ -242,6 +310,7 @@
             border-radius: 3px;
             outline: none;
             cursor: pointer;
+            transition: all 0.2s;
         }
         .vol-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -251,6 +320,11 @@
             background: var(--green);
             border-radius: 50%;
             cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 15px var(--shadow-color);
+        }
+        .vol-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
         }
         .vol-slider::-moz-range-thumb {
             width: 14px;
@@ -267,6 +341,11 @@
             font-weight: bold;
             margin-top: 6px;
             min-height: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .info-label.active {
+            color: var(--green);
         }
 
         /* ===== Right Panel (Channels) ===== */
@@ -278,25 +357,22 @@
             padding: 12px 12px 12px 6px;
             border-left: 2px solid var(--border);
             overflow: hidden;
+            background: var(--bg-dark);
         }
 
         .right-panel .logo {
             text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00ff88, #ff6b35);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             padding: 4px 0;
         }
 
         .right-panel .subtitle {
             text-align: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: var(--green);
-            margin: -4px 0 4px 0;
+            margin: -4px 0 2px 0;
+            letter-spacing: 3px;
+            animation: fireGlow 2s ease-in-out infinite;
         }
 
         .right-panel .version {
@@ -313,6 +389,11 @@
             border: 2px solid var(--border);
             padding: 12px;
             margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .server-section:hover {
+            border-color: var(--green);
         }
 
         .server-section label {
@@ -337,9 +418,11 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M6 8L0 0h12z' fill='%2300ff88'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
+            transition: border-color 0.3s ease;
         }
         .server-select:focus {
             border-color: var(--green);
+            box-shadow: 0 0 20px var(--shadow-color);
         }
         .server-select option {
             background: var(--bg-card);
@@ -366,12 +449,19 @@
             font-weight: bold;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         .action-btn:hover {
             border-color: var(--green);
             background: var(--bg-card);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .action-btn:active {
+            transform: scale(0.97);
         }
         .action-btn.green {
             border-color: var(--green);
@@ -380,6 +470,7 @@
         .action-btn.green:hover {
             background: var(--green);
             color: #0a0c0f;
+            box-shadow: 0 0 30px var(--shadow-color);
         }
         .action-btn.white {
             border-color: var(--white);
@@ -388,10 +479,21 @@
         .action-btn.white:hover {
             background: var(--white);
             color: #0a0c0f;
+            box-shadow: 0 0 30px var(--glow-white);
+        }
+        .action-btn.red {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .action-btn.red:hover {
+            background: var(--red);
+            color: white;
+            box-shadow: 0 0 30px var(--glow-red);
         }
         .action-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
         /* ===== Progress Bar ===== */
@@ -406,13 +508,21 @@
         }
         .progress-bar.active {
             display: block;
+            animation: fadeSlideIn 0.3s ease;
         }
         .progress-bar .fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--green), var(--green-dim));
+            background: linear-gradient(90deg, var(--red), var(--green), var(--white), var(--green), var(--red));
+            background-size: 300% 100%;
             border-radius: 3px;
             width: 0%;
             transition: width 0.3s;
+            animation: progressGlow 2s linear infinite;
+        }
+
+        @keyframes progressGlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
         }
 
         .status-label {
@@ -421,6 +531,14 @@
             font-size: 12px;
             font-weight: bold;
             min-height: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .status-label.success {
+            color: var(--green);
+        }
+        .status-label.error {
+            color: var(--red);
         }
 
         /* ===== Group & Search ===== */
@@ -439,9 +557,11 @@
             background-repeat: no-repeat;
             background-position: right 12px center;
             margin-bottom: 6px;
+            transition: border-color 0.3s ease;
         }
         .group-select:focus {
             border-color: var(--green);
+            box-shadow: 0 0 20px var(--shadow-color);
         }
 
         .search-input {
@@ -453,11 +573,12 @@
             color: var(--text-primary);
             font-size: 13px;
             outline: none;
-            transition: border 0.2s;
+            transition: all 0.3s ease;
             margin-bottom: 6px;
         }
         .search-input:focus {
             border-color: var(--green);
+            box-shadow: 0 0 20px var(--shadow-color);
         }
         .search-input::placeholder {
             color: var(--text-muted);
@@ -472,6 +593,11 @@
             overflow-y: auto;
             padding: 6px;
             min-height: 200px;
+            transition: border-color 0.3s ease;
+        }
+
+        .channel-list:hover {
+            border-color: var(--border-hover);
         }
 
         .channel-item {
@@ -480,26 +606,31 @@
             border-radius: 8px;
             margin: 3px 5px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
             font-size: 13px;
             color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
         .channel-item:hover {
             background: var(--bg-input);
             border: 1px solid var(--border-hover);
+            transform: translateX(4px);
         }
         .channel-item.active {
-            background: var(--green);
+            background: linear-gradient(135deg, var(--green), var(--green-dim));
             color: #0a0c0f;
             font-weight: bold;
             border: 2px solid var(--green-dim);
+            box-shadow: 0 0 30px var(--shadow-color);
+            transform: scale(1.01);
         }
         .channel-item .fav-star {
             color: #ffd700;
             margin-right: 8px;
+            animation: fireGlow 1.5s ease-in-out infinite;
         }
         .channel-item .channel-name {
             flex: 1;
@@ -515,6 +646,7 @@
             border-radius: 10px;
             margin-left: 8px;
             white-space: nowrap;
+            transition: all 0.2s ease;
         }
         .channel-item.active .channel-group {
             background: rgba(0, 0, 0, 0.2);
@@ -527,6 +659,7 @@
             font-size: 12px;
             font-weight: bold;
             padding: 6px 0;
+            transition: color 0.3s ease;
         }
 
         /* ===== Bottom Buttons ===== */
@@ -544,6 +677,36 @@
             background: var(--green);
             color: #0a0c0f;
             border-color: var(--green);
+            box-shadow: 0 0 30px var(--shadow-color);
+        }
+
+        /* ===== X / Twitter Button ===== */
+        .x-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #000;
+            border: 2px solid var(--white);
+            border-radius: 30px;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 6px;
+        }
+        .x-btn:hover {
+            background: var(--white);
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--glow-white);
+        }
+        .x-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
         .footer {
@@ -552,12 +715,18 @@
             font-size: 10px;
             margin-top: 6px;
             padding: 4px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
         .footer a {
             color: var(--green);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
         .footer a:hover {
+            color: var(--white);
             text-decoration: underline;
         }
 
@@ -569,11 +738,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 999;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.2s ease;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(8px);
         }
         .modal-overlay.active {
             display: flex;
@@ -581,14 +751,15 @@
 
         .modal {
             background: var(--bg-card);
-            border: 2px solid var(--border);
+            border: 2px solid var(--green);
             border-radius: 16px;
             padding: 24px;
             max-width: 700px;
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 0 60px var(--shadow-color);
         }
 
         @keyframes fadeIn {
@@ -596,16 +767,16 @@
             to { opacity: 1; }
         }
         @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
 
         .modal-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--green);
+            font-size: 22px;
+            font-weight: 900;
             text-align: center;
             margin-bottom: 16px;
+            animation: logoColorShift 3s ease-in-out infinite, fireGlow 3s ease-in-out infinite;
         }
 
         .modal textarea {
@@ -620,9 +791,11 @@
             font-size: 12px;
             resize: vertical;
             outline: none;
+            transition: border-color 0.3s ease;
         }
         .modal textarea:focus {
             border-color: var(--green);
+            box-shadow: 0 0 20px var(--shadow-color);
         }
 
         .modal .form-group {
@@ -635,7 +808,8 @@
             font-size: 13px;
             margin-bottom: 4px;
         }
-        .modal .form-group input {
+        .modal .form-group input,
+        .modal .form-group select {
             width: 100%;
             padding: 10px 14px;
             background: var(--bg-input);
@@ -644,9 +818,12 @@
             color: var(--text-primary);
             font-size: 13px;
             outline: none;
+            transition: border-color 0.3s ease;
         }
-        .modal .form-group input:focus {
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
             border-color: var(--green);
+            box-shadow: 0 0 20px var(--shadow-color);
         }
         .modal .form-row {
             display: grid;
@@ -692,8 +869,8 @@
                 min-height: 200px;
                 overflow: hidden;
             }
-            .right-panel .logo {
-                font-size: 24px;
+            .right-panel .logo .animated-logo {
+                font-size: 28px;
             }
             .right-panel .subtitle {
                 font-size: 16px;
@@ -773,8 +950,8 @@
             .right-panel {
                 padding: 4px 6px 6px 6px;
             }
-            .right-panel .logo {
-                font-size: 18px;
+            .right-panel .logo .animated-logo {
+                font-size: 22px;
             }
             .right-panel .subtitle {
                 font-size: 14px;
@@ -835,6 +1012,15 @@
                 padding: 8px 12px;
                 font-size: 12px;
             }
+            .x-btn {
+                padding: 6px 14px;
+                font-size: 11px;
+                border-radius: 20px;
+            }
+            .x-btn svg {
+                width: 16px;
+                height: 16px;
+            }
         }
 
         /* ===== Toast ===== */
@@ -842,7 +1028,7 @@
             position: fixed;
             bottom: 20px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(100px);
             background: var(--bg-card);
             border: 2px solid var(--green);
             border-radius: 12px;
@@ -852,9 +1038,11 @@
             font-size: 14px;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             pointer-events: none;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 40px var(--shadow-color);
+            max-width: 90%;
+            text-align: center;
         }
         .toast.show {
             opacity: 1;
@@ -862,7 +1050,11 @@
         }
         .toast.error {
             border-color: var(--red);
-            box-shadow: 0 0 30px rgba(255, 42, 42, 0.2);
+            box-shadow: 0 0 40px var(--glow-red);
+        }
+        .toast.success {
+            border-color: var(--green);
+            box-shadow: 0 0 40px var(--glow-green);
         }
     </style>
 </head>
@@ -880,7 +1072,7 @@
                 <video id="videoPlayer" controls playsinline></video>
                 <div class="video-placeholder" id="videoPlaceholder">
                     <div class="logo-text">MOUSE AI</div>
-                    <p>Select a channel to play</p>
+                    <p>🎬 Select a channel to play</p>
                 </div>
             </div>
 
@@ -890,52 +1082,62 @@
                 <input type="range" class="progress-slider" id="progressSlider" min="0" max="1000" value="0">
 
                 <div class="btn-row">
-                    <button class="ctrl-btn" id="prevBtn" title="Previous">⏮</button>
-                    <button class="ctrl-btn play-btn" id="playBtn" title="Play/Pause">▶</button>
-                    <button class="ctrl-btn red" id="stopBtn" title="Stop">⏹</button>
-                    <button class="ctrl-btn" id="nextBtn" title="Next">⏭</button>
+                    <button class="ctrl-btn" id="prevBtn" title="Previous (←)">⏮</button>
+                    <button class="ctrl-btn play-btn" id="playBtn" title="Play/Pause (Space)">▶</button>
+                    <button class="ctrl-btn red" id="stopBtn" title="Stop (S)">⏹</button>
+                    <button class="ctrl-btn" id="nextBtn" title="Next (→)">⏭</button>
 
                     <span style="flex:1;"></span>
 
-                    <button class="ctrl-btn white" id="muteBtn" title="Mute">🔊</button>
+                    <button class="ctrl-btn white" id="muteBtn" title="Mute (M)">🔊</button>
                     <input type="range" class="vol-slider" id="volSlider" min="0" max="200" value="100">
 
-                    <button class="ctrl-btn white" id="fullscreenBtn" title="Fullscreen">⛶</button>
+                    <button class="ctrl-btn white" id="fullscreenBtn" title="Fullscreen (F)">⛶</button>
                 </div>
 
-                <div class="info-label" id="infoLabel">Ready - Select a channel to play</div>
+                <div class="info-label" id="infoLabel">🎯 Ready - Select a channel to play</div>
             </div>
         </div>
 
         <!-- ===== RIGHT PANEL ===== -->
         <div class="right-panel">
-            <div class="logo">MOUSE AI</div>
-            <div class="subtitle">IPTV Pro</div>
-            <div class="version">v4.0.0 ULTIMATE</div>
+            <div class="logo">
+                <div class="animated-logo">🐭 MOUSE AI</div>
+            </div>
+            <div class="subtitle">⚡ IPTV PRO</div>
+            <div class="version">v4.0.0 ULTIMATE 🔥</div>
 
             <div class="server-section">
-                <label>Select Source:</label>
-                <select class="server-select" id="serverSelect"></select>
+                <label>📡 Select Source:</label>
+                <select class="server-select" id="serverSelect">
+                    <option value="">-- No servers added yet --</option>
+                </select>
 
                 <div class="btn-grid">
                     <button class="action-btn green" id="loadBtn">📡 Load Channels</button>
                     <button class="action-btn white" id="fileBtn">📁 M3U File</button>
-                    <button class="action-btn green full" id="addCodeBtn">➕ Add Code</button>
+                    <button class="action-btn green full" id="addCodeBtn">➕ Add Server</button>
+                    <button class="action-btn white full" id="manageBtn">⚙️ Manage Servers</button>
                 </div>
 
                 <div class="progress-bar" id="progressBar">
                     <div class="fill" id="progressFill"></div>
                 </div>
-                <div class="status-label" id="statusLabel">Ready. Press Load to start.</div>
+                <div class="status-label" id="statusLabel">🚀 Ready. Press Load to start.</div>
             </div>
 
             <select class="group-select" id="groupSelect">
-                <option value="All Groups">All Groups</option>
+                <option value="All Groups">📂 All Groups</option>
             </select>
 
             <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search channels...">
 
-            <div class="channel-list" id="channelList"></div>
+            <div class="channel-list" id="channelList">
+                <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+                    📺 No channels loaded<br>
+                    <span style="font-size:12px;">Add a server and click Load</span>
+                </div>
+            </div>
 
             <div class="channel-count" id="countLabel">0 channels</div>
 
@@ -944,8 +1146,18 @@
                 <button class="action-btn white" id="settingsBtn">⚙️ Settings</button>
             </div>
 
+            <!-- X / Twitter Button -->
+            <a href="https://x.com/mouse0000000" target="_blank" class="x-btn" id="xBtn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                @mouse0000000
+            </a>
+
             <div class="footer">
-                © 2025 MOUSE AI | <a href="https://x.com/0000000000388p" target="_blank">@0000000000388p</a>
+                © 2025 MOUSE AI | 
+                <a href="https://x.com/mouse0000000" target="_blank">🐭 @mouse0000000</a>
+                <span style="font-size:8px;color:var(--text-muted);">🔥 Made with ❤️</span>
             </div>
         </div>
     </div>
@@ -953,7 +1165,7 @@
     <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modalContent">
-            <div class="modal-title" id="modalTitle">Add IPTV Code</div>
+            <div class="modal-title" id="modalTitle">🐭 MOUSE AI</div>
             <div id="modalBody"></div>
         </div>
     </div>
@@ -961,6 +1173,7 @@
     <script>
         // ============================================================
         //  MOUSE AI IPTV Pro v4.0 - Full Web Application
+        //  Enhanced Edition with All Improvements
         // ============================================================
 
         (function() {
@@ -969,133 +1182,17 @@
             // ===== CONSTANTS =====
             const APP_NAME = 'MOUSE AI IPTV';
             const APP_VERSION = '4.0.0 ULTIMATE';
-            const STORAGE_KEY = 'mouse_ai_settings';
-            const FAV_KEY = 'mouse_ai_favorites';
-            const SERVERS_KEY = 'mouse_ai_servers';
-            const HISTORY_KEY = 'mouse_ai_history';
-
-            const DEFAULT_SERVERS = {
-                'Islamic Algeria Tunisia Morocco': 'builtin',
-                'TV14S (Main)': 'http://tv14s.xyz:8080/get.php?username=rossjohn88@hotmail.com&password=KCBKTCnWTU&type=m3u',
-                '51.81.106.100 (Backup)': 'http://51.81.106.100:25461/get.php?username=sjzumbro7&password=7407045283&type=m3u',
-                'SkyTV4K (Backup 2)': 'http://skytv4k.org:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus',
-                'Garaveli (Backup 3)': 'http://garaveli.123tv.to:8080/get.php?username=2rSvsynKRJ&password=5GHeYZFNwI&type=m3u_plus'
-            };
-
-            const BUILTIN_M3U = `#EXTM3U
-        #EXTINF:-1 group-title="Islamic",QURAN ONE
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686148&extension=ts
-        #EXTINF:-1 group-title="Islamic",QURAN TWO
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686147&extension=ts
-        #EXTINF:-1 group-title="Islamic",MISHARI AL AFASI
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686160&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL-SUDAIS
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686159&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL MUAQLY
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686158&extension=ts
-        #EXTINF:-1 group-title="Islamic",FARES ABAD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686157&extension=ts
-        #EXTINF:-1 group-title="Islamic",AHMED ALAJMI
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686156&extension=ts
-        #EXTINF:-1 group-title="Islamic",ABD AL BASET
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686155&extension=ts
-        #EXTINF:-1 group-title="Islamic",M SIDIK ALMANCHAWI
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686154&extension=ts
-        #EXTINF:-1 group-title="Islamic",SAOUD SHURAIM
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686153&extension=ts
-        #EXTINF:-1 group-title="Islamic",RAAD AL KURDI
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686152&extension=ts
-        #EXTINF:-1 group-title="Islamic",SALAH BUKHATIR
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686151&extension=ts
-        #EXTINF:-1 group-title="Islamic",MOHAMED GIBRIL
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686150&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL AFASY
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=686149&extension=ts
-        #EXTINF:-1 group-title="Islamic",ISLAM CHANNEL HD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660225&extension=ts
-        #EXTINF:-1 group-title="Islamic",MISR QURAN KAREEM
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660224&extension=ts
-        #EXTINF:-1 group-title="Islamic",SAUDI QURAN
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660223&extension=ts
-        #EXTINF:-1 group-title="Islamic",SAUDI QURAN HD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660222&extension=ts
-        #EXTINF:-1 group-title="Islamic",SAUDI SUNNAH
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660221&extension=ts
-        #EXTINF:-1 group-title="Islamic",SAUDI SUNNAH HD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660220&extension=ts
-        #EXTINF:-1 group-title="Islamic",IQRAA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660219&extension=ts
-        #EXTINF:-1 group-title="Islamic",RESALA HD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660218&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL RAHMA TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660217&extension=ts
-        #EXTINF:-1 group-title="Islamic",MECCA TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660216&extension=ts
-        #EXTINF:-1 group-title="Islamic",AHLU ALQURAN
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660215&extension=ts
-        #EXTINF:-1 group-title="Islamic",ZAD TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660214&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL MAJD 1
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660213&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL MAJD 2
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660212&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL MAJD 3
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660211&extension=ts
-        #EXTINF:-1 group-title="Islamic",BIN OUTHAYMINE
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660210&extension=ts
-        #EXTINF:-1 group-title="Islamic",TANASOH
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660209&extension=ts
-        #EXTINF:-1 group-title="Islamic",SAFA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660208&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL RESALA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660207&extension=ts
-        #EXTINF:-1 group-title="Islamic",MTA AL ARABIA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660206&extension=ts
-        #EXTINF:-1 group-title="Islamic",MTA WORLD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660205&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL HAQIQA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660204&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL SIRAT
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660203&extension=ts
-        #EXTINF:-1 group-title="Islamic",KAIFA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660202&extension=ts
-        #EXTINF:-1 group-title="Islamic",DAWAAH TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660201&extension=ts
-        #EXTINF:-1 group-title="Islamic",QURAN TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660200&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL ERTH NABAWI
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660199&extension=ts
-        #EXTINF:-1 group-title="Islamic",MAKKAH TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660198&extension=ts
-        #EXTINF:-1 group-title="Islamic",DUAA TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660197&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL FATEH QURAN
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660196&extension=ts
-        #EXTINF:-1 group-title="Islamic",ALMAHDI TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660195&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL ISTIQAMA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660194&extension=ts
-        #EXTINF:-1 group-title="Islamic",AL ZAHRA TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660193&extension=ts
-        #EXTINF:-1 group-title="Islamic",SALAAM TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660192&extension=ts
-        #EXTINF:-1 group-title="Islamic",ALIMAN TV
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660191&extension=ts
-        #EXTINF:-1 group-title="Islamic",ALFATH SONA
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=660190&extension=ts
-        #EXTINF:-1 group-title="Algeria",ALGERIE EN TV 1
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=368773&extension=ts
-        #EXTINF:-1 group-title="Tunisia",TUNISIA 1
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=368799&extension=ts
-        #EXTINF:-1 group-title="Morocco",AL JAZEERA MAROC HD
-        http://line.watchtivo-8k.com:80/play/live.php?mac=A0:BB:3E:18:9E:02&stream=853125&extension=ts`;
+            const STORAGE_KEY = 'mouse_ai_settings_v4';
+            const FAV_KEY = 'mouse_ai_favorites_v4';
+            const SERVERS_KEY = 'mouse_ai_servers_v4';
+            const HISTORY_KEY = 'mouse_ai_history_v4';
 
             // ===== STATE =====
             let state = {
                 channels: [],
                 filtered: [],
                 favorites: new Set(),
-                customServers: {},
+                customServers: {}, // Will be populated from localStorage
                 settings: { volume: 100, muteOnStart: false, autoLoad: false, showServerInfo: true, timeout: 45 },
                 history: [],
                 currentIndex: -1,
@@ -1129,6 +1226,7 @@
             const loadBtn = document.getElementById('loadBtn');
             const fileBtn = document.getElementById('fileBtn');
             const addCodeBtn = document.getElementById('addCodeBtn');
+            const manageBtn = document.getElementById('manageBtn');
             const progressBar = document.getElementById('progressBar');
             const progressFill = document.getElementById('progressFill');
             const statusLabel = document.getElementById('statusLabel');
@@ -1138,6 +1236,7 @@
             const countLabel = document.getElementById('countLabel');
             const favBtn = document.getElementById('favBtn');
             const settingsBtn = document.getElementById('settingsBtn');
+            const xBtn = document.getElementById('xBtn');
             const modalOverlay = document.getElementById('modalOverlay');
             const modalTitle = document.getElementById('modalTitle');
             const modalBody = document.getElementById('modalBody');
@@ -1157,8 +1256,18 @@
 
                 try {
                     const c = localStorage.getItem(SERVERS_KEY);
-                    if (c) state.customServers = JSON.parse(c);
-                } catch (e) { console.warn('Servers load error', e); }
+                    if (c) {
+                        state.customServers = JSON.parse(c);
+                    } else {
+                        // Initialize with empty - no default servers
+                        state.customServers = {};
+                        saveServers();
+                    }
+                } catch (e) {
+                    console.warn('Servers load error', e);
+                    state.customServers = {};
+                    saveServers();
+                }
 
                 try {
                     const h = localStorage.getItem(HISTORY_KEY);
@@ -1185,11 +1294,10 @@
             // ===== TOAST =====
             let toastTimeout = null;
 
-            function showToast(msg, isError = false) {
+            function showToast(msg, type = 'success') {
                 toast.textContent = msg;
-                toast.className = 'toast' + (isError ? ' error' : '');
+                toast.className = 'toast ' + type;
                 clearTimeout(toastTimeout);
-                // Force reflow
                 void toast.offsetWidth;
                 toast.classList.add('show');
                 toastTimeout = setTimeout(() => toast.classList.remove('show'), 4000);
@@ -1284,12 +1392,18 @@
                 updateUIForLoading(true);
                 progressBar.classList.add('active');
                 progressFill.style.width = '0%';
-                statusLabel.textContent = 'Connecting...';
+                statusLabel.textContent = '🔄 Connecting...';
+                statusLabel.className = 'status-label';
 
                 const url = source || serverSelect.value;
 
-                if (url === 'builtin') {
-                    processContent(BUILTIN_M3U, 'builtin');
+                if (!url || url === '' || url === '-- No servers added yet --') {
+                    showToast('❌ No server selected. Please add a server first.', 'error');
+                    state.loading = false;
+                    updateUIForLoading(false);
+                    progressBar.classList.remove('active');
+                    statusLabel.textContent = '⚠️ No server available';
+                    statusLabel.className = 'status-label error';
                     return;
                 }
 
@@ -1301,25 +1415,14 @@
                     return;
                 }
 
-                // Check if it's a default server key
-                if (DEFAULT_SERVERS[url]) {
-                    const val = DEFAULT_SERVERS[url];
-                    if (val === 'builtin') {
-                        processContent(BUILTIN_M3U, 'builtin');
-                        return;
-                    }
-                    state.serverInfo = {};
-                    loadFromUrl(val);
-                    return;
-                }
-
                 // Assume it's a URL
                 state.serverInfo = {};
                 loadFromUrl(url);
             }
 
             function loadFromUrl(url) {
-                statusLabel.textContent = 'Connecting to server...';
+                statusLabel.textContent = '🔄 Connecting to server...';
+                statusLabel.className = 'status-label';
                 progressFill.style.width = '15%';
 
                 const timeout = state.settings.timeout || 45;
@@ -1333,12 +1436,12 @@
                 .then(res => {
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     progressFill.style.width = '40%';
-                    statusLabel.textContent = 'Reading data...';
+                    statusLabel.textContent = '📥 Reading data...';
                     return res.text();
                 })
                 .then(text => {
                     progressFill.style.width = '60%';
-                    statusLabel.textContent = 'Parsing channels...';
+                    statusLabel.textContent = '🔍 Parsing channels...';
                     const channels = parseM3U(text);
                     progressFill.style.width = '90%';
                     onChannelsLoaded(channels);
@@ -1347,14 +1450,15 @@
                     state.loading = false;
                     updateUIForLoading(false);
                     progressBar.classList.remove('active');
-                    statusLabel.textContent = 'Error loading channels';
-                    showToast('Error: ' + err.message, true);
+                    statusLabel.textContent = '❌ Error: ' + err.message;
+                    statusLabel.className = 'status-label error';
+                    showToast('❌ Error: ' + err.message, 'error');
                     console.error('Load error:', err);
                 });
             }
 
             function processContent(content, source) {
-                statusLabel.textContent = 'Processing...';
+                statusLabel.textContent = '⚙️ Processing...';
                 progressFill.style.width = '40%';
                 setTimeout(() => {
                     const channels = parseM3U(content);
@@ -1377,7 +1481,7 @@
                 for (const ch of channels) {
                     if (ch.group) groups.add(ch.group);
                 }
-                groupSelect.innerHTML = '<option value="All Groups">All Groups</option>';
+                groupSelect.innerHTML = '<option value="All Groups">📂 All Groups</option>';
                 for (const g of [...groups].sort()) {
                     const opt = document.createElement('option');
                     opt.value = g;
@@ -1390,10 +1494,10 @@
                 // Update server info
                 if (state.settings.showServerInfo && Object.keys(state.serverInfo).length > 0) {
                     const parts = [];
-                    if (state.serverInfo.created) parts.push(`Created: ${state.serverInfo.created}`);
-                    if (state.serverInfo.expire) parts.push(`Expire: ${state.serverInfo.expire}`);
-                    if (state.serverInfo.duration) parts.push(`Duration: ${state.serverInfo.duration}`);
-                    if (state.serverInfo.hits_by) parts.push(`By: ${state.serverInfo.hits_by}`);
+                    if (state.serverInfo.created) parts.push(`📅 Created: ${state.serverInfo.created}`);
+                    if (state.serverInfo.expire) parts.push(`⏳ Expire: ${state.serverInfo.expire}`);
+                    if (state.serverInfo.duration) parts.push(`⏱️ Duration: ${state.serverInfo.duration}`);
+                    if (state.serverInfo.hits_by) parts.push(`👤 By: ${state.serverInfo.hits_by}`);
                     if (parts.length > 0) {
                         serverInfo.textContent = parts.join('  |  ');
                         serverInfo.classList.add('active');
@@ -1403,9 +1507,10 @@
                 }
 
                 renderChannels();
-                statusLabel.textContent = `Loaded: ${channels.length} channels`;
+                statusLabel.textContent = `✅ Loaded: ${channels.length} channels`;
+                statusLabel.className = 'status-label success';
                 countLabel.textContent = `${channels.length} channels`;
-                showToast(`Loaded ${channels.length} channels`);
+                showToast(`✅ Loaded ${channels.length} channels`, 'success');
 
                 if (state.settings.autoLoad && channels.length > 0) {
                     setTimeout(() => {
@@ -1419,6 +1524,7 @@
                 loadBtn.disabled = loading;
                 fileBtn.disabled = loading;
                 addCodeBtn.disabled = loading;
+                manageBtn.disabled = loading;
                 serverSelect.disabled = loading;
                 searchInput.disabled = loading;
                 if (loading) {
@@ -1447,6 +1553,15 @@
                 state.filtered = filtered;
 
                 channelList.innerHTML = '';
+                if (filtered.length === 0) {
+                    const empty = document.createElement('div');
+                    empty.style.cssText = 'text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;';
+                    empty.innerHTML = '📺 No channels found<br><span style="font-size:12px;">Try changing filters or add a new server</span>';
+                    channelList.appendChild(empty);
+                    countLabel.textContent = '0 channels';
+                    return;
+                }
+
                 for (let i = 0; i < filtered.length; i++) {
                     const ch = filtered[i];
                     const div = document.createElement('div');
@@ -1466,19 +1581,13 @@
                 }
 
                 countLabel.textContent = `${filtered.length} channels`;
-                if (filtered.length === 0) {
-                    const empty = document.createElement('div');
-                    empty.style.cssText = 'text-align:center;padding:40px 20px;color:var(--text-muted);';
-                    empty.textContent = 'No channels found';
-                    channelList.appendChild(empty);
-                }
             }
 
             // ===== PLAY CHANNEL =====
             function playChannel(index) {
                 const ch = state.filtered[index];
                 if (!ch || !ch.url) {
-                    showToast('Channel has no URL', true);
+                    showToast('❌ Channel has no URL', 'error');
                     return;
                 }
 
@@ -1495,13 +1604,15 @@
                 video.load();
                 video.play().catch(err => {
                     console.warn('Play error:', err);
-                    showToast('Playback error: ' + err.message, true);
+                    showToast('❌ Playback error: ' + err.message, 'error');
                     state.isPlaying = false;
                     updatePlayButton();
                 });
 
-                infoLabel.textContent = `Playing: ${ch.name || 'Unnamed'}`;
-                statusLabel.textContent = `Playing: ${ch.name || 'Unnamed'}`;
+                infoLabel.textContent = `▶️ Playing: ${ch.name || 'Unnamed'}`;
+                infoLabel.className = 'info-label active';
+                statusLabel.textContent = `▶️ Playing: ${ch.name || 'Unnamed'}`;
+                statusLabel.className = 'status-label success';
                 placeholder.style.display = 'none';
                 state.videoLoaded = true;
                 updatePlayButton();
@@ -1516,7 +1627,6 @@
             // ===== VIDEO CONTROLS =====
             function togglePlayPause() {
                 if (!state.videoLoaded) {
-                    // Try to play first channel
                     const first = channelList.querySelector('.channel-item');
                     if (first) first.click();
                     return;
@@ -1536,7 +1646,8 @@
                 video.currentTime = 0;
                 state.isPlaying = false;
                 updatePlayButton();
-                infoLabel.textContent = 'Stopped';
+                infoLabel.textContent = '⏹️ Stopped';
+                infoLabel.className = 'info-label';
                 progressSlider.value = 0;
             }
 
@@ -1604,11 +1715,10 @@
                 if (!ch) return;
                 const isFav = state.favorites.has(ch.url);
 
-                // Simple custom menu using modal
                 const items = [
                     { label: '▶ Play', action: () => playChannel(index) },
                     { label: isFav ? '⭐ Remove from Favorites' : '⭐ Add to Favorites', action: () => toggleFavorite(index) },
-                    { label: '📋 Copy URL', action: () => { navigator.clipboard.writeText(ch.url).then(() => showToast('URL copied!')); } },
+                    { label: '📋 Copy URL', action: () => { navigator.clipboard.writeText(ch.url).then(() => showToast('📋 URL copied!', 'success')); } },
                     { label: 'ℹ️ Channel Info', action: () => showChannelInfo(index) }
                 ];
 
@@ -1616,7 +1726,7 @@
                     `<div class="action-btn" style="width:100%;text-align:left;padding:8px 16px;margin:2px 0;border-radius:6px;border:1px solid var(--border);cursor:pointer;" data-action="${i}">${item.label}</div>`
                 ).join('');
 
-                modalTitle.textContent = 'Channel Menu';
+                modalTitle.textContent = '📺 Channel Menu';
                 modalBody.innerHTML = `
                     <div style="margin-bottom:12px;font-size:14px;color:var(--text-secondary);">
                         <strong style="color:var(--green);">${ch.name || 'Unnamed'}</strong>
@@ -1631,7 +1741,6 @@
                 `;
                 modalOverlay.classList.add('active');
 
-                // Bind actions
                 setTimeout(() => {
                     const btns = modalBody.querySelectorAll('[data-action]');
                     btns.forEach((btn, i) => {
@@ -1647,12 +1756,12 @@
                 const ch = state.filtered[index];
                 if (!ch) return;
                 const info = `
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">Name:</strong> ${ch.name || 'Unknown'}</div>
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">Group:</strong> ${ch.group || 'Not set'}</div>
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">URL:</strong> <span style="color:var(--green-dim);word-break:break-all;">${ch.url}</span></div>
-                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">Logo:</strong> ${ch.logo || 'Not available'}</div>
+                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">📺 Name:</strong> ${ch.name || 'Unknown'}</div>
+                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">📂 Group:</strong> ${ch.group || 'Not set'}</div>
+                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">🔗 URL:</strong> <span style="color:var(--green-dim);word-break:break-all;font-size:12px;">${ch.url}</span></div>
+                    <div style="margin-bottom:8px;"><strong style="color:var(--green);">🖼️ Logo:</strong> ${ch.logo || 'Not available'}</div>
                 `;
-                modalTitle.textContent = 'Channel Info';
+                modalTitle.textContent = 'ℹ️ Channel Info';
                 modalBody.innerHTML = `
                     ${info}
                     <div class="btn-row-modal">
@@ -1667,14 +1776,13 @@
                 if (!ch) return;
                 if (state.favorites.has(ch.url)) {
                     state.favorites.delete(ch.url);
-                    showToast('Removed from favorites');
+                    showToast('⭐ Removed from favorites', 'success');
                 } else {
                     state.favorites.add(ch.url);
-                    showToast('Added to favorites ⭐');
+                    showToast('⭐ Added to favorites', 'success');
                 }
                 saveFavorites();
                 renderChannels();
-                // Restore selection
                 const items = channelList.querySelectorAll('.channel-item');
                 if (items[state.currentIndex]) {
                     items[state.currentIndex].classList.add('active');
@@ -1687,31 +1795,34 @@
             };
 
             function openAddCodeModal() {
-                modalTitle.textContent = 'Add IPTV Code';
+                modalTitle.textContent = '🐭 Add IPTV Server';
                 modalBody.innerHTML = `
-                    <div style="margin-bottom:12px;">
-                        <label style="color:var(--green);font-weight:bold;display:block;margin-bottom:4px;">Paste any code:</label>
-                        <textarea id="codeInput" placeholder="Paste CCcam, Newcamd, MAC, Xtream, Portal, Stalker, or M3U URL..."></textarea>
+                    <div style="margin-bottom:12px;color:var(--text-secondary);font-size:13px;">
+                        🔥 Paste any server code - supports CCcam, Newcamd, MAC, Xtream, Portal, Stalker, M3U
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Paste your code:</label>
+                        <textarea id="codeInput" placeholder="Example: C: server.com 12000 user pass&#10;http://host.com:8080/get.php?username=user&password=pass&type=m3u_plus&#10;A0:BB:3E:18:9E:02&#10;N: server.com 12000 user pass 01 02 03 04 05 06 07 08 09 10 11 12 13 14"></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Server Name</label>
+                            <label>🏷️ Server Name</label>
                             <input type="text" id="serverNameInput" placeholder="My Server">
                         </div>
                         <div class="form-group">
-                            <label>Type</label>
-                            <select id="serverTypeInput" style="width:100%;padding:10px 14px;background:var(--bg-input);border:2px solid var(--border);border-radius:10px;color:var(--text-primary);font-size:13px;outline:none;">
+                            <label>📦 Type</label>
+                            <select id="serverTypeInput">
                                 <option value="m3u_plus">m3u_plus (recommended)</option>
                                 <option value="m3u">m3u (standard)</option>
                             </select>
                         </div>
                     </div>
-                    <div id="previewUrl" style="margin-top:12px;padding:12px;background:var(--bg-dark);border:2px solid var(--green);border-radius:10px;color:var(--green);font-family:monospace;font-size:12px;word-break:break-all;min-height:40px;">
-                        Final URL will appear here...
+                    <div id="previewUrl" style="margin-top:12px;padding:12px;background:var(--bg-dark);border:2px solid var(--border);border-radius:10px;color:var(--text-muted);font-family:monospace;font-size:12px;word-break:break-all;min-height:40px;transition:all 0.3s ease;">
+                        ⚡ Final URL will appear here...
                     </div>
                     <div class="btn-row-modal">
                         <button class="action-btn white" onclick="closeModal()">Cancel</button>
-                        <button class="action-btn green" id="addServerBtn">Add Server</button>
+                        <button class="action-btn green" id="addServerBtn">➕ Add Server</button>
                     </div>
                 `;
                 modalOverlay.classList.add('active');
@@ -1727,8 +1838,9 @@
                 function parseAndPreview() {
                     const text = codeInput.value.trim();
                     if (!text) {
-                        preview.textContent = 'Paste code to analyze...';
+                        preview.textContent = '⚡ Paste code to analyze...';
                         preview.style.borderColor = 'var(--border)';
+                        preview.style.color = 'var(--text-muted)';
                         return;
                     }
                     const result = parseCode(text);
@@ -1767,18 +1879,21 @@
                     } else {
                         preview.textContent = '❌ Unknown format. Please check the code.';
                         preview.style.borderColor = 'var(--red)';
+                        preview.style.color = 'var(--red)';
                         return;
                     }
 
                     if (url) {
                         preview.textContent = url;
                         preview.style.borderColor = 'var(--green)';
+                        preview.style.color = 'var(--green)';
                         if (!nameInput.value.trim() && name) {
                             nameInput.value = name;
                         }
                     } else {
                         preview.textContent = '⚠️ Could not build URL. Please check the code.';
-                        preview.style.borderColor = 'var(--orange)';
+                        preview.style.borderColor = 'var(--fire-orange)';
+                        preview.style.color = 'var(--fire-orange)';
                     }
                 }
 
@@ -1790,11 +1905,11 @@
                     const name = nameInput.value.trim();
                     const url = preview.textContent.trim();
                     if (!name) {
-                        showToast('Please enter a server name', true);
+                        showToast('❌ Please enter a server name', 'error');
                         return;
                     }
-                    if (!url || url.startsWith('Paste') || url.startsWith('⚠️') || url.startsWith('❌')) {
-                        showToast('Invalid URL. Check the code.', true);
+                    if (!url || url.startsWith('⚡') || url.startsWith('⚠️') || url.startsWith('❌') || url === 'Final URL will appear here...') {
+                        showToast('❌ Invalid URL. Check the code.', 'error');
                         return;
                     }
                     state.customServers[name] = {
@@ -1804,14 +1919,17 @@
                     saveServers();
                     refreshServerSelect();
                     serverSelect.value = name;
-                    showToast(`Added: ${name}`);
+                    showToast(`✅ Added: ${name}`, 'success');
                     closeModal();
                     setTimeout(() => loadChannels(name), 300);
                 });
+
+                // Auto-detect on paste
+                setTimeout(() => codeInput.focus(), 100);
             }
 
             function openSettingsModal() {
-                modalTitle.textContent = 'Settings';
+                modalTitle.textContent = '⚙️ Settings';
                 const s = state.settings;
                 modalBody.innerHTML = `
                     <div class="form-group">
@@ -1822,19 +1940,19 @@
                     <div class="form-group">
                         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
                             <input type="checkbox" id="muteSetting" ${s.muteOnStart ? 'checked' : ''}>
-                            Mute on startup
+                            🔇 Mute on startup
                         </label>
                     </div>
                     <div class="form-group">
                         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
                             <input type="checkbox" id="autoLoadSetting" ${s.autoLoad ? 'checked' : ''}>
-                            Auto-load on startup
+                            🚀 Auto-load on startup
                         </label>
                     </div>
                     <div class="form-group">
                         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
                             <input type="checkbox" id="showInfoSetting" ${s.showServerInfo !== undefined ? (s.showServerInfo ? 'checked' : '') : 'checked'}>
-                            Show server info
+                            ℹ️ Show server info
                         </label>
                     </div>
                     <div class="form-group">
@@ -1843,7 +1961,7 @@
                     </div>
                     <div class="btn-row-modal">
                         <button class="action-btn white" onclick="closeModal()">Cancel</button>
-                        <button class="action-btn green" id="saveSettingsBtn">Save</button>
+                        <button class="action-btn green" id="saveSettingsBtn">💾 Save</button>
                     </div>
                 `;
                 modalOverlay.classList.add('active');
@@ -1861,14 +1979,13 @@
                     state.settings.showServerInfo = document.getElementById('showInfoSetting').checked;
                     state.settings.timeout = parseInt(document.getElementById('timeoutSetting').value) || 45;
                     saveSettings();
-                    // Apply volume
                     setVolume(state.settings.volume);
                     if (state.settings.muteOnStart) {
                         video.muted = true;
                         state.isMuted = true;
                         muteBtn.textContent = '🔇';
                     }
-                    showToast('Settings saved!');
+                    showToast('✅ Settings saved!', 'success');
                     closeModal();
                 });
             }
@@ -1876,39 +1993,43 @@
             function openManageServers() {
                 const servers = { ...state.customServers };
                 const names = Object.keys(servers);
+
                 if (names.length === 0) {
-                    showToast('No custom servers found', true);
+                    showToast('📭 No servers found. Add one first!', 'error');
                     return;
                 }
 
-                let html = `<div style="margin-bottom:12px;color:var(--text-secondary);font-size:13px;">${names.length} custom server(s)</div>`;
+                let html = `<div style="margin-bottom:12px;color:var(--text-secondary);font-size:13px;">📡 ${names.length} server(s) configured</div>`;
                 for (const name of names) {
                     const data = servers[name];
+                    const infoType = data.info ? data.info.type || 'custom' : 'custom';
+                    const shortUrl = data.url ? data.url.substring(0, 50) + (data.url.length > 50 ? '...' : '') : '';
                     html += `
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-input);border-radius:8px;margin-bottom:6px;border:1px solid var(--border);">
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg-input);border-radius:10px;margin-bottom:6px;border:1px solid var(--border);transition:all 0.2s ease;">
                             <div style="flex:1;overflow:hidden;">
                                 <div style="font-weight:bold;color:var(--green);">${name}</div>
-                                <div style="font-size:11px;color:var(--text-muted);word-break:break-all;">${data.url.substring(0, 60)}...</div>
+                                <div style="font-size:11px;color:var(--text-muted);word-break:break-all;">${shortUrl}</div>
+                                <div style="font-size:10px;color:var(--text-muted);">📦 ${infoType.toUpperCase()}</div>
                             </div>
-                            <button class="action-btn red" style="padding:4px 12px;font-size:11px;border-color:var(--red);color:var(--red);" data-name="${name}">Delete</button>
+                            <button class="action-btn red" style="padding:4px 14px;font-size:11px;border-color:var(--red);color:var(--red);" data-name="${name}">🗑️ Delete</button>
                         </div>
                     `;
                 }
                 html += `<div class="btn-row-modal"><button class="action-btn white" onclick="closeModal()">Close</button></div>`;
 
-                modalTitle.textContent = 'Manage Servers';
+                modalTitle.textContent = '📡 Manage Servers';
                 modalBody.innerHTML = html;
                 modalOverlay.classList.add('active');
 
                 modalBody.querySelectorAll('[data-name]').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const name = btn.dataset.name;
-                        if (confirm(`Delete '${name}'?`)) {
+                        if (confirm(`⚠️ Delete server '${name}'?`)) {
                             delete state.customServers[name];
                             saveServers();
                             refreshServerSelect();
-                            showToast(`Deleted: ${name}`);
-                            openManageServers(); // Refresh
+                            showToast(`🗑️ Deleted: ${name}`, 'success');
+                            openManageServers();
                         }
                     });
                 });
@@ -1918,19 +2039,14 @@
             function refreshServerSelect() {
                 const current = serverSelect.value;
                 serverSelect.innerHTML = '';
-                const defaultNames = Object.keys(DEFAULT_SERVERS);
-                for (const name of defaultNames) {
-                    const opt = document.createElement('option');
-                    opt.value = name;
-                    opt.textContent = name;
-                    serverSelect.appendChild(opt);
-                }
                 const customNames = Object.keys(state.customServers);
-                if (customNames.length > 0) {
-                    const sep = document.createElement('option');
-                    sep.disabled = true;
-                    sep.textContent = '─────────────';
-                    serverSelect.appendChild(sep);
+
+                if (customNames.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = '-- No servers added yet --';
+                    serverSelect.appendChild(opt);
+                } else {
                     for (const name of customNames) {
                         const opt = document.createElement('option');
                         opt.value = name;
@@ -1938,6 +2054,7 @@
                         serverSelect.appendChild(opt);
                     }
                 }
+
                 if (current && [...serverSelect.options].some(o => o.value === current)) {
                     serverSelect.value = current;
                 }
@@ -1958,13 +2075,16 @@
                         updateUIForLoading(true);
                         progressBar.classList.add('active');
                         progressFill.style.width = '30%';
-                        statusLabel.textContent = `Loading: ${file.name}`;
+                        statusLabel.textContent = `📁 Loading: ${file.name}`;
+                        statusLabel.className = 'status-label';
                         setTimeout(() => {
                             const channels = parseM3U(content);
                             progressFill.style.width = '90%';
                             state.serverInfo = {};
                             onChannelsLoaded(channels);
-                            statusLabel.textContent = `Loaded from file: ${file.name}`;
+                            statusLabel.textContent = `✅ Loaded from file: ${file.name}`;
+                            statusLabel.className = 'status-label success';
+                            showToast(`✅ Loaded ${channels.length} channels from file`, 'success');
                         }, 200);
                     };
                     reader.readAsText(file);
@@ -1987,17 +2107,20 @@
                             updateUIForLoading(true);
                             progressBar.classList.add('active');
                             progressFill.style.width = '30%';
-                            statusLabel.textContent = `Loading: ${file.name}`;
+                            statusLabel.textContent = `📁 Loading: ${file.name}`;
+                            statusLabel.className = 'status-label';
                             setTimeout(() => {
                                 const channels = parseM3U(content);
                                 progressFill.style.width = '90%';
                                 state.serverInfo = {};
                                 onChannelsLoaded(channels);
-                                statusLabel.textContent = `Loaded from file: ${file.name}`;
+                                statusLabel.textContent = `✅ Loaded from file: ${file.name}`;
+                                statusLabel.className = 'status-label success';
+                                showToast(`✅ Loaded ${channels.length} channels from file`, 'success');
                             }, 200);
                         };
                         reader.readAsText(file);
-                        showToast(`Loading: ${file.name}`);
+                        showToast(`📁 Loading: ${file.name}`, 'success');
                     }
                 }
             });
@@ -2015,9 +2138,25 @@
                     muteBtn.textContent = '🔇';
                 }
 
+                // Show initial status
+                const serverCount = Object.keys(state.customServers).length;
+                if (serverCount === 0) {
+                    statusLabel.textContent = '📭 No servers. Click "Add Server" to start!';
+                    statusLabel.className = 'status-label';
+                } else {
+                    statusLabel.textContent = '🚀 Ready. Select a server and press Load.';
+                    statusLabel.className = 'status-label';
+                }
+
                 // Load auto
-                if (state.settings.autoLoad) {
-                    setTimeout(() => loadChannels(), 500);
+                if (state.settings.autoLoad && serverCount > 0) {
+                    setTimeout(() => {
+                        const firstServer = Object.keys(state.customServers)[0];
+                        if (firstServer) {
+                            serverSelect.value = firstServer;
+                            loadChannels(firstServer);
+                        }
+                    }, 500);
                 }
 
                 // ===== EVENT LISTENERS =====
@@ -2030,7 +2169,9 @@
                 loadBtn.addEventListener('click', () => loadChannels());
                 fileBtn.addEventListener('click', loadFile);
                 addCodeBtn.addEventListener('click', openAddCodeModal);
+                manageBtn.addEventListener('click', openManageServers);
                 settingsBtn.addEventListener('click', openSettingsModal);
+
                 favBtn.addEventListener('click', () => {
                     state.favView = !state.favView;
                     favBtn.classList.toggle('fav-active');
@@ -2069,6 +2210,14 @@
                     }
                 });
 
+                // X / Twitter button hover effect
+                xBtn.addEventListener('mouseenter', () => {
+                    xBtn.style.transform = 'scale(1.05)';
+                });
+                xBtn.addEventListener('mouseleave', () => {
+                    xBtn.style.transform = 'scale(1)';
+                });
+
                 // Video events
                 video.addEventListener('timeupdate', () => {
                     if (video.duration) {
@@ -2080,6 +2229,7 @@
                 video.addEventListener('play', () => {
                     state.isPlaying = true;
                     updatePlayButton();
+                    infoLabel.className = 'info-label active';
                 });
 
                 video.addEventListener('pause', () => {
@@ -2095,7 +2245,7 @@
 
                 video.addEventListener('error', (e) => {
                     console.warn('Video error:', e);
-                    showToast('Playback error', true);
+                    showToast('❌ Playback error', 'error');
                     state.isPlaying = false;
                     updatePlayButton();
                 });
@@ -2138,6 +2288,9 @@
                             if (document.fullscreenElement) {
                                 document.exitFullscreen().catch(() => {});
                             }
+                            if (modalOverlay.classList.contains('active')) {
+                                closeModal();
+                            }
                             break;
                     }
                 });
@@ -2152,13 +2305,14 @@
                     if (e.target === modalOverlay) closeModal();
                 });
 
-                // Handle resize
-                window.addEventListener('resize', () => {
-                    // Adjust video
-                });
-
-                console.log(`${APP_NAME} v${APP_VERSION} initialized`);
-                showToast(`${APP_NAME} v${APP_VERSION} ready`);
+                console.log(`🐭 ${APP_NAME} v${APP_VERSION} initialized`);
+                setTimeout(() => {
+                    if (Object.keys(state.customServers).length === 0) {
+                        showToast('📭 Add your first server to start watching!', 'success');
+                    } else {
+                        showToast(`🐭 ${APP_NAME} v${APP_VERSION} ready`, 'success');
+                    }
+                }, 500);
             }
 
             // ===== START =====
