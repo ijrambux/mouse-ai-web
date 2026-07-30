@@ -134,6 +134,7 @@
             transform: translate(-50%, -50%);
             text-align: center;
             pointer-events: none;
+            z-index: 10;
         }
 
         .video-placeholder .logo-text {
@@ -1053,6 +1054,22 @@
             border-color: var(--green);
             box-shadow: 0 0 40px var(--glow-green);
         }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--bg-input);
+            border-radius: 50%;
+            border-top-color: var(--green);
+            animation: spin 0.8s ease-in-out infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -1170,7 +1187,7 @@
     <script>
         // ============================================================
         //  MOUSE AI IPTV Pro v4.0 - Full Web Application
-        //  FIXED VERSION - All bugs resolved
+        //  FIXED: Video playback now works properly
         // ============================================================
 
         (function() {
@@ -1183,13 +1200,6 @@
             const FAV_KEY = 'mouse_ai_favorites_v4';
             const SERVERS_KEY = 'mouse_ai_servers_v4';
             const HISTORY_KEY = 'mouse_ai_history_v4';
-
-            // ===== SAMPLE SERVER FOR TESTING =====
-            // This is a public test M3U URL - replace with your own
-            const SAMPLE_SERVER = {
-                name: '🎯 Sample Server (Test)',
-                url: 'http://line.watchtivo-8k.com:80/get.php?username=demo&password=demo&type=m3u_plus'
-            };
 
             // ===== STATE =====
             let state = {
@@ -1209,7 +1219,8 @@
                 favView: false,
                 currentGroup: 'All Groups',
                 searchQuery: '',
-                videoLoaded: false
+                videoLoaded: false,
+                currentChannelUrl: ''
             };
 
             // ===== DOM REFS =====
@@ -1263,11 +1274,8 @@
                     if (c) {
                         state.customServers = JSON.parse(c);
                     } else {
-                        // Add a sample server if no servers exist
                         state.customServers = {};
-                        // Uncomment to add sample server automatically:
-                        // state.customServers[SAMPLE_SERVER.name] = { url: SAMPLE_SERVER.url, info: { type: 'xtream', host: 'Sample' } };
-                        // saveServers();
+                        saveServers();
                     }
                 } catch (e) {
                     console.warn('Servers load error', e);
@@ -1314,35 +1322,49 @@
                 const lines = content.split(/\r?\n/);
                 const channels = [];
                 let current = {};
+                
                 for (const raw of lines) {
                     const line = raw.trim();
                     if (!line) continue;
+                    
                     if (line.startsWith('#EXTINF:')) {
-                        const parts = line.split(',');
-                        const name = parts.length > 1 ? parts.slice(1).join(',').trim() : line;
+                        // Extract channel name
+                        let name = 'Unnamed';
+                        const nameMatch = line.match(/#EXTINF:[^,]*,\s*(.+?)\s*$/);
+                        if (nameMatch) name = nameMatch[1].trim();
+                        
+                        // Extract logo
                         let logo = '';
                         const logoMatch = line.match(/tvg-logo="([^"]*)"/);
                         if (logoMatch) logo = logoMatch[1];
+                        
+                        // Extract group
                         let group = 'General';
                         const groupMatch = line.match(/group-title="([^"]*)"/);
                         if (groupMatch) group = groupMatch[1];
-                        current = { name: name || 'Unnamed', logo, group, url: '' };
-                    } else if (line.startsWith('http://') || line.startsWith('https://')) {
-                        if (current && !current.url) {
-                            current.url = line;
-                            channels.push({ ...current });
-                            current = {};
-                        }
+                        
+                        current = { name, logo, group, url: '' };
+                    } else if ((line.startsWith('http://') || line.startsWith('https://')) && current && !current.url) {
+                        current.url = line;
+                        channels.push({ ...current });
+                        current = {};
                     }
                 }
+                
                 // Also handle URLs that might not have #EXTINF before them
                 for (const line of lines) {
                     const trimmed = line.trim();
                     if ((trimmed.startsWith('http://') || trimmed.startsWith('https://')) && 
                         !channels.some(c => c.url === trimmed)) {
-                        channels.push({ name: 'Channel ' + (channels.length + 1), url: trimmed, group: 'General', logo: '' });
+                        channels.push({ 
+                            name: 'Channel ' + (channels.length + 1), 
+                            url: trimmed, 
+                            group: 'General', 
+                            logo: '' 
+                        });
                     }
                 }
+                
                 return channels.filter(c => c.url);
             }
 
@@ -1404,22 +1426,11 @@
             // ===== LOAD CHANNELS =====
             function loadChannels(source) {
                 if (state.loading) return;
-                state.loading = true;
-                updateUIForLoading(true);
-                progressBar.classList.add('active');
-                progressFill.style.width = '0%';
-                statusLabel.textContent = '🔄 Connecting...';
-                statusLabel.className = 'status-label';
-
+                
                 let url = source || serverSelect.value;
 
                 if (!url || url === '' || url === '-- No servers added yet --') {
                     showToast('❌ No server selected. Please add a server first.', 'error');
-                    state.loading = false;
-                    updateUIForLoading(false);
-                    progressBar.classList.remove('active');
-                    statusLabel.textContent = '⚠️ No server available';
-                    statusLabel.className = 'status-label error';
                     return;
                 }
 
@@ -1432,29 +1443,38 @@
 
                 if (!url || !url.startsWith('http')) {
                     showToast('❌ Invalid server URL', 'error');
-                    state.loading = false;
-                    updateUIForLoading(false);
-                    progressBar.classList.remove('active');
-                    statusLabel.textContent = '❌ Invalid URL';
-                    statusLabel.className = 'status-label error';
                     return;
                 }
 
-                loadFromUrl(url);
-            }
-
-            function loadFromUrl(url) {
+                // Clear previous channels
+                state.channels = [];
+                state.filtered = [];
+                state.currentIndex = -1;
+                state.videoLoaded = false;
+                video.pause();
+                video.src = '';
+                placeholder.style.display = 'block';
+                updatePlayButton();
+                
+                state.loading = true;
+                updateUIForLoading(true);
+                progressBar.classList.add('active');
+                progressFill.style.width = '0%';
                 statusLabel.textContent = '🔄 Connecting to server...';
                 statusLabel.className = 'status-label';
-                progressFill.style.width = '15%';
 
                 const timeout = (state.settings.timeout || 30) * 1000;
-
-                // Create AbortController for timeout
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-                fetch(url, {
+                // Try to fetch with CORS proxy if needed
+                let fetchUrl = url;
+                
+                // If the URL doesn't support CORS, try using a proxy
+                // You can enable this if needed
+                // fetchUrl = 'https://cors-anywhere.herokuapp.com/' + url;
+
+                fetch(fetchUrl, {
                     signal: controller.signal,
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -1495,23 +1515,13 @@
                     if (err.name === 'AbortError') {
                         errorMsg = 'Connection timeout - Server took too long to respond';
                     } else if (err.message.includes('Failed to fetch')) {
-                        errorMsg = 'Network error - Check your internet connection or CORS policy';
+                        errorMsg = 'Network error - Check your internet connection';
                     }
                     statusLabel.textContent = '❌ Error: ' + errorMsg;
                     statusLabel.className = 'status-label error';
                     showToast('❌ ' + errorMsg, 'error');
                     console.error('Load error:', err);
                 });
-            }
-
-            function processContent(content, source) {
-                statusLabel.textContent = '⚙️ Processing...';
-                progressFill.style.width = '40%';
-                setTimeout(() => {
-                    const channels = parseM3U(content);
-                    progressFill.style.width = '90%';
-                    onChannelsLoaded(channels);
-                }, 100);
             }
 
             function onChannelsLoaded(channels) {
@@ -1575,7 +1585,7 @@
                 serverSelect.disabled = loading;
                 searchInput.disabled = loading;
                 if (loading) {
-                    loadBtn.textContent = '⏳ Loading...';
+                    loadBtn.innerHTML = '<span class="spinner"></span> Loading...';
                 } else {
                     loadBtn.textContent = '📡 Load Channels';
                 }
@@ -1630,7 +1640,7 @@
                 countLabel.textContent = `${filtered.length} channels`;
             }
 
-            // ===== PLAY CHANNEL =====
+            // ===== PLAY CHANNEL - FIXED =====
             function playChannel(index) {
                 const ch = state.filtered[index];
                 if (!ch || !ch.url) {
@@ -1639,35 +1649,75 @@
                 }
 
                 state.currentIndex = index;
+                state.currentChannelUrl = ch.url;
                 state.isPlaying = true;
+                state.videoLoaded = true;
 
                 // Update active state
                 document.querySelectorAll('.channel-item').forEach((el, i) => {
                     el.classList.toggle('active', i === index);
                 });
 
-                // Load video
+                // Hide placeholder
+                placeholder.style.display = 'none';
+
+                // Set video source and play
                 video.src = ch.url;
                 video.load();
-                video.play().catch(err => {
-                    console.warn('Play error:', err);
-                    showToast('❌ Playback error: ' + err.message, 'error');
-                    state.isPlaying = false;
-                    updatePlayButton();
-                });
+                
+                // Try to play with error handling
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        state.isPlaying = true;
+                        updatePlayButton();
+                        infoLabel.textContent = `▶️ Playing: ${ch.name || 'Unnamed'}`;
+                        infoLabel.className = 'info-label active';
+                        statusLabel.textContent = `▶️ Playing: ${ch.name || 'Unnamed'}`;
+                        statusLabel.className = 'status-label success';
+                    }).catch(err => {
+                        console.warn('Play error:', err);
+                        // Try alternative playback methods
+                        handlePlaybackError(ch);
+                    });
+                }
 
+                updatePlayButton();
                 infoLabel.textContent = `▶️ Playing: ${ch.name || 'Unnamed'}`;
                 infoLabel.className = 'info-label active';
                 statusLabel.textContent = `▶️ Playing: ${ch.name || 'Unnamed'}`;
                 statusLabel.className = 'status-label success';
-                placeholder.style.display = 'none';
-                state.videoLoaded = true;
-                updatePlayButton();
 
                 // Add to history
                 if (!state.history.includes(ch.url)) {
                     state.history.push(ch.url);
                     saveHistory();
+                }
+            }
+
+            function handlePlaybackError(ch) {
+                // Try with different video attributes
+                video.removeAttribute('controls');
+                video.setAttribute('controls', '');
+                video.load();
+                
+                // Try loading as blob
+                try {
+                    fetch(ch.url)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const blobUrl = URL.createObjectURL(blob);
+                            video.src = blobUrl;
+                            video.load();
+                            video.play().catch(e => {
+                                showToast('❌ Cannot play this channel', 'error');
+                            });
+                        })
+                        .catch(() => {
+                            showToast('❌ Cannot play this channel', 'error');
+                        });
+                } catch (e) {
+                    showToast('❌ Cannot play this channel', 'error');
                 }
             }
 
@@ -1679,7 +1729,9 @@
                     return;
                 }
                 if (video.paused) {
-                    video.play().catch(() => {});
+                    video.play().catch(err => {
+                        showToast('❌ Cannot resume playback', 'error');
+                    });
                     state.isPlaying = true;
                 } else {
                     video.pause();
@@ -1692,10 +1744,13 @@
                 video.pause();
                 video.currentTime = 0;
                 state.isPlaying = false;
+                state.videoLoaded = false;
                 updatePlayButton();
                 infoLabel.textContent = '⏹️ Stopped';
                 infoLabel.className = 'info-label';
                 progressSlider.value = 0;
+                placeholder.style.display = 'block';
+                video.src = '';
             }
 
             function playNext() {
@@ -2195,6 +2250,44 @@
                 }
             });
 
+            // ===== VIDEO EVENT LISTENERS =====
+            video.addEventListener('timeupdate', () => {
+                if (video.duration) {
+                    const pct = (video.currentTime / video.duration) * 1000;
+                    progressSlider.value = Math.min(pct, 1000);
+                }
+            });
+
+            video.addEventListener('play', () => {
+                state.isPlaying = true;
+                updatePlayButton();
+                infoLabel.className = 'info-label active';
+                placeholder.style.display = 'none';
+            });
+
+            video.addEventListener('pause', () => {
+                state.isPlaying = false;
+                updatePlayButton();
+            });
+
+            video.addEventListener('ended', () => {
+                state.isPlaying = false;
+                updatePlayButton();
+                playNext();
+            });
+
+            video.addEventListener('error', (e) => {
+                console.warn('Video error:', e);
+                // Try to recover
+                if (state.currentChannelUrl) {
+                    setTimeout(() => {
+                        video.src = state.currentChannelUrl;
+                        video.load();
+                        video.play().catch(() => {});
+                    }, 1000);
+                }
+            });
+
             // ===== INIT =====
             function init() {
                 loadData();
@@ -2232,12 +2325,10 @@
                 }
 
                 // ===== EVENT LISTENERS =====
-                // Server
                 serverSelect.addEventListener('change', () => {
                     state.selectedServer = serverSelect.value;
                 });
 
-                // Buttons
                 loadBtn.addEventListener('click', () => {
                     const selected = serverSelect.value;
                     if (!selected || selected === '-- No servers added yet --') {
@@ -2246,6 +2337,7 @@
                     }
                     loadChannels(selected);
                 });
+                
                 fileBtn.addEventListener('click', loadFile);
                 addCodeBtn.addEventListener('click', openAddCodeModal);
                 manageBtn.addEventListener('click', openManageServers);
@@ -2258,19 +2350,16 @@
                     renderChannels();
                 });
 
-                // Search
                 searchInput.addEventListener('input', (e) => {
                     state.searchQuery = e.target.value;
                     renderChannels();
                 });
 
-                // Group
                 groupSelect.addEventListener('change', (e) => {
                     state.currentGroup = e.target.value;
                     renderChannels();
                 });
 
-                // Video controls
                 playBtn.addEventListener('click', togglePlayPause);
                 stopBtn.addEventListener('click', stopPlayback);
                 prevBtn.addEventListener('click', playPrev);
@@ -2287,46 +2376,6 @@
                         const pos = (e.target.value / 1000) * video.duration;
                         video.currentTime = pos;
                     }
-                });
-
-                // X / Twitter button hover effect
-                xBtn.addEventListener('mouseenter', () => {
-                    xBtn.style.transform = 'scale(1.02)';
-                });
-                xBtn.addEventListener('mouseleave', () => {
-                    xBtn.style.transform = 'scale(1)';
-                });
-
-                // Video events
-                video.addEventListener('timeupdate', () => {
-                    if (video.duration) {
-                        const pct = (video.currentTime / video.duration) * 1000;
-                        progressSlider.value = Math.min(pct, 1000);
-                    }
-                });
-
-                video.addEventListener('play', () => {
-                    state.isPlaying = true;
-                    updatePlayButton();
-                    infoLabel.className = 'info-label active';
-                });
-
-                video.addEventListener('pause', () => {
-                    state.isPlaying = false;
-                    updatePlayButton();
-                });
-
-                video.addEventListener('ended', () => {
-                    state.isPlaying = false;
-                    updatePlayButton();
-                    playNext();
-                });
-
-                video.addEventListener('error', (e) => {
-                    console.warn('Video error:', e);
-                    showToast('❌ Playback error - The channel may be offline', 'error');
-                    state.isPlaying = false;
-                    updatePlayButton();
                 });
 
                 // Keyboard shortcuts
@@ -2374,12 +2423,10 @@
                     }
                 });
 
-                // Fullscreen change
                 document.addEventListener('fullscreenchange', () => {
                     state.isFullscreen = !!document.fullscreenElement;
                 });
 
-                // Modal close on overlay click
                 modalOverlay.addEventListener('click', (e) => {
                     if (e.target === modalOverlay) closeModal();
                 });
