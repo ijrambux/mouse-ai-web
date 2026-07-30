@@ -4,873 +4,388 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🐭 MOUSE AI IPTV</title>
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiTU9VU0UgQUkgSVBUViIsInNob3J0X25hbWUiOiJNQUktSVBUViIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMGEwYzBmIiwidGhlbWVfY29sb3IiOiIjMDBmZjg4In0=">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.0"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg: #0a0c0f;
-            --card: #111418;
-            --input: #161a20;
-            --border: #1e242c;
-            --green: #00ff88;
-            --red: #ff2a2a;
-            --text: #ffffff;
-            --text-sec: #8b95a5;
-            --text-muted: #5a6470;
-        }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .app {
-            display: flex;
-            height: 100vh;
-            gap: 10px;
-            padding: 10px;
-        }
-        /* ===== اليسار: الفيديو ===== */
-        .left {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 0;
-        }
-        .video-container {
-            flex: 1;
-            background: #000;
-            border-radius: 16px;
-            border: 3px solid var(--green);
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .video-placeholder {
-            color: var(--text-muted);
-            font-size: 18px;
-            text-align: center;
-        }
-        .controls {
-            background: var(--card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: var(--input);
-            border-radius: 3px;
-            outline: none;
-        }
-        .progress-bar::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            background: var(--green);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .ctrl-btns {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .btn {
-            background: var(--input);
-            border: 2px solid var(--green);
-            color: var(--green);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .btn:hover {
-            background: var(--green);
-            color: #0a0c0f;
-        }
-        .btn.danger {
-            border-color: var(--red);
-            color: var(--red);
-        }
-        .btn.danger:hover {
-            background: var(--red);
-            color: white;
-        }
-        .btn.play {
-            background: linear-gradient(180deg, #ff2a2a, #cc2222);
-            border-color: #ff2a2a;
-            color: white;
-            font-size: 16px;
-            padding: 8px 24px;
-        }
-        .btn.play:hover {
-            background: linear-gradient(180deg, #cc2222, #ff2a2a);
-        }
-        .btn.play.active {
-            background: linear-gradient(180deg, #00ff88, #00cc6a);
-            border-color: #00ff88;
-        }
-        .info-text {
-            text-align: center;
-            color: var(--text-sec);
-            font-size: 14px;
-        }
-
-        /* ===== اليمين: القنوات ===== */
-        .right {
-            width: 420px;
-            min-width: 320px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow: hidden;
-        }
-        .panel {
-            background: var(--card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            padding: 12px;
-        }
-        .header-title {
-            color: var(--green);
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-        .version {
-            color: var(--text-muted);
-            font-size: 11px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .server-row {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .server-row select, .server-row input {
-            flex: 1;
-            background: var(--input);
-            border: 2px solid var(--border);
-            color: var(--text);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-family: inherit;
-        }
-        .server-row select:focus, .server-row input:focus {
-            border-color: var(--green);
-            outline: none;
-        }
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .btn-grid .btn {
-            padding: 8px;
-            font-size: 13px;
-        }
-        .status {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-sec);
-            min-height: 18px;
-        }
-        .status.error { color: var(--red); }
-        .status.success { color: var(--green); }
-        .progress {
-            width: 100%;
-            height: 6px;
-            background: var(--input);
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 6px 0;
-            display: none;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff2a2a, #00ff88, #fff);
-            width: 0%;
-            transition: width 0.3s;
-        }
-        .filter-row {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .channel-list {
-            flex: 1;
-            overflow-y: auto;
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 4px;
-        }
-        .channel-list::-webkit-scrollbar { width: 6px; }
-        .channel-list::-webkit-scrollbar-track { background: var(--card); }
-        .channel-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        .channel-item {
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.15s;
-            user-select: none;
-        }
-        .channel-item:hover { background: var(--input); }
-        .channel-item.active {
-            background: var(--green);
-            color: #0a0c0f;
-            font-weight: bold;
-        }
-        .channel-item img {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            object-fit: cover;
-            background: var(--input);
-        }
-        .channel-name { flex: 1; font-size: 13px; }
-        .fav-star { color: gold; font-size: 14px; }
-        .count {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            padding: 4px;
-        }
-        .bottom-btns {
-            display: flex;
-            gap: 6px;
-        }
-        .footer {
-            text-align: center;
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-        .footer a { color: var(--green); text-decoration: none; }
-        
-        /* ===== نافذة الإعدادات ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.show { display: flex; }
-        .modal {
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            width: 90%;
-            max-width: 450px;
-        }
-        .modal h2 {
-            color: var(--green);
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .modal-row {
-            margin-bottom: 12px;
-        }
-        .modal-row label {
-            display: block;
-            margin-bottom: 4px;
-            color: var(--text-sec);
-            font-size: 13px;
-        }
-        .modal-row input, .modal-row select {
-            width: 100%;
-            background: var(--input);
-            border: 2px solid var(--border);
-            color: var(--text);
-            padding: 10px;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 13px;
-        }
-        .modal-row input:focus, .modal-row select:focus {
-            border-color: var(--green);
-            outline: none;
-        }
-        .modal-btns {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 16px;
-        }
-        .hidden-file { display: none; }
-        
-        @media (max-width: 900px) {
-            .app { flex-direction: column; }
-            .right { width: 100%; height: 50%; }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0c0f;--card:#111418;--input:#161a20;--border:#1e242c;--green:#00ff88;--red:#ff2a2a;--text:#fff;--text2:#8b95a5}
+        body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,Arial,sans-serif;height:100vh;overflow:hidden}
+        .app{display:flex;height:100vh;gap:10px;padding:10px}
+        .left{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
+        .video-box{flex:1;background:#000;border-radius:16px;border:3px solid var(--green);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+        video{width:100%;height:100%;object-fit:contain}
+        .placeholder{color:var(--text2);font-size:18px;text-align:center;padding:20px}
+        .controls{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:8px}
+        .ctrl-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+        .btn{background:var(--input);border:2px solid var(--green);color:var(--green);padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:13px;font-family:inherit;transition:.2s}
+        .btn:hover{background:var(--green);color:#0a0c0f}
+        .btn.danger{border-color:var(--red);color:var(--red)}
+        .btn.danger:hover{background:var(--red);color:#fff}
+        .btn.play{background:linear-gradient(180deg,#ff2a2a,#cc2222);border-color:#ff2a2a;color:#fff;font-size:15px}
+        .btn.play.active{background:linear-gradient(180deg,#00ff88,#00cc6a);border-color:#00ff88}
+        .right{width:420px;min-width:320px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+        .panel{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:12px}
+        .title{color:var(--green);font-size:22px;font-weight:bold;text-align:center}
+        .ver{color:var(--text2);font-size:11px;text-align:center;margin-bottom:10px}
+        select,input{background:var(--input);border:2px solid var(--border);color:var(--text);padding:8px;border-radius:8px;font-family:inherit;font-size:13px;width:100%;margin-bottom:6px}
+        select:focus,input:focus{border-color:var(--green);outline:none}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        .status{text-align:center;font-size:12px;color:var(--text2);min-height:18px;margin-top:4px}
+        .status.err{color:var(--red)} .status.ok{color:var(--green)}
+        .progress{height:6px;background:var(--input);border-radius:3px;overflow:hidden;margin:6px 0;display:none}
+        .progress>div{height:100%;background:linear-gradient(90deg,#ff2a2a,#00ff88,#fff);width:0%;transition:.3s}
+        .list{flex:1;overflow-y:auto;background:var(--card);border:2px solid var(--border);border-radius:10px;padding:4px}
+        .list::-webkit-scrollbar{width:6px}
+        .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+        .ch{padding:10px 14px;border-bottom:1px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.15s}
+        .ch:hover{background:var(--input)}
+        .ch.active{background:var(--green);color:#0a0c0f;font-weight:bold}
+        .ch img{width:32px;height:32px;border-radius:4px;object-fit:cover;background:var(--input)}
+        .ch-name{flex:1;font-size:13px}
+        .count{text-align:center;color:var(--text2);font-size:11px}
+        .bottom{display:flex;gap:6px}
+        .footer{text-align:center;font-size:10px;color:var(--text2)}
+        .footer a{color:var(--green);text-decoration:none}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center}
+        .modal.show{display:flex}
+        .modal-box{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:24px;width:90%;max-width:420px}
+        .modal-box h2{color:var(--green);margin-bottom:16px;text-align:center}
+        .modal-box label{display:block;margin:8px 0 4px;color:var(--text2);font-size:13px}
+        .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+        .tabs{display:flex;gap:4px;margin-bottom:8px}
+        .tab{flex:1;padding:8px;background:var(--input);border:1px solid var(--border);border-radius:6px;color:var(--text2);cursor:pointer;text-align:center;font-size:12px}
+        .tab.active{background:var(--green);color:#0a0c0f;font-weight:bold}
+        .api-key-pos{position:fixed;top:10px;left:10px;background:var(--card);border:1px solid var(--border);padding:8px 12px;border-radius:8px;font-size:11px;color:var(--text2);z-index:100}
+        .api-key-pos input{background:transparent;border:none;color:var(--green);font-family:monospace;width:180px;font-size:11px}
+        @media(max-width:900px){.app{flex-direction:column}.right{width:100%;height:45%}}
     </style>
 </head>
 <body>
+    <!-- إدخال API Key -->
+    <div class="api-key-pos">
+        🔑 API Key: <input type="password" id="apiKeyInput" value="mouse-ai-iptv-2024-secure" onchange="API_KEY=this.value">
+    </div>
+
     <div class="app">
-        <!-- اليسار: الفيديو -->
         <div class="left">
-            <div class="video-container" id="videoContainer">
-                <div class="video-placeholder" id="placeholder">🎯 اختر قناة للتشغيل</div>
-                <video id="videoPlayer" style="display:none;" playsinline></video>
+            <div class="video-box" id="vbox">
+                <div class="placeholder" id="ph">🎯 اختر قناة للتشغيل</div>
+                <video id="vid" style="display:none" playsinline></video>
             </div>
             <div class="controls">
-                <input type="range" class="progress-bar" id="progressBar" min="0" max="1000" value="0">
-                <div class="ctrl-btns">
-                    <button class="btn" onclick="playPrev()">⏮ سابق</button>
-                    <button class="btn play" id="playBtn" onclick="togglePlay()">▶ تشغيل</button>
-                    <button class="btn danger" onclick="stopPlayer()">⏹ إيقاف</button>
-                    <button class="btn" onclick="playNext()">⏭ تالي</button>
+                <input type="range" id="prog" min="0" max="1000" value="0" style="width:100%;margin-bottom:8px">
+                <div class="ctrl-row">
+                    <button class="btn" onclick="prev()">⏮ سابق</button>
+                    <button class="btn play" id="pbtn" onclick="togglePlay()">▶ تشغيل</button>
+                    <button class="btn danger" onclick="stop()">⏹ إيقاف</button>
+                    <button class="btn" onclick="next()">⏭ تالي</button>
                     <div style="flex:1"></div>
-                    <button class="btn" onclick="toggleMute()" id="muteBtn">🔊</button>
-                    <input type="range" min="0" max="100" value="100" style="width:100px;" oninput="setVolume(this.value)">
-                    <button class="btn" onclick="toggleFullscreen()">⛶ تكبير</button>
+                    <button class="btn" onclick="toggleMute()" id="mbtn">🔊</button>
+                    <input type="range" min="0" max="100" value="100" style="width:90px" oninput="setVol(this.value)">
+                    <button class="btn" onclick="toggleFS()">⛶</button>
                 </div>
-                <div class="info-text" id="infoText">🎯 جاهز — اختر قناة للتشغيل</div>
+                <div style="text-align:center;color:var(--text2);font-size:13px" id="info">🎯 جاهز</div>
             </div>
         </div>
 
-        <!-- اليمين: القنوات -->
         <div class="right">
             <div class="panel">
-                <div class="header-title">🐭 MOUSE AI IPTV</div>
-                <div class="version">v6.0 — النسخة النهائية</div>
+                <div class="title">🐭 MOUSE AI IPTV</div>
+                <div class="ver">v8.0 — السيرفر المحلي الآمن</div>
                 
-                <div class="server-row">
-                    <select id="serverSelect"></select>
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('play',this)">▶ مشاهدة</div>
+                    <div class="tab" onclick="switchTab('manage',this)">⚙️ إدارة</div>
                 </div>
-                <div class="btn-grid">
-                    <button class="btn" onclick="loadFromServer()">📡 تحميل القنوات</button>
-                    <button class="btn" onclick="document.getElementById('fileInput').click()">📁 ملف M3U</button>
-                    <button class="btn" onclick="showAddServer()">➕ إضافة سيرفر</button>
-                    <button class="btn" onclick="showSettings()">⚙️ الإعدادات</button>
+
+                <div id="tab-play">
+                    <select id="srvSel"></select>
+                    <div class="grid2">
+                        <button class="btn" onclick="loadSrv()">📡 تحميل</button>
+                        <button class="btn" onclick="document.getElementById('fup').click()">📁 ملف</button>
+                    </div>
+                    <div class="progress" id="pbar"><div id="pfill"></div></div>
+                    <div class="status" id="st">🚀 جاهز</div>
                 </div>
-                <div class="progress" id="progressBarContainer"><div class="progress-fill" id="progressFill"></div></div>
-                <div class="status" id="statusText">🚀 جاهز</div>
+
+                <div id="tab-manage" style="display:none">
+                    <input type="text" id="sn" placeholder="اسم السيرفر">
+                    <input type="text" id="su" placeholder="رابط M3U">
+                    <div class="grid2">
+                        <button class="btn" onclick="addSrv()">➕ إضافة</button>
+                        <button class="btn danger" onclick="delSrv()">🗑️ حذف</button>
+                    </div>
+                    <div class="status" id="mst" style="margin-top:6px">أضف سيرفرك الخاص</div>
+                </div>
             </div>
 
-            <div class="panel" style="padding:8px 12px;">
-                <div class="filter-row">
-                    <select id="groupSelect" onchange="renderChannels()">
-                        <option value="">📂 كل المجموعات</option>
-                    </select>
-                </div>
-                <input type="text" id="searchInput" placeholder="🔍 ابحث عن قناة..." oninput="renderChannels()" 
-                       style="width:100%;background:var(--input);border:2px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:inherit;font-size:13px;">
+            <div class="panel" style="padding:8px 12px">
+                <select id="grp" onchange="render()"><option value="">📂 كل المجموعات</option></select>
+                <input type="text" id="src" placeholder="🔍 بحث..." oninput="render()">
             </div>
 
-            <div class="channel-list" id="channelList"></div>
-            <div class="count" id="countLabel">0 قناة</div>
+            <div class="list" id="lst"></div>
+            <div class="count" id="cnt">0 قناة</div>
 
-            <div class="bottom-btns">
-                <button class="btn" id="favBtn" onclick="toggleFavView()" style="flex:1;">⭐ المفضلة</button>
-                <button class="btn" onclick="clearData()" style="flex:1;">🗑️ مسح البيانات</button>
+            <div class="bottom">
+                <button class="btn" id="fbtn" onclick="toggleFav()" style="flex:1">⭐ المفضلة</button>
+                <button class="btn" onclick="refresh()" style="flex:1">🔄 تحديث</button>
             </div>
-            <div class="footer">
-                <a href="https://x.com/0000000000388p" target="_blank">🐭 @mouse0000000</a>
-            </div>
+            <div class="footer"><a href="https://x.com/0000000000388p" target="_blank">🐭 @mouse0000000</a></div>
         </div>
     </div>
 
-    <input type="file" id="fileInput" class="hidden-file" accept=".m3u,.m3u8" onchange="loadFromFile(this)">
-
-    <!-- نافذة إضافة سيرفر -->
-    <div class="modal-overlay" id="addServerModal">
-        <div class="modal">
-            <h2>➕ إضافة سيرفر</h2>
-            <div class="modal-row">
-                <label>اسم السيرفر</label>
-                <input type="text" id="newServerName" placeholder="مثال: سيرفري">
-            </div>
-            <div class="modal-row">
-                <label>رابط السيرفر (M3U)</label>
-                <input type="text" id="newServerUrl" placeholder="http://...">
-            </div>
-            <div class="modal-btns">
-                <button class="btn danger" onclick="closeModal('addServerModal')">إلغاء</button>
-                <button class="btn" onclick="confirmAddServer()">حفظ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة الإعدادات -->
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal">
-            <h2>⚙️ الإعدادات</h2>
-            <div class="modal-row">
-                <label>المشغل المفضل</label>
-                <select id="playerType">
-                    <option value="auto">🤖 تلقائي (موصى به)</option>
-                    <option value="hls">🌐 HLS.js (للبث المباشر)</option>
-                    <option value="native">📺 مشغل المتصفح الأصلي</option>
-                </select>
-            </div>
-            <div class="modal-row">
-                <label><input type="checkbox" id="autoLoad" checked> 🚀 تحميل تلقائي عند البدء</label>
-            </div>
-            <div class="modal-btns">
-                <button class="btn" onclick="closeModal('settingsModal')">حفظ</button>
-            </div>
-        </div>
-    </div>
+    <input type="file" id="fup" style="display:none" accept=".m3u,.m3u8" onchange="loadFile(this)">
 
     <script>
-        // ===== البيانات =====
-        let channels = [];
-        let filtered = [];
-        let favorites = new Set();
-        let servers = {};
-        let currentIndex = -1;
-        let isPlaying = false;
-        let hls = null;
-        let showFavOnly = false;
-        let settings = {};
+        // ===== الإعدادات =====
+        const BASE_URL = ""; // فارغ = نفس السيرفر. للـ Vercel: "https://your-ngrok-url"
+        let API_KEY = document.getElementById("apiKeyInput").value;
+        let channels = [], filtered = [], favs = new Set(), cur = -1, hls = null, showFav = false;
 
-        const DEFAULT_SERVERS = {
-            '🐭 MOUSE AI - شهار': 'http://81.31.194.66:8080/get.php?username=pro4451769801014&password=f734a8f19cf5&type=m3u_plus&output=ts'
-        };
+        const $ = id => document.getElementById(id);
+        const vid = $("vid"), ph = $("ph"), pbtn = $("pbtn"), info = $("info"), st = $("st");
 
-        const video = document.getElementById('videoPlayer');
-        const placeholder = document.getElementById('placeholder');
-        const playBtn = document.getElementById('playBtn');
-        const infoText = document.getElementById('infoText');
-        const statusText = document.getElementById('statusText');
-        const progressFill = document.getElementById('progressFill');
-        const progressContainer = document.getElementById('progressBarContainer');
-
-        // ===== التخزين المحلي =====
-        function loadStorage() {
-            try {
-                const s = localStorage.getItem('mouse_servers');
-                servers = s ? JSON.parse(s) : {...DEFAULT_SERVERS};
-                const f = localStorage.getItem('mouse_favs');
-                favorites = new Set(f ? JSON.parse(f) : []);
-                const st = localStorage.getItem('mouse_settings');
-                settings = st ? JSON.parse(st) : {playerType: 'auto', autoLoad: true};
-            } catch(e) {
-                servers = {...DEFAULT_SERVERS};
-                favorites = new Set();
-                settings = {playerType: 'auto', autoLoad: true};
-            }
-        }
-        function saveStorage() {
-            localStorage.setItem('mouse_servers', JSON.stringify(servers));
-            localStorage.setItem('mouse_favs', JSON.stringify([...favorites]));
-            localStorage.setItem('mouse_settings', JSON.stringify(settings));
-        }
-
-        // ===== تحليل M3U =====
-        function parseM3U(content) {
-            const lines = content.split(/\r?\n/);
-            const result = [];
-            let current = null;
-
-            for (let line of lines) {
-                line = line.trim();
-                if (!line) continue;
-
-                if (line.startsWith('#EXTINF:')) {
-                    const nameMatch = line.match(/,(.+)$/);
-                    const name = nameMatch ? nameMatch[1].trim() : 'Unnamed';
-                    const groupMatch = line.match(/group-title="([^"]*)"/);
-                    const group = groupMatch ? groupMatch[1].trim() : 'General';
-                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
-                    const logo = logoMatch ? logoMatch[1].trim() : '';
-                    current = {name, group, logo, url: ''};
-                } else if (line.startsWith('http') && current) {
-                    current.url = line;
-                    result.push({...current});
-                    current = null;
+        // ===== API =====
+        async function api(path, opts = {}) {
+            const url = (BASE_URL || "") + path;
+            const res = await fetch(url, {
+                ...opts,
+                headers: {
+                    "X-API-Key": API_KEY,
+                    "Content-Type": "application/json",
+                    ...opts.headers
                 }
-            }
-            return result;
-        }
-
-        // ===== تحديث الواجهة =====
-        function refreshServers() {
-            const sel = document.getElementById('serverSelect');
-            sel.innerHTML = '';
-            for (const name in servers) {
-                const opt = document.createElement('option');
-                opt.value = servers[name];
-                opt.textContent = name;
-                sel.appendChild(opt);
-            }
-        }
-
-        function setStatus(msg, isError=false) {
-            statusText.textContent = msg;
-            statusText.className = 'status ' + (isError ? 'error' : msg.includes('✅') ? 'success' : '');
-        }
-
-        function setProgress(pct) {
-            progressFill.style.width = pct + '%';
-            progressContainer.style.display = pct > 0 && pct < 100 ? 'block' : 'none';
-        }
-
-        // ===== تحميل القنوات =====
-        async function loadFromServer() {
-            const url = document.getElementById('serverSelect').value;
-            if (!url) return;
-
-            setProgress(10);
-            setStatus('🔄 جاري الاتصال...');
-            channels = [];
-
-            try {
-                // استخدام proxy للتغلب على CORS
-                const proxies = [
-                    url,
-                    'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-                    'https://corsproxy.io/?' + encodeURIComponent(url)
-                ];
-
-                let content = null;
-                for (const proxyUrl of proxies) {
-                    try {
-                        setProgress(30);
-                        const controller = new AbortController();
-                        const timeout = setTimeout(() => controller.abort(), 20000);
-                        const res = await fetch(proxyUrl, {signal: controller.signal});
-                        clearTimeout(timeout);
-                        if (res.ok) {
-                            content = await res.text();
-                            break;
-                        }
-                    } catch(e) { /* تجربة البروكسي التالي */ }
-                }
-
-                if (!content) throw new Error('فشل الاتصال بجميع البوابات');
-
-                setProgress(60);
-                channels = parseM3U(content);
-                setProgress(90);
-
-                updateGroups();
-                renderChannels();
-                setProgress(100);
-                setStatus(`✅ تم التحميل: ${channels.length} قناة`);
-
-                if (channels.length > 0) {
-                    setTimeout(() => playChannel(0), 300);
-                }
-            } catch(err) {
-                setProgress(0);
-                setStatus('❌ ' + err.message, true);
-                alert('❌ خطأ: ' + err.message + '\n\nجرب تحميل ملف M3U محلي بدلاً من ذلك.');
-            }
-        }
-
-        function loadFromFile(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            setStatus('📁 جاري قراءة الملف...');
-            setProgress(20);
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                setProgress(60);
-                channels = parseM3U(e.target.result);
-                updateGroups();
-                renderChannels();
-                setProgress(100);
-                setStatus(`✅ تم التحميل: ${channels.length} قناة`);
-                if (channels.length > 0) setTimeout(() => playChannel(0), 300);
-            };
-            reader.onerror = () => {
-                setProgress(0);
-                setStatus('❌ خطأ في قراءة الملف', true);
-            };
-            reader.readAsText(file);
-            input.value = '';
-        }
-
-        function updateGroups() {
-            const groups = [...new Set(channels.map(c => c.group).filter(g => g))].sort();
-            const sel = document.getElementById('groupSelect');
-            const current = sel.value;
-            sel.innerHTML = '<option value="">📂 كل المجموعات</option>';
-            groups.forEach(g => {
-                const opt = document.createElement('option');
-                opt.value = g;
-                opt.textContent = g;
-                sel.appendChild(opt);
             });
-            if (groups.includes(current)) sel.value = current;
+            if (res.status === 401) throw new Error("API Key غير صحيح");
+            if (!res.ok) throw new Error((await res.json()).error || "خطأ غير معروف");
+            return res.json();
         }
 
-        function renderChannels() {
-            const search = document.getElementById('searchInput').value.trim().toLowerCase();
-            const group = document.getElementById('groupSelect').value;
+        // ===== تحميل =====
+        async function loadSrv() {
+            const url = $("srvSel").value;
+            if (!url) return;
+            prog(20); st.textContent = "🔄 جاري التحميل...";
+            try {
+                const data = await api("/api/load", {
+                    method: "POST",
+                    body: JSON.stringify({ url })
+                });
+                channels = data.channels || [];
+                updateGroups(); render(); prog(100);
+                st.textContent = `✅ ${data.count} قناة`;
+                st.className = "status ok";
+                if (channels.length) setTimeout(() => play(0), 300);
+            } catch (e) {
+                prog(0); st.textContent = "❌ " + e.message; st.className = "status err";
+            }
+        }
 
-            filtered = channels.filter(ch => {
-                if (group && ch.group !== group) return false;
-                if (search && !ch.name.toLowerCase().includes(search)) return false;
-                if (showFavOnly && !favorites.has(ch.url)) return false;
+        async function loadFile(input) {
+            const file = input.files[0]; if (!file) return;
+            const text = await file.text();
+            // تحليل محلي
+            const lines = text.split(/\r?\n/);
+            const chs = []; let cur = null;
+            for (let l of lines) {
+                l = l.trim(); if (!l) continue;
+                if (l.startsWith("#EXTINF:")) {
+                    const nm = (l.match(/,(.+)$/) || [, "Unnamed"])[1].trim();
+                    const gr = (l.match(/group-title="([^"]*)"/) || [, "General"])[1];
+                    const lg = (l.match(/tvg-logo="([^"]*)"/) || [, ""])[1];
+                    cur = { name: nm, group: gr, logo: lg, url: "" };
+                } else if (l.startsWith("http") && cur) {
+                    cur.url = l; chs.push({ ...cur }); cur = null;
+                }
+            }
+            channels = chs; updateGroups(); render();
+            st.textContent = `✅ ${chs.length} قناة من الملف`; st.className = "status ok";
+            if (chs.length) setTimeout(() => play(0), 300);
+            input.value = "";
+        }
+
+        async function refresh() {
+            try {
+                const data = await api("/api/channels");
+                channels = data.channels || [];
+                updateGroups(); render();
+                st.textContent = `🔄 ${data.count} قناة محفوظة`;
+            } catch (e) {
+                st.textContent = "❌ " + e.message; st.className = "status err";
+            }
+        }
+
+        // ===== إدارة السيرفرات =====
+        async function addSrv() {
+            const name = $("sn").value.trim(), url = $("su").value.trim();
+            if (!name || !url) return alert("أدخل الاسم والرابط");
+            try {
+                await api("/api/servers", { method: "POST", body: JSON.stringify({ name, url }) });
+                $("mst").textContent = `✅ تم إضافة ${name}`; $("mst").className = "status ok";
+                loadServers(); $("sn").value = ""; $("su").value = "";
+            } catch (e) {
+                $("mst").textContent = "❌ " + e.message; $("mst").className = "status err";
+            }
+        }
+
+        async function delSrv() {
+            const name = $("srvSel").options[$("srvSel").selectedIndex].text;
+            if (!name || !confirm(`حذف ${name}؟`)) return;
+            try {
+                await api(`/api/servers/${encodeURIComponent(name)}`, { method: "DELETE" });
+                $("mst").textContent = `✅ تم الحذف`; loadServers();
+            } catch (e) {
+                $("mst").textContent = "❌ " + e.message;
+            }
+        }
+
+        async function loadServers() {
+            try {
+                const data = await api("/api/servers");
+                const sel = $("srvSel");
+                sel.innerHTML = "";
+                for (const [name, url] of Object.entries(data.servers || {})) {
+                    const o = document.createElement("option");
+                    o.value = url; o.textContent = name;
+                    sel.appendChild(o);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // ===== عرض =====
+        function updateGroups() {
+            const grps = [...new Set(channels.map(c => c.group).filter(g => g))].sort();
+            const sel = $("grp");
+            const cur = sel.value;
+            sel.innerHTML = '<option value="">📂 كل المجموعات</option>';
+            grps.forEach(g => { const o = document.createElement("option"); o.value = g; o.textContent = g; sel.appendChild(o); });
+            if (grps.includes(cur)) sel.value = cur;
+        }
+
+        function render() {
+            const s = $("src").value.trim().toLowerCase();
+            const g = $("grp").value;
+            filtered = channels.filter(c => {
+                if (g && c.group !== g) return false;
+                if (s && !c.name.toLowerCase().includes(s)) return false;
+                if (showFav && !favs.has(c.url)) return false;
                 return true;
             });
 
-            const list = document.getElementById('channelList');
-            list.innerHTML = '';
-
-            filtered.forEach((ch, idx) => {
-                const div = document.createElement('div');
-                div.className = 'channel-item' + (idx === currentIndex ? ' active' : '');
-                div.onclick = () => playChannel(idx);
-                div.ondblclick = () => playChannel(idx);
-
-                const isFav = favorites.has(ch.url);
-                const logoHtml = ch.logo ? `<img src="${ch.logo}" onerror="this.style.display='none'">` : '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\'%3E%3Crect width=\'32\' height=\'32\' fill=\'%23161a20\'/%3E%3C/svg%3E">';
-
-                div.innerHTML = `
-                    ${logoHtml}
-                    <span class="channel-name">${isFav ? '<span class="fav-star">⭐</span> ' : ''}${ch.name}</span>
-                `;
-
-                // قائمة سياق
-                div.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    const action = confirm(isFav ? 'إزالة من المفضلة؟' : 'إضافة للمفضلة؟');
-                    if (action) toggleFavorite(ch.url);
-                };
-
-                list.appendChild(div);
+            $("lst").innerHTML = "";
+            filtered.forEach((c, i) => {
+                const d = document.createElement("div");
+                d.className = "ch" + (i === cur ? " active" : "");
+                d.onclick = () => play(i);
+                const isF = favs.has(c.url);
+                d.innerHTML = `<img src="${c.logo || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" onerror="this.style.display='none'"><span class="ch-name">${isF ? '⭐ ' : ''}${c.name}</span>`;
+                d.oncontextmenu = e => { e.preventDefault(); toggleFavItem(c.url); };
+                $("lst").appendChild(d);
             });
-
-            document.getElementById('countLabel').textContent = filtered.length + ' قناة';
+            $("cnt").textContent = filtered.length + " قناة";
         }
 
-        // ===== التشغيل =====
-        function playChannel(index) {
-            if (index < 0 || index >= filtered.length) return;
-            currentIndex = index;
-            const ch = filtered[index];
+        // ===== تشغيل =====
+        async function play(idx) {
+            if (idx < 0 || idx >= filtered.length) return;
+            cur = idx;
+            const ch = filtered[idx];
+            document.querySelectorAll(".ch").forEach((e, i) => e.classList.toggle("active", i === idx));
+            info.textContent = `▶️ ${ch.name}`;
+            ph.style.display = "none"; vid.style.display = "block";
 
-            // تحديث الواجهة
-            document.querySelectorAll('.channel-item').forEach((el, i) => {
-                el.classList.toggle('active', i === index);
-            });
-
-            infoText.textContent = `▶️ ${ch.name}`;
-            placeholder.style.display = 'none';
-            video.style.display = 'block';
-
-            // إيقاف HLS السابق
             if (hls) { hls.destroy(); hls = null; }
 
-            const url = ch.url;
-            const playerType = settings.playerType || 'auto';
-            const useHls = playerType === 'hls' || (playerType === 'auto' && (url.includes('.m3u8') || url.includes('output=ts')));
+            // استخدم Proxy السيرفر لتجاوز CORS
+            const proxyUrl = `${BASE_URL}/api/proxy?url=${encodeURIComponent(ch.url)}&api_key=${API_KEY}`;
 
-            if (useHls && Hls.isSupported()) {
-                hls = new Hls({enableWorker: true, lowLatencyMode: true});
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(() => {});
-                });
-                hls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal) {
-                        console.error('HLS error:', data);
-                        // محاولة التشغيل الأصلي كـ fallback
-                        video.src = url;
-                        video.play().catch(() => {});
-                    }
-                });
+            if (Hls.isSupported() && (ch.url.includes(".m3u8") || ch.url.includes("output="))) {
+                hls = new Hls({ enableWorker: true, maxBufferLength: 30 });
+                hls.loadSource(proxyUrl);
+                hls.attachMedia(vid);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => vid.play().catch(() => {}));
             } else {
-                video.src = url;
-                video.play().catch(err => {
-                    infoText.textContent = '⚠️ فشل التشغيل: ' + err.message;
-                });
+                vid.src = proxyUrl;
+                vid.play().catch(() => {});
             }
 
-            isPlaying = true;
-            playBtn.textContent = '⏸ إيقاف مؤقت';
-            playBtn.classList.add('active');
+            pbtn.textContent = "⏸"; pbtn.classList.add("active");
+            // تسجيل تشغيل
+            api("/api/play", { method: "POST", body: JSON.stringify({ name: ch.name }) }).catch(() => {});
         }
 
         function togglePlay() {
-            if (!video.src) return;
-            if (video.paused) {
-                video.play();
-                isPlaying = true;
-                playBtn.textContent = '⏸ إيقاف مؤقت';
-                playBtn.classList.add('active');
-            } else {
-                video.pause();
-                isPlaying = false;
-                playBtn.textContent = '▶ تشغيل';
-                playBtn.classList.remove('active');
-            }
+            if (!vid.src) return;
+            if (vid.paused) { vid.play(); pbtn.textContent = "⏸"; pbtn.classList.add("active"); }
+            else { vid.pause(); pbtn.textContent = "▶"; pbtn.classList.remove("active"); }
         }
 
-        function stopPlayer() {
+        function stop() {
             if (hls) { hls.destroy(); hls = null; }
-            video.pause();
-            video.src = '';
-            video.style.display = 'none';
-            placeholder.style.display = 'block';
-            isPlaying = false;
-            playBtn.textContent = '▶ تشغيل';
-            playBtn.classList.remove('active');
-            infoText.textContent = '⏹️ تم الإيقاف';
-            currentIndex = -1;
-            document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
+            vid.pause(); vid.src = ""; vid.style.display = "none"; ph.style.display = "block";
+            pbtn.textContent = "▶"; pbtn.classList.remove("active"); info.textContent = "⏹️ تم الإيقاف"; cur = -1;
+            document.querySelectorAll(".ch").forEach(e => e.classList.remove("active"));
         }
 
-        function playNext() {
-            if (filtered.length === 0) return;
-            playChannel((currentIndex + 1) % filtered.length);
+        function next() { if (filtered.length) play((cur + 1) % filtered.length); }
+        function prev() { if (filtered.length) play((cur - 1 + filtered.length) % filtered.length); }
+        function toggleMute() { vid.muted = !vid.muted; $("mbtn").textContent = vid.muted ? "🔇" : "🔊"; }
+        function setVol(v) { vid.volume = v / 100; }
+        function toggleFS() {
+            const el = $("vbox");
+            if (!document.fullscreenElement) el.requestFullscreen().catch(() => {});
+            else document.exitFullscreen();
         }
 
-        function playPrev() {
-            if (filtered.length === 0) return;
-            playChannel((currentIndex - 1 + filtered.length) % filtered.length);
+        function toggleFav() {
+            showFav = !showFav;
+            $("fbtn").style.background = showFav ? "var(--green)" : "";
+            $("fbtn").style.color = showFav ? "#0a0c0f" : "";
+            render();
         }
 
-        function toggleMute() {
-            video.muted = !video.muted;
-            document.getElementById('muteBtn').textContent = video.muted ? '🔇' : '🔊';
+        function toggleFavItem(url) {
+            if (favs.has(url)) favs.delete(url); else favs.add(url);
+            localStorage.setItem("mouse_favs", JSON.stringify([...favs]));
+            render();
         }
 
-        function setVolume(val) {
-            video.volume = val / 100;
+        // ===== مساعدات =====
+        function prog(p) { $("pbar").style.display = p > 0 && p < 100 ? "block" : "none"; $("pfill").style.width = p + "%"; }
+        function switchTab(t, el) {
+            document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+            el.classList.add("active");
+            $("tab-play").style.display = t === "play" ? "block" : "none";
+            $("tab-manage").style.display = t === "manage" ? "block" : "none";
         }
 
-        function toggleFullscreen() {
-            const container = document.getElementById('videoContainer');
-            if (!document.fullscreenElement) {
-                container.requestFullscreen().catch(() => {});
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        function toggleFavView() {
-            showFavOnly = !showFavOnly;
-            document.getElementById('favBtn').style.background = showFavOnly ? 'var(--green)' : '';
-            document.getElementById('favBtn').style.color = showFavOnly ? '#0a0c0f' : '';
-            renderChannels();
-        }
-
-        function toggleFavorite(url) {
-            if (favorites.has(url)) favorites.delete(url);
-            else favorites.add(url);
-            saveStorage();
-            renderChannels();
-        }
-
-        // ===== السيرفرات =====
-        function showAddServer() {
-            document.getElementById('addServerModal').classList.add('show');
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('show');
-        }
-        function confirmAddServer() {
-            const name = document.getElementById('newServerName').value.trim();
-            const url = document.getElementById('newServerUrl').value.trim();
-            if (!name || !url) return alert('❌ أدخل الاسم والرابط');
-            if (!url.startsWith('http')) return alert('❌ الرابط يجب أن يبدأ بـ http://');
-            servers[name] = url;
-            saveStorage();
-            refreshServers();
-            document.getElementById('serverSelect').value = url;
-            closeModal('addServerModal');
-            setStatus(`✅ تم إضافة السيرفر: ${name}`);
-        }
-
-        // ===== الإعدادات =====
-        function showSettings() {
-            document.getElementById('playerType').value = settings.playerType || 'auto';
-            document.getElementById('autoLoad').checked = settings.autoLoad !== false;
-            document.getElementById('settingsModal').classList.add('show');
-        }
-        document.getElementById('settingsModal').addEventListener('click', (e) => {
-            if (e.target.id === 'settingsModal') {
-                settings.playerType = document.getElementById('playerType').value;
-                settings.autoLoad = document.getElementById('autoLoad').checked;
-                saveStorage();
-                closeModal('settingsModal');
-            }
+        // ===== اختصارات =====
+        document.addEventListener("keydown", e => {
+            if (e.target.tagName === "INPUT") return;
+            if (e.key === " ") { e.preventDefault(); togglePlay(); }
+            else if (e.key === "ArrowRight") next();
+            else if (e.key === "ArrowLeft") prev();
+            else if (e.key === "ArrowUp") vid.volume = Math.min(1, vid.volume + 0.1);
+            else if (e.key === "ArrowDown") vid.volume = Math.max(0, vid.volume - 0.1);
+            else if (e.key === "f" || e.key === "F") toggleFS();
+            else if (e.key === "m" || e.key === "M") toggleMute();
         });
 
-        function clearData() {
-            if (!confirm('هل أنت متأكد من مسح جميع البيانات؟')) return;
-            localStorage.clear();
-            location.reload();
-        }
-
-        // ===== اختصارات لوحة المفاتيح =====
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT') return;
-            switch(e.key) {
-                case ' ': e.preventDefault(); togglePlay(); break;
-                case 'ArrowRight': playNext(); break;
-                case 'ArrowLeft': playPrev(); break;
-                case 'ArrowUp': video.volume = Math.min(1, video.volume + 0.1); break;
-                case 'ArrowDown': video.volume = Math.max(0, video.volume - 0.1); break;
-                case 'f': toggleFullscreen(); break;
-                case 'F': toggleFullscreen(); break;
-                case 'm': toggleMute(); break;
-                case 'M': toggleMute(); break;
-                case 'Escape': if(document.fullscreenElement) document.exitFullscreen(); break;
-            }
+        vid.addEventListener("timeupdate", () => {
+            if (vid.duration) $("prog").value = (vid.currentTime / vid.duration) * 1000;
+        });
+        $("prog").addEventListener("input", function () {
+            if (vid.duration) vid.currentTime = (this.value / 1000) * vid.duration;
         });
 
-        // ===== شريط التقدم =====
-        video.addEventListener('timeupdate', () => {
-            if (video.duration) {
-                document.getElementById('progressBar').value = (video.currentTime / video.duration) * 1000;
-            }
-        });
-        document.getElementById('progressBar').addEventListener('input', function() {
-            if (video.duration) {
-                video.currentTime = (this.value / 1000) * video.duration;
-            }
-        });
-
-        // ===== تهيئة =====
-        loadStorage();
-        refreshServers();
-        if (settings.autoLoad && document.getElementById('serverSelect').value) {
-            setTimeout(loadFromServer, 500);
-        }
-
-        // إغلاق النوافذ بالنقر خارجها
-        document.querySelectorAll('.modal-overlay').forEach(m => {
-            m.addEventListener('click', (e) => { if(e.target === m) closeModal(m.id); });
-        });
+        // ===== بدء =====
+        const savedFavs = localStorage.getItem("mouse_favs");
+        if (savedFavs) favs = new Set(JSON.parse(savedFavs));
+        loadServers();
+        refresh();
     </script>
 </body>
 </html>
