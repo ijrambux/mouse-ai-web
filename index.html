@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOUSE AI IPTV - شهار</title>
+    <title>🐭 MOUSE AI IPTV</title>
     <style>
         * {
             margin: 0;
@@ -34,9 +34,9 @@
             100% { background-position: 0% 50%; }
         }
         .header h1 {
-            font-size: 28px;
+            font-size: 32px;
             color: #0a0c0f;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
         }
         .header .sub {
             font-size: 14px;
@@ -550,7 +550,7 @@
 <!-- ===== HEADER ===== -->
 <div class="header">
     <h1>🐭 MOUSE AI IPTV</h1>
-    <div class="sub">⚡ شهار IPTV - PRO ULTIMATE</div>
+    <div class="sub">⚡ PRO ULTIMATE - شهار IPTV</div>
 </div>
 
 <!-- ===== MAIN ===== -->
@@ -597,8 +597,8 @@
         <select id="serverSelect"></select>
         
         <div class="btn-row">
-            <button class="action-btn green" id="loadBtn">📡 تحميل</button>
-            <button class="action-btn" id="fileBtn">📁 ملف</button>
+            <button class="action-btn green" id="loadBtn">📡 تحميل القنوات</button>
+            <button class="action-btn" id="fileBtn">📁 ملف M3U</button>
             <button class="action-btn green full" id="addBtn">➕ إضافة سيرفر</button>
         </div>
         
@@ -611,7 +611,7 @@
         <div class="channel-list" id="channelList">
             <div style="text-align:center;padding:30px 10px;color:#5a6470;font-size:13px;">
                 📺 لا توجد قنوات<br>
-                <span style="font-size:11px;">اضغط تحميل</span>
+                <span style="font-size:11px;">اضغط تحميل القنوات</span>
             </div>
         </div>
         
@@ -644,7 +644,7 @@
 
 <script>
 // ============================================================
-// MOUSE AI IPTV - الحل النهائي البسيط
+// 🐭 MOUSE AI IPTV - الحل النهائي 100%
 // ============================================================
 
 (function() {
@@ -652,7 +652,7 @@
 
     // ===== سيرفر شهار =====
     const SHAHAR = {
-        name: '📺 شهار IPTV',
+        name: '🐭 MOUSE AI IPTV - شهار',
         url: 'http://81.31.194.66:8080/get.php?username=pro4451769801014&password=f734a8f19cf5&type=m3u_plus&output=ts'
     };
 
@@ -792,6 +792,7 @@
         if (state.loading) return;
         
         let url = source || serverSelect.value;
+        
         if (!url || url === '-- لا يوجد --') {
             showToast('❌ لا يوجد سيرفر', 'error');
             return;
@@ -803,7 +804,7 @@
         }
         
         if (!url.startsWith('http')) {
-            showToast('❌ رابط غير صالح', 'error');
+            showToast('❌ رابط غير صالح: ' + url, 'error');
             return;
         }
 
@@ -823,23 +824,29 @@
         loadBtn.textContent = '⏳ جاري...';
         progressBar.classList.add('active');
         progressFill.style.width = '0%';
-        statusText.textContent = '🔄 جاري الاتصال...';
+        statusText.textContent = '🔄 جاري الاتصال بسيرفر شهار...';
         statusText.className = 'status-text';
         loadingOverlay.classList.add('active');
 
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 45000);
 
+        console.log('🔄 جاري التحميل من:', url);
+
         fetch(url, {
             signal: controller.signal,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': '*/*'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Language': 'ar,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Referer': 'https://www.google.com/'
             }
         })
         .then(res => {
             clearTimeout(timeout);
-            if (!res.ok) throw new Error('HTTP ' + res.status);
+            if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
             progressFill.style.width = '40%';
             statusText.textContent = '📥 جاري القراءة...';
             return res.text();
@@ -863,32 +870,37 @@
             clearTimeout(timeout);
             state.loading = false;
             loadBtn.disabled = false;
-            loadBtn.textContent = '📡 تحميل';
+            loadBtn.textContent = '📡 تحميل القنوات';
             progressBar.classList.remove('active');
             loadingOverlay.classList.remove('active');
             
             let msg = err.message;
-            if (err.name === 'AbortError') msg = 'انتهت المهلة';
-            else if (msg.includes('403')) msg = '⛔ ممنوع الوصول - جرب رابط آخر';
-            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة';
+            if (err.name === 'AbortError') msg = '⏱️ انتهت المهلة - السيرفر لم يستجب';
+            else if (msg.includes('403')) msg = '⛔ ممنوع الوصول (403) - جرب سيرفر آخر';
+            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة - تأكد من اتصال الإنترنت';
+            else if (msg.includes('500')) msg = '⚠️ خطأ في السيرفر (500)';
+            else if (msg.includes('404')) msg = '❌ الرابط غير موجود (404)';
             
             statusText.textContent = '❌ ' + msg;
             statusText.className = 'status-text error';
             showToast('❌ ' + msg, 'error');
-            console.error(err);
+            console.error('Load error:', err);
             
-            // Try with proxy
+            // Try with proxy as fallback
             tryProxy(url);
         });
     }
 
     function tryProxy(url) {
-        statusText.textContent = '🔄 محاولة عبر وكيل...';
+        statusText.textContent = '🔄 محاولة عبر وكيل CORS...';
         showToast('🔄 محاولة عبر وكيل...');
         
         const proxy = 'https://cors-anywhere.herokuapp.com/' + url;
         fetch(proxy, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': '*/*'
+            }
         })
         .then(res => {
             if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -903,7 +915,7 @@
         .catch(err => {
             state.loading = false;
             loadBtn.disabled = false;
-            loadBtn.textContent = '📡 تحميل';
+            loadBtn.textContent = '📡 تحميل القنوات';
             progressBar.classList.remove('active');
             loadingOverlay.classList.remove('active');
             statusText.textContent = '❌ فشل التحميل: ' + err.message;
@@ -918,7 +930,7 @@
         state.currentIndex = -1;
         state.loading = false;
         loadBtn.disabled = false;
-        loadBtn.textContent = '📡 تحميل';
+        loadBtn.textContent = '📡 تحميل القنوات';
         progressBar.classList.remove('active');
         progressFill.style.width = '100%';
         loadingOverlay.classList.remove('active');
@@ -939,17 +951,19 @@
         groupSelect.value = 'All';
 
         renderChannels();
-        statusText.textContent = `✅ تم التحميل: ${channels.length} قناة`;
+        statusText.textContent = `✅ تم التحميل: ${channels.length} قناة من شهار`;
         statusText.className = 'status-text success';
         countLabel.textContent = channels.length + ' قناة';
-        showToast(`✅ تم تحميل ${channels.length} قناة`);
+        showToast(`✅ تم تحميل ${channels.length} قناة من شهار`);
 
-        // Auto play first
+        // Auto play first channel
         if (channels.length > 0) {
             setTimeout(() => {
                 const first = channelList.querySelector('.channel-item');
-                if (first) first.click();
-            }, 500);
+                if (first) {
+                    first.click();
+                }
+            }, 600);
         }
     }
 
@@ -1031,7 +1045,7 @@
                 loadingOverlay.classList.remove('active');
                 console.warn('Play error:', err);
                 showToast('❌ لا يمكن تشغيل هذه القناة', 'error');
-                // Try proxy
+                // Try with proxy
                 const proxy = 'https://cors-anywhere.herokuapp.com/' + ch.url;
                 video.src = proxy;
                 video.load();
@@ -1160,11 +1174,11 @@
         openModal('➕ إضافة سيرفر', `
             <div class="form-group">
                 <label>🏷️ اسم السيرفر</label>
-                <input type="text" id="newServerName" placeholder="مثال: سيرفر جديد">
+                <input type="text" id="newServerName" placeholder="مثال: سيرفر جديد" value="🐭 MOUSE AI - جديد">
             </div>
             <div class="form-group">
                 <label>🔗 رابط السيرفر</label>
-                <input type="text" id="newServerUrl" placeholder="http://...">
+                <input type="text" id="newServerUrl" placeholder="http://..." value="http://">
             </div>
             <div class="modal-btns">
                 <button class="action-btn" onclick="closeModal()">إلغاء</button>
@@ -1176,6 +1190,10 @@
             const url = document.getElementById('newServerUrl').value.trim();
             if (!name || !url) {
                 showToast('❌ أدخل الاسم والرابط', 'error');
+                return;
+            }
+            if (!url.startsWith('http')) {
+                showToast('❌ الرابط يجب أن يبدأ بـ http://', 'error');
                 return;
             }
             state.servers[name] = url;
@@ -1389,8 +1407,7 @@
     addBtn.addEventListener('click', openAddServer);
     settingsBtn.addEventListener('click', openSettings);
 
-    document.querySelector('#manageBtn')?.addEventListener('click', openManageServers);
-    // Add manage button if needed
+    // Add manage button
     const manageBtn = document.createElement('button');
     manageBtn.className = 'action-btn full';
     manageBtn.textContent = '⚙️ إدارة السيرفرات';
@@ -1493,15 +1510,23 @@
         refreshServers();
         setVolume(state.settings.volume || 100);
 
-        if (state.settings.autoLoad !== false) {
+        // Select the MOUSE AI server
+        const mouseServer = Object.keys(state.servers).find(k => k.includes('MOUSE AI'));
+        if (mouseServer) {
+            serverSelect.value = mouseServer;
+        } else {
             const first = Object.keys(state.servers)[0];
-            if (first) {
-                serverSelect.value = first;
-                setTimeout(() => loadChannels(first), 500);
+            if (first) serverSelect.value = first;
+        }
+
+        if (state.settings.autoLoad !== false) {
+            const selected = serverSelect.value;
+            if (selected && selected !== '-- لا يوجد --') {
+                setTimeout(() => loadChannels(selected), 600);
             }
         }
 
-        // Make functions global for inline onclick
+        // Make functions global
         window.closeModal = closeModal;
         window.showToast = showToast;
 
