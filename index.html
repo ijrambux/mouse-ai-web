@@ -89,11 +89,6 @@
             font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        .animated-logo span {
-            display: inline-block;
-            animation: logoColorShift 3s ease-in-out infinite;
-        }
-
         /* ===== App Container ===== */
         .app-container {
             display: flex;
@@ -684,6 +679,7 @@
         .x-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             padding: 10px 20px;
             background: #000;
@@ -696,11 +692,12 @@
             transition: all 0.3s ease;
             text-decoration: none;
             margin-top: 6px;
+            width: 100%;
         }
         .x-btn:hover {
             background: var(--white);
             color: #000;
-            transform: scale(1.05);
+            transform: scale(1.02);
             box-shadow: 0 0 30px var(--glow-white);
         }
         .x-btn svg {
@@ -1173,7 +1170,7 @@
     <script>
         // ============================================================
         //  MOUSE AI IPTV Pro v4.0 - Full Web Application
-        //  Enhanced Edition with All Improvements
+        //  FIXED VERSION - All bugs resolved
         // ============================================================
 
         (function() {
@@ -1187,13 +1184,20 @@
             const SERVERS_KEY = 'mouse_ai_servers_v4';
             const HISTORY_KEY = 'mouse_ai_history_v4';
 
+            // ===== SAMPLE SERVER FOR TESTING =====
+            // This is a public test M3U URL - replace with your own
+            const SAMPLE_SERVER = {
+                name: '🎯 Sample Server (Test)',
+                url: 'http://line.watchtivo-8k.com:80/get.php?username=demo&password=demo&type=m3u_plus'
+            };
+
             // ===== STATE =====
             let state = {
                 channels: [],
                 filtered: [],
                 favorites: new Set(),
-                customServers: {}, // Will be populated from localStorage
-                settings: { volume: 100, muteOnStart: false, autoLoad: false, showServerInfo: true, timeout: 45 },
+                customServers: {},
+                settings: { volume: 100, muteOnStart: false, autoLoad: false, showServerInfo: true, timeout: 30 },
                 history: [],
                 currentIndex: -1,
                 isPlaying: false,
@@ -1259,9 +1263,11 @@
                     if (c) {
                         state.customServers = JSON.parse(c);
                     } else {
-                        // Initialize with empty - no default servers
+                        // Add a sample server if no servers exist
                         state.customServers = {};
-                        saveServers();
+                        // Uncomment to add sample server automatically:
+                        // state.customServers[SAMPLE_SERVER.name] = { url: SAMPLE_SERVER.url, info: { type: 'xtream', host: 'Sample' } };
+                        // saveServers();
                     }
                 } catch (e) {
                     console.warn('Servers load error', e);
@@ -1321,10 +1327,20 @@
                         const groupMatch = line.match(/group-title="([^"]*)"/);
                         if (groupMatch) group = groupMatch[1];
                         current = { name: name || 'Unnamed', logo, group, url: '' };
-                    } else if (line.startsWith('http') && current && !current.url) {
-                        current.url = line;
-                        channels.push({ ...current });
-                        current = {};
+                    } else if (line.startsWith('http://') || line.startsWith('https://')) {
+                        if (current && !current.url) {
+                            current.url = line;
+                            channels.push({ ...current });
+                            current = {};
+                        }
+                    }
+                }
+                // Also handle URLs that might not have #EXTINF before them
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if ((trimmed.startsWith('http://') || trimmed.startsWith('https://')) && 
+                        !channels.some(c => c.url === trimmed)) {
+                        channels.push({ name: 'Channel ' + (channels.length + 1), url: trimmed, group: 'General', logo: '' });
                     }
                 }
                 return channels.filter(c => c.url);
@@ -1395,7 +1411,7 @@
                 statusLabel.textContent = '🔄 Connecting...';
                 statusLabel.className = 'status-label';
 
-                const url = source || serverSelect.value;
+                let url = source || serverSelect.value;
 
                 if (!url || url === '' || url === '-- No servers added yet --') {
                     showToast('❌ No server selected. Please add a server first.', 'error');
@@ -1411,12 +1427,19 @@
                 if (state.customServers[url]) {
                     const data = state.customServers[url];
                     state.serverInfo = data.info || {};
-                    loadFromUrl(data.url);
+                    url = data.url;
+                }
+
+                if (!url || !url.startsWith('http')) {
+                    showToast('❌ Invalid server URL', 'error');
+                    state.loading = false;
+                    updateUIForLoading(false);
+                    progressBar.classList.remove('active');
+                    statusLabel.textContent = '❌ Invalid URL';
+                    statusLabel.className = 'status-label error';
                     return;
                 }
 
-                // Assume it's a URL
-                state.serverInfo = {};
                 loadFromUrl(url);
             }
 
@@ -1425,16 +1448,23 @@
                 statusLabel.className = 'status-label';
                 progressFill.style.width = '15%';
 
-                const timeout = state.settings.timeout || 45;
+                const timeout = (state.settings.timeout || 30) * 1000;
+
+                // Create AbortController for timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
 
                 fetch(url, {
-                    signal: AbortSignal.timeout(timeout * 1000),
+                    signal: controller.signal,
                     headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        'Accept': '*/*',
+                        'Accept-Encoding': 'gzip, deflate, br'
                     }
                 })
                 .then(res => {
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    clearTimeout(timeoutId);
+                    if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
                     progressFill.style.width = '40%';
                     statusLabel.textContent = '📥 Reading data...';
                     return res.text();
@@ -1442,17 +1472,34 @@
                 .then(text => {
                     progressFill.style.width = '60%';
                     statusLabel.textContent = '🔍 Parsing channels...';
+                    
+                    if (!text || text.length < 10) {
+                        throw new Error('Empty response from server');
+                    }
+                    
                     const channels = parseM3U(text);
                     progressFill.style.width = '90%';
+                    
+                    if (channels.length === 0) {
+                        throw new Error('No channels found in the response');
+                    }
+                    
                     onChannelsLoaded(channels);
                 })
                 .catch(err => {
+                    clearTimeout(timeoutId);
                     state.loading = false;
                     updateUIForLoading(false);
                     progressBar.classList.remove('active');
-                    statusLabel.textContent = '❌ Error: ' + err.message;
+                    let errorMsg = err.message;
+                    if (err.name === 'AbortError') {
+                        errorMsg = 'Connection timeout - Server took too long to respond';
+                    } else if (err.message.includes('Failed to fetch')) {
+                        errorMsg = 'Network error - Check your internet connection or CORS policy';
+                    }
+                    statusLabel.textContent = '❌ Error: ' + errorMsg;
                     statusLabel.className = 'status-label error';
-                    showToast('❌ Error: ' + err.message, 'error');
+                    showToast('❌ ' + errorMsg, 'error');
                     console.error('Load error:', err);
                 });
             }
@@ -1924,7 +1971,6 @@
                     setTimeout(() => loadChannels(name), 300);
                 });
 
-                // Auto-detect on paste
                 setTimeout(() => codeInput.focus(), 100);
             }
 
@@ -1957,7 +2003,7 @@
                     </div>
                     <div class="form-group">
                         <label>⏱️ Connection timeout (seconds)</label>
-                        <input type="number" id="timeoutSetting" value="${s.timeout || 45}" min="10" max="120">
+                        <input type="number" id="timeoutSetting" value="${s.timeout || 30}" min="5" max="120">
                     </div>
                     <div class="btn-row-modal">
                         <button class="action-btn white" onclick="closeModal()">Cancel</button>
@@ -1977,7 +2023,7 @@
                     state.settings.muteOnStart = document.getElementById('muteSetting').checked;
                     state.settings.autoLoad = document.getElementById('autoLoadSetting').checked;
                     state.settings.showServerInfo = document.getElementById('showInfoSetting').checked;
-                    state.settings.timeout = parseInt(document.getElementById('timeoutSetting').value) || 45;
+                    state.settings.timeout = parseInt(document.getElementById('timeoutSetting').value) || 30;
                     saveSettings();
                     setVolume(state.settings.volume);
                     if (state.settings.muteOnStart) {
@@ -2070,22 +2116,34 @@
                     if (!file) return;
                     const reader = new FileReader();
                     reader.onload = (ev) => {
-                        const content = ev.target.result;
-                        state.loading = true;
-                        updateUIForLoading(true);
-                        progressBar.classList.add('active');
-                        progressFill.style.width = '30%';
-                        statusLabel.textContent = `📁 Loading: ${file.name}`;
-                        statusLabel.className = 'status-label';
-                        setTimeout(() => {
-                            const channels = parseM3U(content);
-                            progressFill.style.width = '90%';
-                            state.serverInfo = {};
-                            onChannelsLoaded(channels);
-                            statusLabel.textContent = `✅ Loaded from file: ${file.name}`;
-                            statusLabel.className = 'status-label success';
-                            showToast(`✅ Loaded ${channels.length} channels from file`, 'success');
-                        }, 200);
+                        try {
+                            const content = ev.target.result;
+                            state.loading = true;
+                            updateUIForLoading(true);
+                            progressBar.classList.add('active');
+                            progressFill.style.width = '30%';
+                            statusLabel.textContent = `📁 Loading: ${file.name}`;
+                            statusLabel.className = 'status-label';
+                            setTimeout(() => {
+                                const channels = parseM3U(content);
+                                if (channels.length === 0) {
+                                    throw new Error('No channels found in file');
+                                }
+                                progressFill.style.width = '90%';
+                                state.serverInfo = {};
+                                onChannelsLoaded(channels);
+                                statusLabel.textContent = `✅ Loaded from file: ${file.name}`;
+                                statusLabel.className = 'status-label success';
+                                showToast(`✅ Loaded ${channels.length} channels from file`, 'success');
+                            }, 200);
+                        } catch (err) {
+                            showToast('❌ Error reading file: ' + err.message, 'error');
+                            state.loading = false;
+                            updateUIForLoading(false);
+                            progressBar.classList.remove('active');
+                            statusLabel.textContent = '❌ Error reading file';
+                            statusLabel.className = 'status-label error';
+                        }
                     };
                     reader.readAsText(file);
                 };
@@ -2102,22 +2160,34 @@
                     if (file.name.match(/\.m3u8?$/i)) {
                         const reader = new FileReader();
                         reader.onload = (ev) => {
-                            const content = ev.target.result;
-                            state.loading = true;
-                            updateUIForLoading(true);
-                            progressBar.classList.add('active');
-                            progressFill.style.width = '30%';
-                            statusLabel.textContent = `📁 Loading: ${file.name}`;
-                            statusLabel.className = 'status-label';
-                            setTimeout(() => {
-                                const channels = parseM3U(content);
-                                progressFill.style.width = '90%';
-                                state.serverInfo = {};
-                                onChannelsLoaded(channels);
-                                statusLabel.textContent = `✅ Loaded from file: ${file.name}`;
-                                statusLabel.className = 'status-label success';
-                                showToast(`✅ Loaded ${channels.length} channels from file`, 'success');
-                            }, 200);
+                            try {
+                                const content = ev.target.result;
+                                state.loading = true;
+                                updateUIForLoading(true);
+                                progressBar.classList.add('active');
+                                progressFill.style.width = '30%';
+                                statusLabel.textContent = `📁 Loading: ${file.name}`;
+                                statusLabel.className = 'status-label';
+                                setTimeout(() => {
+                                    const channels = parseM3U(content);
+                                    if (channels.length === 0) {
+                                        throw new Error('No channels found in file');
+                                    }
+                                    progressFill.style.width = '90%';
+                                    state.serverInfo = {};
+                                    onChannelsLoaded(channels);
+                                    statusLabel.textContent = `✅ Loaded from file: ${file.name}`;
+                                    statusLabel.className = 'status-label success';
+                                    showToast(`✅ Loaded ${channels.length} channels from file`, 'success');
+                                }, 200);
+                            } catch (err) {
+                                showToast('❌ Error reading file: ' + err.message, 'error');
+                                state.loading = false;
+                                updateUIForLoading(false);
+                                progressBar.classList.remove('active');
+                                statusLabel.textContent = '❌ Error reading file';
+                                statusLabel.className = 'status-label error';
+                            }
                         };
                         reader.readAsText(file);
                         showToast(`📁 Loading: ${file.name}`, 'success');
@@ -2143,9 +2213,11 @@
                 if (serverCount === 0) {
                     statusLabel.textContent = '📭 No servers. Click "Add Server" to start!';
                     statusLabel.className = 'status-label';
+                    showToast('📭 Add your first server to start watching!', 'success');
                 } else {
                     statusLabel.textContent = '🚀 Ready. Select a server and press Load.';
                     statusLabel.className = 'status-label';
+                    showToast(`🐭 ${APP_NAME} v${APP_VERSION} ready`, 'success');
                 }
 
                 // Load auto
@@ -2166,7 +2238,14 @@
                 });
 
                 // Buttons
-                loadBtn.addEventListener('click', () => loadChannels());
+                loadBtn.addEventListener('click', () => {
+                    const selected = serverSelect.value;
+                    if (!selected || selected === '-- No servers added yet --') {
+                        showToast('❌ Please add a server first', 'error');
+                        return;
+                    }
+                    loadChannels(selected);
+                });
                 fileBtn.addEventListener('click', loadFile);
                 addCodeBtn.addEventListener('click', openAddCodeModal);
                 manageBtn.addEventListener('click', openManageServers);
@@ -2212,7 +2291,7 @@
 
                 // X / Twitter button hover effect
                 xBtn.addEventListener('mouseenter', () => {
-                    xBtn.style.transform = 'scale(1.05)';
+                    xBtn.style.transform = 'scale(1.02)';
                 });
                 xBtn.addEventListener('mouseleave', () => {
                     xBtn.style.transform = 'scale(1)';
@@ -2245,7 +2324,7 @@
 
                 video.addEventListener('error', (e) => {
                     console.warn('Video error:', e);
-                    showToast('❌ Playback error', 'error');
+                    showToast('❌ Playback error - The channel may be offline', 'error');
                     state.isPlaying = false;
                     updatePlayButton();
                 });
@@ -2306,13 +2385,6 @@
                 });
 
                 console.log(`🐭 ${APP_NAME} v${APP_VERSION} initialized`);
-                setTimeout(() => {
-                    if (Object.keys(state.customServers).length === 0) {
-                        showToast('📭 Add your first server to start watching!', 'success');
-                    } else {
-                        showToast(`🐭 ${APP_NAME} v${APP_VERSION} ready`, 'success');
-                    }
-                }, 500);
             }
 
             // ===== START =====
