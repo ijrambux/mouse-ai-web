@@ -1,650 +1,190 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🐭 MOUSE AI IPTV</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: #0a0c0f;
-            color: #fff;
-            min-height: 100vh;
+        body { 
+            background: #0a0c0f; 
+            color: #fff; 
+            font-family: Arial; 
+            margin: 0; 
+            padding: 10px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        
-        /* Header */
         .header {
-            background: linear-gradient(135deg, #ff2a2a, #00ff88, #ffffff);
-            background-size: 300% 300%;
-            animation: gradientMove 4s ease infinite;
-            padding: 15px 20px;
-            text-align: center;
-            position: relative;
-        }
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .header h1 {
-            font-size: 32px;
-            color: #0a0c0f;
-            text-shadow: 0 0 30px rgba(255,255,255,0.5);
-        }
-        .header .sub {
-            font-size: 14px;
-            color: #0a0c0f;
-            font-weight: bold;
-        }
-        
-        /* Main Layout */
-        .main {
-            display: flex;
-            flex: 1;
-            padding: 10px;
-            gap: 10px;
-            height: calc(100vh - 80px);
-            overflow: hidden;
-        }
-        
-        /* Video Player */
-        .video-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-        .video-wrapper {
-            flex: 1;
-            background: #000;
-            border-radius: 12px;
-            border: 3px solid #00ff88;
-            position: relative;
-            overflow: hidden;
-            min-height: 300px;
-        }
-        #videoPlayer {
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-        .video-placeholder {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            pointer-events: none;
-            color: #5a6470;
-        }
-        .video-placeholder h2 {
-            font-size: 36px;
-            color: #00ff88;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-        
-        /* Controls */
-        .controls {
-            background: #111418;
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 8px;
-            border: 1px solid #1e242c;
-        }
-        .controls .row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .controls button {
-            background: #161a20;
-            border: 2px solid #00ff88;
-            border-radius: 8px;
-            color: #00ff88;
-            padding: 8px 14px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-        .controls button:hover {
-            background: #00ff88;
-            color: #0a0c0f;
-            transform: scale(1.05);
-        }
-        .controls button.red {
-            border-color: #ff2a2a;
-            color: #ff2a2a;
-        }
-        .controls button.red:hover {
-            background: #ff2a2a;
-            color: #fff;
-        }
-        .controls button.play {
-            background: linear-gradient(135deg, #ff2a2a, #cc2222);
-            border-color: #ff2a2a;
-            color: #fff;
-            font-size: 18px;
-            padding: 8px 20px;
-        }
-        .controls button.play.playing {
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
-            border-color: #00ff88;
-        }
-        .controls input[type="range"] {
-            width: 100px;
-            height: 4px;
-            -webkit-appearance: none;
-            background: #161a20;
-            border-radius: 2px;
-        }
-        .controls input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            background: #00ff88;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .info-label {
-            text-align: center;
-            color: #8b95a5;
-            font-size: 13px;
-            margin-top: 6px;
-            min-height: 20px;
-            font-weight: bold;
-        }
-        .info-label.active {
-            color: #00ff88;
-        }
-        
-        /* Right Panel */
-        .channels-section {
-            width: 380px;
-            min-width: 280px;
-            display: flex;
-            flex-direction: column;
-            background: #111418;
-            border-radius: 12px;
-            border: 1px solid #1e242c;
-            padding: 10px;
-            overflow: hidden;
-        }
-        .channels-section .title {
-            color: #00ff88;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            text-align: center;
-        }
-        .channels-section select,
-        .channels-section input {
-            width: 100%;
-            padding: 8px 12px;
-            background: #161a20;
-            border: 2px solid #1e242c;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-            margin-bottom: 6px;
-        }
-        .channels-section select:focus,
-        .channels-section input:focus {
-            border-color: #00ff88;
-        }
-        .channels-section .btn-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-        .channels-section .btn-row .full {
-            grid-column: 1 / -1;
-        }
-        .channels-section .action-btn {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 2px solid #1e242c;
-            background: #161a20;
-            color: #fff;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-        .channels-section .action-btn:hover {
-            border-color: #00ff88;
-        }
-        .channels-section .action-btn.green {
-            border-color: #00ff88;
-            color: #00ff88;
-        }
-        .channels-section .action-btn.green:hover {
-            background: #00ff88;
-            color: #0a0c0f;
-        }
-        .channels-section .action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: #161a20;
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 4px 0;
-            display: none;
-        }
-        .progress-bar.active {
-            display: block;
-        }
-        .progress-bar .fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff2a2a, #00ff88, #ffffff);
+            background: linear-gradient(90deg, #ff0000, #00ff88, #ffffff, #ff0000);
             background-size: 300% 100%;
-            width: 0%;
-            animation: progressAnim 2s linear infinite;
-        }
-        @keyframes progressAnim {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 300% 0%; }
-        }
-        
-        .status-text {
+            animation: move 3s linear infinite;
+            padding: 15px;
             text-align: center;
-            color: #8b95a5;
-            font-size: 12px;
-            min-height: 18px;
-            font-weight: bold;
-        }
-        .status-text.success { color: #00ff88; }
-        .status-text.error { color: #ff2a2a; }
-        
-        .channel-list {
-            flex: 1;
-            overflow-y: auto;
-            background: #0a0c0f;
-            border-radius: 8px;
-            padding: 4px;
-            min-height: 150px;
-            border: 1px solid #1e242c;
-        }
-        .channel-item {
-            padding: 8px 12px;
-            border-bottom: 1px solid #1e242c;
-            border-radius: 6px;
-            margin: 2px 0;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .channel-item:hover {
-            background: #161a20;
-        }
-        .channel-item.active {
-            background: #00ff88;
-            color: #0a0c0f;
-            font-weight: bold;
-        }
-        .channel-item .fav {
-            color: #ffd700;
-        }
-        .channel-item .group-tag {
-            font-size: 10px;
-            color: #5a6470;
-            background: #161a20;
-            padding: 1px 8px;
             border-radius: 10px;
-        }
-        .channel-item.active .group-tag {
-            background: rgba(0,0,0,0.2);
-            color: #0a0c0f;
-        }
-        .channel-count {
-            text-align: center;
-            color: #5a6470;
-            font-size: 11px;
-            padding: 4px 0;
-            font-weight: bold;
-        }
-        
-        .bottom-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 4px;
-        }
-        .bottom-row .action-btn {
-            flex: 1;
-            font-size: 11px;
-            padding: 6px 8px;
-        }
-        .bottom-row .action-btn.fav-active {
-            background: #00ff88;
-            color: #0a0c0f;
-            border-color: #00ff88;
-        }
-        
-        .footer {
-            text-align: center;
-            color: #5a6470;
-            font-size: 10px;
-            padding: 4px 0;
-        }
-        .footer a {
-            color: #00ff88;
-            text-decoration: none;
-        }
-        .x-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: #000;
-            border: 2px solid #fff;
-            border-radius: 20px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 12px;
-            text-decoration: none;
-            margin-top: 4px;
-            transition: all 0.2s;
-        }
-        .x-btn:hover {
-            background: #fff;
-            color: #000;
-        }
-        .x-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
-        
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #111418;
-            border: 2px solid #00ff88;
-            border-radius: 10px;
-            padding: 10px 24px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 14px;
-            z-index: 999;
-            opacity: 0;
-            transition: all 0.4s;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-        .toast.error {
-            border-color: #ff2a2a;
-        }
-        
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal {
-            background: #111418;
-            border: 2px solid #00ff88;
-            border-radius: 12px;
-            padding: 20px;
-            max-width: 600px;
-            width: 95%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal h2 {
-            color: #00ff88;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .modal textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 10px;
-            background: #0a0c0f;
-            border: 2px solid #1e242c;
-            border-radius: 8px;
-            color: #fff;
-            font-family: monospace;
-            font-size: 12px;
-            resize: vertical;
-            outline: none;
-        }
-        .modal textarea:focus {
-            border-color: #00ff88;
-        }
-        .modal .form-group {
             margin-bottom: 10px;
         }
-        .modal .form-group label {
-            color: #00ff88;
-            font-weight: bold;
-            font-size: 13px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .modal .form-group input {
-            width: 100%;
-            padding: 8px 12px;
-            background: #0a0c0f;
-            border: 2px solid #1e242c;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-        }
-        .modal .form-group input:focus {
-            border-color: #00ff88;
-        }
-        .modal .modal-btns {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-            justify-content: flex-end;
-        }
-        .modal .modal-btns .action-btn {
-            min-width: 80px;
-            padding: 10px 20px;
-            font-size: 13px;
-        }
+        @keyframes move { 0% { background-position: 0% 0%; } 100% { background-position: 300% 0%; } }
+        .header h1 { margin: 0; color: #000; font-size: 28px; text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        .header small { color: #000; font-weight: bold; }
         
-        @media (max-width: 768px) {
-            .main {
-                flex-direction: column;
-                height: auto;
-            }
-            .video-wrapper {
-                min-height: 200px;
-            }
-            .channels-section {
-                width: 100%;
-                min-width: 0;
-                max-height: 50vh;
-            }
-            .controls .row {
-                gap: 4px;
-            }
-            .controls button {
-                padding: 5px 10px;
-                font-size: 12px;
-            }
-            .controls input[type="range"] {
-                width: 60px;
-            }
-            .header h1 {
-                font-size: 20px;
-            }
-        }
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 16px;
-            }
-            .video-wrapper {
-                min-height: 150px;
-            }
-            .channels-section {
-                max-height: 40vh;
-            }
-            .controls button {
-                padding: 4px 8px;
-                font-size: 10px;
-                min-width: 30px;
-            }
-            .controls button.play {
-                font-size: 14px;
-                padding: 4px 14px;
-            }
-            .controls input[type="range"] {
-                width: 40px;
-            }
-            .channel-item {
-                font-size: 11px;
-                padding: 5px 8px;
-            }
+        .main { display: flex; flex: 1; gap: 10px; min-height: 0; }
+        
+        .video-box { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 10px; border: 3px solid #00ff88; overflow: hidden; }
+        #video { width: 100%; flex: 1; background: #000; }
+        .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; color: #5a6470; }
+        .placeholder h2 { color: #00ff88; font-size: 30px; animation: pulse 2s ease infinite; }
+        @keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .video-wrap { position: relative; flex: 1; display: flex; background: #000; }
+        .video-wrap .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+        .video-wrap .placeholder h2 { color: #00ff88; font-size: 30px; animation: pulse 2s ease infinite; }
+        #video { width: 100%; flex: 1; }
+        
+        .controls { padding: 8px; background: #111; border-radius: 8px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+        .controls button { background: #1a1a1a; border: 2px solid #00ff88; color: #00ff88; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .controls button:hover { background: #00ff88; color: #000; }
+        .controls button.red { border-color: #ff2a2a; color: #ff2a2a; }
+        .controls button.red:hover { background: #ff2a2a; color: #fff; }
+        .controls button.play { background: #ff2a2a; border-color: #ff2a2a; color: #fff; font-size: 16px; padding: 6px 18px; }
+        .controls button.play.playing { background: #00ff88; border-color: #00ff88; color: #000; }
+        .controls input[type="range"] { width: 80px; height: 4px; background: #333; -webkit-appearance: none; border-radius: 2px; }
+        .controls input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #00ff88; border-radius: 50%; cursor: pointer; }
+        .info { text-align: center; color: #8b95a5; font-size: 13px; padding: 4px; min-height: 22px; font-weight: bold; }
+        .info.active { color: #00ff88; }
+        
+        .channels { width: 360px; min-width: 260px; display: flex; flex-direction: column; background: #111; border-radius: 10px; border: 1px solid #1e242c; padding: 10px; overflow: hidden; }
+        .channels .title { color: #00ff88; font-weight: bold; text-align: center; margin-bottom: 6px; font-size: 15px; }
+        .channels select, .channels input { width: 100%; padding: 6px 10px; background: #1a1a1a; border: 2px solid #1e242c; border-radius: 6px; color: #fff; font-size: 13px; outline: none; margin-bottom: 4px; }
+        .channels select:focus, .channels input:focus { border-color: #00ff88; }
+        .channels .row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+        .channels .row .full { grid-column: 1 / -1; }
+        .channels .btn { padding: 6px 10px; border-radius: 6px; border: 2px solid #1e242c; background: #1a1a1a; color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; transition: 0.2s; }
+        .channels .btn:hover { border-color: #00ff88; }
+        .channels .btn.green { border-color: #00ff88; color: #00ff88; }
+        .channels .btn.green:hover { background: #00ff88; color: #000; }
+        .channels .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .progress { height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin: 4px 0; display: none; }
+        .progress.active { display: block; }
+        .progress .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff2a2a, #00ff88, #fff); background-size: 300% 100%; animation: move 2s linear infinite; }
+        
+        .status { text-align: center; color: #8b95a5; font-size: 12px; min-height: 18px; font-weight: bold; }
+        .status.ok { color: #00ff88; }
+        .status.err { color: #ff2a2a; }
+        
+        .list { flex: 1; overflow-y: auto; background: #0a0c0f; border-radius: 6px; padding: 4px; min-height: 120px; border: 1px solid #1e242c; }
+        .item { padding: 6px 10px; border-bottom: 1px solid #1e242c; border-radius: 4px; margin: 2px 0; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+        .item:hover { background: #1a1a1a; }
+        .item.active { background: #00ff88; color: #000; font-weight: bold; }
+        .item .tag { font-size: 10px; color: #5a6470; background: #1a1a1a; padding: 0 8px; border-radius: 8px; }
+        .item.active .tag { background: rgba(0,0,0,0.2); color: #000; }
+        .count { text-align: center; color: #5a6470; font-size: 11px; padding: 4px 0; font-weight: bold; }
+        
+        .bottom { display: flex; gap: 4px; margin-top: 4px; }
+        .bottom .btn { flex: 1; font-size: 11px; padding: 4px 6px; }
+        .bottom .btn.fav-on { background: #00ff88; color: #000; border-color: #00ff88; }
+        
+        .x { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 10px; background: #000; border: 2px solid #fff; border-radius: 20px; color: #fff; font-weight: bold; font-size: 11px; text-decoration: none; margin-top: 4px; transition: 0.2s; }
+        .x:hover { background: #fff; color: #000; }
+        .x svg { width: 14px; height: 14px; fill: currentColor; }
+        
+        .footer { text-align: center; color: #5a6470; font-size: 9px; padding: 4px 0; }
+        .footer a { color: #00ff88; text-decoration: none; }
+        
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: #111; border: 2px solid #00ff88; border-radius: 8px; padding: 8px 20px; color: #fff; font-weight: bold; font-size: 13px; z-index: 999; opacity: 0; transition: 0.3s; pointer-events: none; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.err { border-color: #ff2a2a; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; justify-content: center; align-items: center; }
+        .modal.show { display: flex; }
+        .modal .box { background: #111; border: 2px solid #00ff88; border-radius: 10px; padding: 20px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; }
+        .modal .box h2 { color: #00ff88; text-align: center; margin-bottom: 12px; }
+        .modal .box input, .modal .box textarea { width: 100%; padding: 8px 12px; background: #0a0c0f; border: 2px solid #1e242c; border-radius: 6px; color: #fff; font-size: 13px; outline: none; margin-bottom: 8px; }
+        .modal .box input:focus, .modal .box textarea:focus { border-color: #00ff88; }
+        .modal .box textarea { min-height: 100px; font-family: monospace; }
+        .modal .box label { color: #00ff88; font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px; }
+        .modal .box .btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+        .modal .box .btns .btn { min-width: 70px; padding: 8px 16px; }
+        
+        @media (max-width: 700px) {
+            .main { flex-direction: column; }
+            .channels { width: 100%; min-width: 0; max-height: 50vh; }
         }
     </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <div class="header">
     <h1>🐭 MOUSE AI IPTV</h1>
-    <div class="sub">⚡ PRO ULTIMATE - شهار IPTV</div>
+    <small>⚡ شهار IPTV - PRO ULTIMATE</small>
 </div>
 
-<!-- ===== MAIN ===== -->
 <div class="main">
-
-    <!-- ===== VIDEO SECTION ===== -->
-    <div class="video-section">
-        <div class="video-wrapper">
-            <video id="videoPlayer" controls playsinline></video>
-            <div class="video-placeholder" id="placeholder">
+    <!-- VIDEO -->
+    <div class="video-box">
+        <div class="video-wrap">
+            <video id="video" controls playsinline></video>
+            <div class="placeholder" id="ph">
                 <h2>🐭 MOUSE AI</h2>
-                <p>🎬 اختر قناة للمشاهدة</p>
+                <p>🎬 اختر قناة</p>
             </div>
-            <div class="loading-overlay" id="loadingOverlay" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:20;color:#00ff88;font-weight:bold;">
-                <div style="width:40px;height:40px;border:4px solid #161a20;border-top-color:#00ff88;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-                <span style="margin-top:10px;">جاري التحميل...</span>
+            <div id="loader" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:20;color:#00ff88;">
+                <div style="width:30px;height:30px;border:3px solid #1a1a1a;border-top-color:#00ff88;border-radius:50%;animation:sp 0.8s linear infinite;"></div>
+                <span style="margin-top:8px;">جاري التحميل...</span>
             </div>
             <style>
-                .loading-overlay { display: none; }
-                .loading-overlay.active { display: flex !important; }
-                @keyframes spin { to { transform: rotate(360deg); } }
+                #loader { display: none; }
+                #loader.active { display: flex !important; }
+                @keyframes sp { to { transform: rotate(360deg); } }
             </style>
         </div>
-
+        
         <div class="controls">
-            <div class="row">
-                <button id="prevBtn">⏮</button>
-                <button class="play" id="playBtn">▶</button>
-                <button class="red" id="stopBtn">⏹</button>
-                <button id="nextBtn">⏭</button>
-                <span style="flex:1"></span>
-                <button id="muteBtn">🔊</button>
-                <input type="range" id="volSlider" min="0" max="200" value="100">
-                <button id="fullscreenBtn">⛶</button>
-            </div>
-            <div class="info-label" id="infoLabel">🎯 جاهز - اختر قناة</div>
+            <button id="prev">⏮</button>
+            <button class="play" id="play">▶</button>
+            <button class="red" id="stop">⏹</button>
+            <button id="next">⏭</button>
+            <span style="flex:1"></span>
+            <button id="mute">🔊</button>
+            <input type="range" id="vol" min="0" max="200" value="100">
+            <button id="fs">⛶</button>
         </div>
+        <div class="info" id="info">🎯 جاهز</div>
     </div>
 
-    <!-- ===== CHANNELS SECTION ===== -->
-    <div class="channels-section">
+    <!-- CHANNELS -->
+    <div class="channels">
         <div class="title">📡 سيرفر شهار</div>
-        
-        <select id="serverSelect"></select>
-        
-        <div class="btn-row">
-            <button class="action-btn green" id="loadBtn">📡 تحميل القنوات</button>
-            <button class="action-btn" id="fileBtn">📁 ملف M3U</button>
-            <button class="action-btn green full" id="addBtn">➕ إضافة سيرفر</button>
+        <select id="server"></select>
+        <div class="row">
+            <button class="btn green" id="load">📡 تحميل</button>
+            <button class="btn" id="file">📁 ملف</button>
+            <button class="btn green full" id="add">➕ إضافة</button>
         </div>
-        
-        <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
-        <div class="status-text" id="statusText">🚀 اضغط تحميل للبدء</div>
-        
-        <select id="groupSelect"><option value="All">📂 كل المجموعات</option></select>
-        <input type="text" id="searchInput" placeholder="🔍 بحث...">
-        
-        <div class="channel-list" id="channelList">
-            <div style="text-align:center;padding:30px 10px;color:#5a6470;font-size:13px;">
-                📺 لا توجد قنوات<br>
-                <span style="font-size:11px;">اضغط تحميل القنوات</span>
-            </div>
+        <div class="progress" id="prog"><div class="fill" id="fill"></div></div>
+        <div class="status" id="status">🚀 اضغط تحميل</div>
+        <select id="group"><option value="All">📂 الكل</option></select>
+        <input type="text" id="search" placeholder="🔍 بحث...">
+        <div class="list" id="list"><div style="text-align:center;padding:20px;color:#5a6470;">📺 لا توجد قنوات</div></div>
+        <div class="count" id="count">0 قناة</div>
+        <div class="bottom">
+            <button class="btn" id="fav">⭐ المفضلة</button>
+            <button class="btn" id="settings">⚙️ إعدادات</button>
         </div>
-        
-        <div class="channel-count" id="countLabel">0 قناة</div>
-        
-        <div class="bottom-row">
-            <button class="action-btn" id="favBtn">⭐ المفضلة</button>
-            <button class="action-btn" id="settingsBtn">⚙️ إعدادات</button>
-        </div>
-        
-        <a href="https://x.com/mouse0000000" target="_blank" class="x-btn">
-            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        <a href="https://x.com/mouse0000000" target="_blank" class="x">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231z"/></svg>
             @mouse0000000
         </a>
-        
         <div class="footer">© 2025 MOUSE AI | <a href="https://x.com/mouse0000000">🐭 @mouse0000000</a></div>
     </div>
 </div>
 
-<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== MODAL ===== -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modalContent">
-        <h2 id="modalTitle">🐭 MOUSE AI</h2>
-        <div id="modalBody"></div>
-    </div>
-</div>
+<div class="modal" id="modal"><div class="box" id="modalBox"><h2 id="modalTitle">🐭</h2><div id="modalBody"></div></div></div>
 
 <script>
 // ============================================================
-// 🐭 MOUSE AI IPTV - الحل النهائي 100%
+// 🐭 MOUSE AI IPTV - كود بسيط جداً يشتغل مباشرة
 // ============================================================
 
 (function() {
@@ -657,396 +197,342 @@
     };
 
     // ===== STATE =====
-    let state = {
+    let S = {
         channels: [],
         filtered: [],
-        favorites: new Set(),
+        favs: new Set(),
         servers: {},
-        settings: { volume: 100, autoLoad: true },
-        currentIndex: -1,
-        isPlaying: false,
+        vol: 100,
+        idx: -1,
+        playing: false,
         loading: false,
         favView: false,
-        currentGroup: 'All',
+        group: 'All',
         search: '',
-        videoLoaded: false
+        loaded: false
     };
 
     // ===== DOM =====
-    const video = document.getElementById('videoPlayer');
-    const placeholder = document.getElementById('placeholder');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const progressSlider = document.getElementById('progressSlider');
-    const playBtn = document.getElementById('playBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const muteBtn = document.getElementById('muteBtn');
-    const volSlider = document.getElementById('volSlider');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
-    const infoLabel = document.getElementById('infoLabel');
-    const serverSelect = document.getElementById('serverSelect');
-    const loadBtn = document.getElementById('loadBtn');
-    const fileBtn = document.getElementById('fileBtn');
-    const addBtn = document.getElementById('addBtn');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
-    const statusText = document.getElementById('statusText');
-    const groupSelect = document.getElementById('groupSelect');
-    const searchInput = document.getElementById('searchInput');
-    const channelList = document.getElementById('channelList');
-    const countLabel = document.getElementById('countLabel');
-    const favBtn = document.getElementById('favBtn');
-    const settingsBtn = document.getElementById('settingsBtn');
-    const modalOverlay = document.getElementById('modalOverlay');
+    const video = document.getElementById('video');
+    const ph = document.getElementById('ph');
+    const loader = document.getElementById('loader');
+    const playBtn = document.getElementById('play');
+    const stopBtn = document.getElementById('stop');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const muteBtn = document.getElementById('mute');
+    const volSlider = document.getElementById('vol');
+    const fsBtn = document.getElementById('fs');
+    const info = document.getElementById('info');
+    const serverSel = document.getElementById('server');
+    const loadBtn = document.getElementById('load');
+    const fileBtn = document.getElementById('file');
+    const addBtn = document.getElementById('add');
+    const prog = document.getElementById('prog');
+    const fill = document.getElementById('fill');
+    const status = document.getElementById('status');
+    const groupSel = document.getElementById('group');
+    const searchInput = document.getElementById('search');
+    const list = document.getElementById('list');
+    const count = document.getElementById('count');
+    const favBtn = document.getElementById('fav');
+    const settingsBtn = document.getElementById('settings');
+    const toast = document.getElementById('toast');
+    const modal = document.getElementById('modal');
+    const modalBox = document.getElementById('modalBox');
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
-    const toast = document.getElementById('toast');
 
     // ===== STORAGE =====
-    function loadData() {
+    function loadStorage() {
         try {
-            const s = localStorage.getItem('mouse_settings');
-            if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
+            let s = localStorage.getItem('m_settings');
+            if (s) S.vol = JSON.parse(s).vol || 100;
         } catch(e) {}
         try {
-            const f = localStorage.getItem('mouse_favs');
-            if (f) state.favorites = new Set(JSON.parse(f));
+            let f = localStorage.getItem('m_favs');
+            if (f) S.favs = new Set(JSON.parse(f));
         } catch(e) {}
         try {
-            const sv = localStorage.getItem('mouse_servers');
+            let sv = localStorage.getItem('m_servers');
             if (sv) {
-                state.servers = JSON.parse(sv);
+                S.servers = JSON.parse(sv);
             } else {
-                state.servers = {};
-                state.servers[SHAHAR.name] = SHAHAR.url;
+                S.servers = {};
+                S.servers[SHAHAR.name] = SHAHAR.url;
                 saveServers();
             }
         } catch(e) {
-            state.servers = {};
-            state.servers[SHAHAR.name] = SHAHAR.url;
+            S.servers = {};
+            S.servers[SHAHAR.name] = SHAHAR.url;
             saveServers();
         }
     }
 
-    function saveSettings() {
-        try { localStorage.setItem('mouse_settings', JSON.stringify(state.settings)); } catch(e) {}
-    }
-
-    function saveFavorites() {
-        try { localStorage.setItem('mouse_favs', JSON.stringify([...state.favorites])); } catch(e) {}
-    }
-
-    function saveServers() {
-        try { localStorage.setItem('mouse_servers', JSON.stringify(state.servers)); } catch(e) {}
-    }
+    function saveVol() { try { localStorage.setItem('m_settings', JSON.stringify({vol: S.vol})); } catch(e) {} }
+    function saveFavs() { try { localStorage.setItem('m_favs', JSON.stringify([...S.favs])); } catch(e) {} }
+    function saveServers() { try { localStorage.setItem('m_servers', JSON.stringify(S.servers)); } catch(e) {} }
 
     // ===== TOAST =====
-    let toastTimer = null;
-    function showToast(msg, type = '') {
+    let tTimer = null;
+    function toastMsg(msg, err = false) {
         toast.textContent = msg;
-        toast.className = 'toast' + (type ? ' ' + type : '');
-        clearTimeout(toastTimer);
+        toast.className = 'toast' + (err ? ' err' : '');
+        clearTimeout(tTimer);
         void toast.offsetWidth;
         toast.classList.add('show');
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+        tTimer = setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
     // ===== PARSER =====
     function parseM3U(text) {
-        const lines = text.split(/\r?\n/);
-        const channels = [];
+        let lines = text.split(/\r?\n/);
+        let chs = [];
         let cur = {};
-        for (const raw of lines) {
-            const line = raw.trim();
+        for (let raw of lines) {
+            let line = raw.trim();
             if (!line) continue;
             if (line.startsWith('#EXTINF:')) {
                 let name = 'Unnamed';
-                const nm = line.match(/#EXTINF:[^,]*,\s*(.+?)\s*$/);
-                if (nm) name = nm[1].trim();
+                let m = line.match(/#EXTINF:[^,]*,\s*(.+?)\s*$/);
+                if (m) name = m[1].trim();
                 let logo = '';
-                const lm = line.match(/tvg-logo="([^"]*)"/);
+                let lm = line.match(/tvg-logo="([^"]*)"/);
                 if (lm) logo = lm[1];
                 let group = 'General';
-                const gm = line.match(/group-title="([^"]*)"/);
+                let gm = line.match(/group-title="([^"]*)"/);
                 if (gm) group = gm[1];
                 cur = { name, logo, group, url: '' };
             } else if ((line.startsWith('http://') || line.startsWith('https://')) && cur && !cur.url) {
                 cur.url = line;
-                channels.push({ ...cur });
+                chs.push({ ...cur });
                 cur = {};
             }
         }
-        // Handle orphan URLs
-        for (const line of lines) {
-            const t = line.trim();
-            if ((t.startsWith('http://') || t.startsWith('https://')) && !channels.some(c => c.url === t)) {
-                channels.push({ name: 'قناة ' + (channels.length + 1), url: t, group: 'General', logo: '' });
+        for (let line of lines) {
+            let t = line.trim();
+            if ((t.startsWith('http://') || t.startsWith('https://')) && !chs.some(c => c.url === t)) {
+                chs.push({ name: 'قناة ' + (chs.length + 1), url: t, group: 'General', logo: '' });
             }
         }
-        return channels;
+        return chs;
     }
 
-    // ===== LOAD CHANNELS =====
-    function loadChannels(source) {
-        if (state.loading) return;
-        
-        let url = source || serverSelect.value;
-        
-        if (!url || url === '-- لا يوجد --') {
-            showToast('❌ لا يوجد سيرفر', 'error');
-            return;
-        }
-        
-        // Check if it's a server name
-        if (state.servers[url]) {
-            url = state.servers[url];
-        }
-        
-        if (!url.startsWith('http')) {
-            showToast('❌ رابط غير صالح: ' + url, 'error');
-            return;
-        }
+    // ===== LOAD =====
+    function loadChannels(src) {
+        if (S.loading) return;
+        let url = src || serverSel.value;
+        if (!url || url === '-- لا يوجد --') { toastMsg('❌ لا يوجد سيرفر', true); return; }
+        if (S.servers[url]) url = S.servers[url];
+        if (!url.startsWith('http')) { toastMsg('❌ رابط غير صالح', true); return; }
 
-        // Clear
-        state.channels = [];
-        state.filtered = [];
-        state.currentIndex = -1;
-        state.videoLoaded = false;
+        S.channels = [];
+        S.filtered = [];
+        S.idx = -1;
+        S.loaded = false;
         video.pause();
         video.src = '';
-        placeholder.style.display = 'block';
+        ph.style.display = 'block';
         playBtn.textContent = '▶';
         playBtn.classList.remove('playing');
 
-        state.loading = true;
+        S.loading = true;
         loadBtn.disabled = true;
-        loadBtn.textContent = '⏳ جاري...';
-        progressBar.classList.add('active');
-        progressFill.style.width = '0%';
-        statusText.textContent = '🔄 جاري الاتصال بسيرفر شهار...';
-        statusText.className = 'status-text';
-        loadingOverlay.classList.add('active');
+        loadBtn.textContent = '⏳...';
+        prog.classList.add('active');
+        fill.style.width = '0%';
+        status.textContent = '🔄 جاري الاتصال...';
+        status.className = 'status';
+        loader.classList.add('active');
 
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 45000);
-
-        console.log('🔄 جاري التحميل من:', url);
+        const ctrl = new AbortController();
+        const tm = setTimeout(() => ctrl.abort(), 45000);
 
         fetch(url, {
-            signal: controller.signal,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': '*/*',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'ar,en;q=0.9',
-                'Connection': 'keep-alive',
-                'Referer': 'https://www.google.com/'
-            }
-        })
-        .then(res => {
-            clearTimeout(timeout);
-            if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
-            progressFill.style.width = '40%';
-            statusText.textContent = '📥 جاري القراءة...';
-            return res.text();
-        })
-        .then(text => {
-            progressFill.style.width = '60%';
-            statusText.textContent = '🔍 جاري التحليل...';
-            
-            if (!text || text.length < 10) throw new Error('استجابة فارغة');
-            if (text.includes('<!DOCTYPE') || text.includes('<html')) {
-                throw new Error('تم استقبال HTML بدلاً من القنوات');
-            }
-            
-            const chs = parseM3U(text);
-            progressFill.style.width = '90%';
-            if (chs.length === 0) throw new Error('لا توجد قنوات');
-            
-            onChannelsLoaded(chs);
-        })
-        .catch(err => {
-            clearTimeout(timeout);
-            state.loading = false;
-            loadBtn.disabled = false;
-            loadBtn.textContent = '📡 تحميل القنوات';
-            progressBar.classList.remove('active');
-            loadingOverlay.classList.remove('active');
-            
-            let msg = err.message;
-            if (err.name === 'AbortError') msg = '⏱️ انتهت المهلة - السيرفر لم يستجب';
-            else if (msg.includes('403')) msg = '⛔ ممنوع الوصول (403) - جرب سيرفر آخر';
-            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة - تأكد من اتصال الإنترنت';
-            else if (msg.includes('500')) msg = '⚠️ خطأ في السيرفر (500)';
-            else if (msg.includes('404')) msg = '❌ الرابط غير موجود (404)';
-            
-            statusText.textContent = '❌ ' + msg;
-            statusText.className = 'status-text error';
-            showToast('❌ ' + msg, 'error');
-            console.error('Load error:', err);
-            
-            // Try with proxy as fallback
-            tryProxy(url);
-        });
-    }
-
-    function tryProxy(url) {
-        statusText.textContent = '🔄 محاولة عبر وكيل CORS...';
-        showToast('🔄 محاولة عبر وكيل...');
-        
-        const proxy = 'https://cors-anywhere.herokuapp.com/' + url;
-        fetch(proxy, {
+            signal: ctrl.signal,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': '*/*'
             }
         })
         .then(res => {
+            clearTimeout(tm);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            fill.style.width = '40%';
+            status.textContent = '📥 جاري القراءة...';
+            return res.text();
+        })
+        .then(text => {
+            fill.style.width = '60%';
+            status.textContent = '🔍 جاري التحليل...';
+            if (!text || text.length < 10) throw new Error('استجابة فارغة');
+            if (text.includes('<!DOCTYPE') || text.includes('<html')) throw new Error('تم استقبال HTML');
+            let chs = parseM3U(text);
+            fill.style.width = '90%';
+            if (chs.length === 0) throw new Error('لا توجد قنوات');
+            onLoaded(chs);
+        })
+        .catch(err => {
+            clearTimeout(tm);
+            S.loading = false;
+            loadBtn.disabled = false;
+            loadBtn.textContent = '📡 تحميل';
+            prog.classList.remove('active');
+            loader.classList.remove('active');
+            let msg = err.message;
+            if (err.name === 'AbortError') msg = '⏱️ انتهت المهلة';
+            else if (msg.includes('403')) msg = '⛔ ممنوع الوصول';
+            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة';
+            status.textContent = '❌ ' + msg;
+            status.className = 'status err';
+            toastMsg('❌ ' + msg, true);
+            console.error(err);
+            // Try proxy
+            tryProxy(url);
+        });
+    }
+
+    function tryProxy(url) {
+        status.textContent = '🔄 محاولة عبر وكيل...';
+        toastMsg('🔄 محاولة عبر وكيل...');
+        let proxy = 'https://cors-anywhere.herokuapp.com/' + url;
+        fetch(proxy, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+        })
+        .then(res => {
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.text();
         })
         .then(text => {
-            const chs = parseM3U(text);
+            let chs = parseM3U(text);
             if (chs.length === 0) throw new Error('لا توجد قنوات');
-            onChannelsLoaded(chs);
-            showToast('✅ تم التحميل عبر الوكيل');
+            onLoaded(chs);
+            toastMsg('✅ تم التحميل عبر الوكيل');
         })
         .catch(err => {
-            state.loading = false;
+            S.loading = false;
             loadBtn.disabled = false;
-            loadBtn.textContent = '📡 تحميل القنوات';
-            progressBar.classList.remove('active');
-            loadingOverlay.classList.remove('active');
-            statusText.textContent = '❌ فشل التحميل: ' + err.message;
-            statusText.className = 'status-text error';
-            showToast('❌ فشل التحميل: ' + err.message, 'error');
+            loadBtn.textContent = '📡 تحميل';
+            prog.classList.remove('active');
+            loader.classList.remove('active');
+            status.textContent = '❌ فشل: ' + err.message;
+            status.className = 'status err';
+            toastMsg('❌ فشل التحميل', true);
         });
     }
 
-    function onChannelsLoaded(channels) {
-        state.channels = channels;
-        state.filtered = [...channels];
-        state.currentIndex = -1;
-        state.loading = false;
+    function onLoaded(chs) {
+        S.channels = chs;
+        S.filtered = [...chs];
+        S.idx = -1;
+        S.loaded = true;
+        S.loading = false;
         loadBtn.disabled = false;
-        loadBtn.textContent = '📡 تحميل القنوات';
-        progressBar.classList.remove('active');
-        progressFill.style.width = '100%';
-        loadingOverlay.classList.remove('active');
+        loadBtn.textContent = '📡 تحميل';
+        prog.classList.remove('active');
+        fill.style.width = '100%';
+        loader.classList.remove('active');
 
         // Groups
-        const groups = new Set();
-        for (const ch of channels) {
+        let groups = new Set();
+        for (let ch of chs) {
             if (ch.group) groups.add(ch.group);
         }
-        groupSelect.innerHTML = '<option value="All">📂 كل المجموعات</option>';
-        for (const g of [...groups].sort()) {
-            const opt = document.createElement('option');
+        groupSel.innerHTML = '<option value="All">📂 الكل</option>';
+        for (let g of [...groups].sort()) {
+            let opt = document.createElement('option');
             opt.value = g;
             opt.textContent = g;
-            groupSelect.appendChild(opt);
+            groupSel.appendChild(opt);
         }
-        state.currentGroup = 'All';
-        groupSelect.value = 'All';
+        S.group = 'All';
+        groupSel.value = 'All';
 
-        renderChannels();
-        statusText.textContent = `✅ تم التحميل: ${channels.length} قناة من شهار`;
-        statusText.className = 'status-text success';
-        countLabel.textContent = channels.length + ' قناة';
-        showToast(`✅ تم تحميل ${channels.length} قناة من شهار`);
+        render();
+        status.textContent = '✅ تم التحميل: ' + chs.length + ' قناة';
+        status.className = 'status ok';
+        count.textContent = chs.length + ' قناة';
+        toastMsg('✅ تم تحميل ' + chs.length + ' قناة');
 
-        // Auto play first channel
-        if (channels.length > 0) {
+        // Auto play first
+        if (chs.length > 0) {
             setTimeout(() => {
-                const first = channelList.querySelector('.channel-item');
-                if (first) {
-                    first.click();
-                }
-            }, 600);
+                let first = list.querySelector('.item');
+                if (first) first.click();
+            }, 500);
         }
     }
 
     // ===== RENDER =====
-    function renderChannels() {
-        const search = state.search.toLowerCase().trim();
-        const group = state.currentGroup;
-        const favOnly = state.favView;
+    function render() {
+        let search = S.search.toLowerCase().trim();
+        let group = S.group;
+        let favOnly = S.favView;
 
-        let filtered = state.channels;
-        if (group !== 'All') {
-            filtered = filtered.filter(c => (c.group || 'General') === group);
-        }
-        if (search) {
-            filtered = filtered.filter(c => (c.name || '').toLowerCase().includes(search));
-        }
-        if (favOnly) {
-            filtered = filtered.filter(c => state.favorites.has(c.url));
-        }
-        state.filtered = filtered;
+        let filtered = S.channels;
+        if (group !== 'All') filtered = filtered.filter(c => (c.group || 'General') === group);
+        if (search) filtered = filtered.filter(c => (c.name || '').toLowerCase().includes(search));
+        if (favOnly) filtered = filtered.filter(c => S.favs.has(c.url));
+        S.filtered = filtered;
 
-        channelList.innerHTML = '';
+        list.innerHTML = '';
         if (filtered.length === 0) {
-            channelList.innerHTML = '<div style="text-align:center;padding:30px 10px;color:#5a6470;font-size:13px;">📺 لا توجد قنوات</div>';
-            countLabel.textContent = '0 قناة';
+            list.innerHTML = '<div style="text-align:center;padding:20px;color:#5a6470;">📺 لا توجد قنوات</div>';
+            count.textContent = '0 قناة';
             return;
         }
 
         for (let i = 0; i < filtered.length; i++) {
-            const ch = filtered[i];
-            const div = document.createElement('div');
-            div.className = 'channel-item' + (i === state.currentIndex ? ' active' : '');
-            const isFav = state.favorites.has(ch.url);
+            let ch = filtered[i];
+            let div = document.createElement('div');
+            div.className = 'item' + (i === S.idx ? ' active' : '');
+            let fav = S.favs.has(ch.url);
             div.innerHTML = `
-                <span>${isFav ? '<span class="fav">⭐</span>' : ''} ${ch.name || 'Unnamed'}</span>
-                ${ch.group ? `<span class="group-tag">${ch.group}</span>` : ''}
+                <span>${fav ? '⭐ ' : ''}${ch.name || 'Unnamed'}</span>
+                ${ch.group ? `<span class="tag">${ch.group}</span>` : ''}
             `;
             div.dataset.index = i;
             div.addEventListener('click', () => playChannel(i));
-            channelList.appendChild(div);
+            list.appendChild(div);
         }
-        countLabel.textContent = filtered.length + ' قناة';
+        count.textContent = filtered.length + ' قناة';
     }
 
     // ===== PLAY =====
-    function playChannel(index) {
-        const ch = state.filtered[index];
-        if (!ch || !ch.url) {
-            showToast('❌ لا يوجد رابط', 'error');
-            return;
-        }
+    function playChannel(idx) {
+        let ch = S.filtered[idx];
+        if (!ch || !ch.url) { toastMsg('❌ لا يوجد رابط', true); return; }
 
-        state.currentIndex = index;
-        state.videoLoaded = true;
-        state.isPlaying = true;
+        S.idx = idx;
+        S.loaded = true;
+        S.playing = true;
 
-        document.querySelectorAll('.channel-item').forEach((el, i) => {
-            el.classList.toggle('active', i === index);
+        document.querySelectorAll('.item').forEach((el, i) => {
+            el.classList.toggle('active', i === idx);
         });
 
-        placeholder.style.display = 'none';
-        loadingOverlay.classList.add('active');
+        ph.style.display = 'none';
+        loader.classList.add('active');
 
         video.src = ch.url;
         video.load();
-        
-        const promise = video.play();
-        if (promise !== undefined) {
-            promise.then(() => {
-                loadingOverlay.classList.remove('active');
-                state.isPlaying = true;
+        let p = video.play();
+        if (p !== undefined) {
+            p.then(() => {
+                loader.classList.remove('active');
+                S.playing = true;
                 playBtn.textContent = '⏸';
                 playBtn.classList.add('playing');
-                infoLabel.textContent = '▶️ ' + ch.name;
-                infoLabel.className = 'info-label active';
-                statusText.textContent = '▶️ ' + ch.name;
-                statusText.className = 'status-text success';
+                info.textContent = '▶️ ' + ch.name;
+                info.className = 'info active';
+                status.textContent = '▶️ ' + ch.name;
+                status.className = 'status ok';
             }).catch(err => {
-                loadingOverlay.classList.remove('active');
-                console.warn('Play error:', err);
-                showToast('❌ لا يمكن تشغيل هذه القناة', 'error');
-                // Try with proxy
-                const proxy = 'https://cors-anywhere.herokuapp.com/' + ch.url;
+                loader.classList.remove('active');
+                console.warn(err);
+                toastMsg('❌ لا يمكن تشغيل هذه القناة', true);
+                // Try proxy
+                let proxy = 'https://cors-anywhere.herokuapp.com/' + ch.url;
                 video.src = proxy;
                 video.load();
                 video.play().catch(() => {});
@@ -1055,25 +541,25 @@
 
         playBtn.textContent = '⏸';
         playBtn.classList.add('playing');
-        infoLabel.textContent = '▶️ ' + ch.name;
-        infoLabel.className = 'info-label active';
+        info.textContent = '▶️ ' + ch.name;
+        info.className = 'info active';
     }
 
     // ===== CONTROLS =====
     function togglePlay() {
-        if (!state.videoLoaded) {
-            const first = channelList.querySelector('.channel-item');
+        if (!S.loaded) {
+            let first = list.querySelector('.item');
             if (first) first.click();
             return;
         }
         if (video.paused) {
             video.play().catch(() => {});
-            state.isPlaying = true;
+            S.playing = true;
             playBtn.textContent = '⏸';
             playBtn.classList.add('playing');
         } else {
             video.pause();
-            state.isPlaying = false;
+            S.playing = false;
             playBtn.textContent = '▶';
             playBtn.classList.remove('playing');
         }
@@ -1082,34 +568,34 @@
     function stopPlay() {
         video.pause();
         video.currentTime = 0;
-        state.isPlaying = false;
-        state.videoLoaded = false;
+        S.playing = false;
+        S.loaded = false;
         playBtn.textContent = '▶';
         playBtn.classList.remove('playing');
-        infoLabel.textContent = '⏹️ تم الإيقاف';
-        infoLabel.className = 'info-label';
-        progressSlider.value = 0;
-        placeholder.style.display = 'block';
+        info.textContent = '⏹️ تم الإيقاف';
+        info.className = 'info';
+        document.getElementById('progressSlider')?.remove();
+        ph.style.display = 'block';
         video.src = '';
     }
 
-    function playNext() {
-        if (state.filtered.length === 0) return;
-        const n = (state.currentIndex + 1) % state.filtered.length;
+    function nextCh() {
+        if (S.filtered.length === 0) return;
+        let n = (S.idx + 1) % S.filtered.length;
         playChannel(n);
         scrollTo(n);
     }
 
-    function playPrev() {
-        if (state.filtered.length === 0) return;
-        const n = state.currentIndex <= 0 ? state.filtered.length - 1 : state.currentIndex - 1;
+    function prevCh() {
+        if (S.filtered.length === 0) return;
+        let n = S.idx <= 0 ? S.filtered.length - 1 : S.idx - 1;
         playChannel(n);
         scrollTo(n);
     }
 
-    function scrollTo(index) {
-        const items = channelList.querySelectorAll('.channel-item');
-        if (items[index]) items[index].scrollIntoView({ block: 'nearest' });
+    function scrollTo(idx) {
+        let items = list.querySelectorAll('.item');
+        if (items[idx]) items[idx].scrollIntoView({ block: 'nearest' });
     }
 
     function toggleMute() {
@@ -1117,90 +603,77 @@
         muteBtn.textContent = video.muted ? '🔇' : '🔊';
     }
 
-    function setVolume(val) {
-        const v = parseInt(val);
-        video.volume = Math.min(v / 200, 1);
-        state.settings.volume = v;
-        saveSettings();
-        if (v === 0) muteBtn.textContent = '🔇';
-        else if (v < 50) muteBtn.textContent = '🔉';
-        else if (v < 100) muteBtn.textContent = '🔊';
+    function setVol(v) {
+        let val = parseInt(v);
+        video.volume = Math.min(val / 200, 1);
+        S.vol = val;
+        saveVol();
+        if (val === 0) muteBtn.textContent = '🔇';
+        else if (val < 50) muteBtn.textContent = '🔉';
+        else if (val < 100) muteBtn.textContent = '🔊';
         else muteBtn.textContent = '🔊';
     }
 
-    function toggleFullscreen() {
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-        } else {
-            document.documentElement.requestFullscreen().catch(() => {});
-        }
+    function toggleFS() {
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+        else document.documentElement.requestFullscreen().catch(() => {});
     }
 
     function toggleFavView() {
-        state.favView = !state.favView;
-        favBtn.classList.toggle('fav-active');
-        favBtn.textContent = state.favView ? '⭐ مفضلة (نشط)' : '⭐ المفضلة';
-        renderChannels();
+        S.favView = !S.favView;
+        favBtn.classList.toggle('fav-on');
+        favBtn.textContent = S.favView ? '⭐ مفضلة (نشط)' : '⭐ المفضلة';
+        render();
     }
 
-    function toggleFavorite(index) {
-        const ch = state.filtered[index];
+    function toggleFav(idx) {
+        let ch = S.filtered[idx];
         if (!ch) return;
-        if (state.favorites.has(ch.url)) {
-            state.favorites.delete(ch.url);
-            showToast('⭐ تم الإزالة');
+        if (S.favs.has(ch.url)) {
+            S.favs.delete(ch.url);
+            toastMsg('⭐ تم الإزالة');
         } else {
-            state.favorites.add(ch.url);
-            showToast('⭐ تم الإضافة');
+            S.favs.add(ch.url);
+            toastMsg('⭐ تم الإضافة');
         }
-        saveFavorites();
-        renderChannels();
-        const items = channelList.querySelectorAll('.channel-item');
-        if (items[state.currentIndex]) items[state.currentIndex].classList.add('active');
+        saveFavs();
+        render();
+        let items = list.querySelectorAll('.item');
+        if (items[S.idx]) items[S.idx].classList.add('active');
     }
 
     // ===== MODAL =====
     function openModal(title, html) {
         modalTitle.textContent = title;
         modalBody.innerHTML = html;
-        modalOverlay.classList.add('active');
+        modal.classList.add('show');
     }
 
     function closeModal() {
-        modalOverlay.classList.remove('active');
+        modal.classList.remove('show');
     }
 
     function openAddServer() {
         openModal('➕ إضافة سيرفر', `
-            <div class="form-group">
-                <label>🏷️ اسم السيرفر</label>
-                <input type="text" id="newServerName" placeholder="مثال: سيرفر جديد" value="🐭 MOUSE AI - جديد">
-            </div>
-            <div class="form-group">
-                <label>🔗 رابط السيرفر</label>
-                <input type="text" id="newServerUrl" placeholder="http://..." value="http://">
-            </div>
-            <div class="modal-btns">
-                <button class="action-btn" onclick="closeModal()">إلغاء</button>
-                <button class="action-btn green" id="saveServerBtn">💾 حفظ</button>
+            <label>🏷️ اسم السيرفر</label>
+            <input type="text" id="nsName" placeholder="اسم السيرفر" value="🐭 MOUSE AI - جديد">
+            <label>🔗 رابط السيرفر</label>
+            <input type="text" id="nsUrl" placeholder="http://..." value="http://">
+            <div class="btns">
+                <button class="btn" onclick="closeModal()">إلغاء</button>
+                <button class="btn green" id="nsSave">💾 حفظ</button>
             </div>
         `);
-        document.getElementById('saveServerBtn').addEventListener('click', () => {
-            const name = document.getElementById('newServerName').value.trim();
-            const url = document.getElementById('newServerUrl').value.trim();
-            if (!name || !url) {
-                showToast('❌ أدخل الاسم والرابط', 'error');
-                return;
-            }
-            if (!url.startsWith('http')) {
-                showToast('❌ الرابط يجب أن يبدأ بـ http://', 'error');
-                return;
-            }
-            state.servers[name] = url;
+        document.getElementById('nsSave').addEventListener('click', () => {
+            let name = document.getElementById('nsName').value.trim();
+            let url = document.getElementById('nsUrl').value.trim();
+            if (!name || !url) { toastMsg('❌ أدخل الاسم والرابط', true); return; }
+            if (!url.startsWith('http')) { toastMsg('❌ رابط غير صالح', true); return; }
+            S.servers[name] = url;
             saveServers();
             refreshServers();
-            serverSelect.value = name;
-            showToast('✅ تم الإضافة: ' + name);
+            serverSel.value = name;
+            toastMsg('✅ تم الإضافة: ' + name);
             closeModal();
             setTimeout(() => loadChannels(name), 300);
         });
@@ -1208,63 +681,51 @@
 
     function openSettings() {
         openModal('⚙️ الإعدادات', `
-            <div class="form-group">
-                <label>🔊 مستوى الصوت</label>
-                <input type="range" id="volSetting" min="0" max="200" value="${state.settings.volume || 100}" style="width:100%;">
-                <span id="volDisplay" style="color:#00ff88;font-weight:bold;">${state.settings.volume || 100}%</span>
-            </div>
-            <div class="form-group">
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-                    <input type="checkbox" id="autoLoadSetting" ${state.settings.autoLoad !== false ? 'checked' : ''}>
-                    🚀 تحميل تلقائي عند البدء
-                </label>
-            </div>
-            <div class="modal-btns">
-                <button class="action-btn" onclick="closeModal()">إلغاء</button>
-                <button class="action-btn green" id="saveSettingsBtn">💾 حفظ</button>
+            <label>🔊 مستوى الصوت</label>
+            <input type="range" id="volSet" min="0" max="200" value="${S.vol || 100}" style="width:100%;">
+            <span id="volDisp" style="color:#00ff88;font-weight:bold;">${S.vol || 100}%</span>
+            <div class="btns">
+                <button class="btn" onclick="closeModal()">إلغاء</button>
+                <button class="btn green" id="saveSet">💾 حفظ</button>
             </div>
         `);
-        const volSlider = document.getElementById('volSetting');
-        const volDisplay = document.getElementById('volDisplay');
-        volSlider.addEventListener('input', () => {
-            volDisplay.textContent = volSlider.value + '%';
-        });
-        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
-            state.settings.volume = parseInt(document.getElementById('volSetting').value);
-            state.settings.autoLoad = document.getElementById('autoLoadSetting').checked;
-            saveSettings();
-            setVolume(state.settings.volume);
-            showToast('✅ تم الحفظ');
+        let vs = document.getElementById('volSet');
+        let vd = document.getElementById('volDisp');
+        vs.addEventListener('input', () => { vd.textContent = vs.value + '%'; });
+        document.getElementById('saveSet').addEventListener('click', () => {
+            let v = parseInt(document.getElementById('volSet').value);
+            setVol(v);
+            toastMsg('✅ تم الحفظ');
             closeModal();
         });
     }
 
-    function openManageServers() {
-        const names = Object.keys(state.servers);
-        let html = `<div style="margin-bottom:10px;color:#8b95a5;">${names.length} سيرفر(ات)</div>`;
-        for (const name of names) {
-            const url = state.servers[name];
+    function openManage() {
+        let names = Object.keys(S.servers);
+        let html = `<div style="margin-bottom:8px;color:#8b95a5;">${names.length} سيرفر(ات)</div>`;
+        for (let name of names) {
+            let url = S.servers[name];
             html += `
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0a0c0f;border-radius:6px;margin-bottom:4px;border:1px solid #1e242c;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#0a0c0f;border-radius:4px;margin-bottom:4px;border:1px solid #1e242c;">
                     <div style="flex:1;overflow:hidden;">
                         <div style="color:#00ff88;font-weight:bold;">${name}</div>
-                        <div style="font-size:11px;color:#5a6470;word-break:break-all;">${url.substring(0, 50)}...</div>
+                        <div style="font-size:10px;color:#5a6470;word-break:break-all;">${url.substring(0, 40)}...</div>
                     </div>
-                    <button class="action-btn red" style="border-color:#ff2a2a;color:#ff2a2a;padding:4px 12px;font-size:11px;" data-name="${name}">🗑️</button>
+                    <button class="btn red" style="border-color:#ff2a2a;color:#ff2a2a;padding:2px 10px;font-size:11px;" data-name="${name}">🗑️</button>
                 </div>
             `;
         }
-        html += `<div class="modal-btns"><button class="action-btn" onclick="closeModal()">إغلاق</button></div>`;
+        html += `<div class="btns"><button class="btn" onclick="closeModal()">إغلاق</button></div>`;
         openModal('📡 إدارة السيرفرات', html);
         modalBody.querySelectorAll('[data-name]').forEach(btn => {
             btn.addEventListener('click', () => {
-                const name = btn.dataset.name;
+                let name = btn.dataset.name;
                 if (confirm('حذف "' + name + '"؟')) {
-                    delete state.servers[name];
+                    delete S.servers[name];
                     saveServers();
                     refreshServers();
-                    showToast('🗑️ تم الحذف: ' + name);
-                    openManageServers();
+                    toastMsg('🗑️ تم الحذف: ' + name);
+                    openManage();
                 }
             });
         });
@@ -1272,65 +733,63 @@
 
     // ===== REFRESH =====
     function refreshServers() {
-        const current = serverSelect.value;
-        serverSelect.innerHTML = '';
-        const names = Object.keys(state.servers);
+        let cur = serverSel.value;
+        serverSel.innerHTML = '';
+        let names = Object.keys(S.servers);
         if (names.length === 0) {
-            const opt = document.createElement('option');
+            let opt = document.createElement('option');
             opt.value = '';
             opt.textContent = '-- لا يوجد --';
-            serverSelect.appendChild(opt);
+            serverSel.appendChild(opt);
         } else {
-            for (const name of names) {
-                const opt = document.createElement('option');
+            for (let name of names) {
+                let opt = document.createElement('option');
                 opt.value = name;
                 opt.textContent = name;
-                serverSelect.appendChild(opt);
+                serverSel.appendChild(opt);
             }
         }
-        if (current && [...serverSelect.options].some(o => o.value === current)) {
-            serverSelect.value = current;
+        if (cur && [...serverSel.options].some(o => o.value === cur)) {
+            serverSel.value = cur;
         }
     }
 
     // ===== FILE =====
     function loadFile() {
-        const input = document.createElement('input');
+        let input = document.createElement('input');
         input.type = 'file';
         input.accept = '.m3u,.m3u8';
         input.onchange = () => {
-            const file = input.files[0];
+            let file = input.files[0];
             if (!file) return;
-            const reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = (e) => {
                 try {
-                    const text = e.target.result;
-                    const chs = parseM3U(text);
+                    let text = e.target.result;
+                    let chs = parseM3U(text);
                     if (chs.length === 0) throw new Error('لا توجد قنوات');
-                    state.channels = chs;
-                    state.filtered = [...chs];
-                    state.currentIndex = -1;
-                    renderChannels();
-                    // Update groups
-                    const groups = new Set();
-                    for (const ch of chs) {
-                        if (ch.group) groups.add(ch.group);
-                    }
-                    groupSelect.innerHTML = '<option value="All">📂 كل المجموعات</option>';
-                    for (const g of [...groups].sort()) {
-                        const opt = document.createElement('option');
+                    S.channels = chs;
+                    S.filtered = [...chs];
+                    S.idx = -1;
+                    S.loaded = true;
+                    render();
+                    let groups = new Set();
+                    for (let ch of chs) if (ch.group) groups.add(ch.group);
+                    groupSel.innerHTML = '<option value="All">📂 الكل</option>';
+                    for (let g of [...groups].sort()) {
+                        let opt = document.createElement('option');
                         opt.value = g;
                         opt.textContent = g;
-                        groupSelect.appendChild(opt);
+                        groupSel.appendChild(opt);
                     }
-                    state.currentGroup = 'All';
-                    groupSelect.value = 'All';
-                    statusText.textContent = `✅ تم التحميل: ${chs.length} قناة`;
-                    statusText.className = 'status-text success';
-                    countLabel.textContent = chs.length + ' قناة';
-                    showToast(`✅ تم تحميل ${chs.length} قناة من الملف`);
+                    S.group = 'All';
+                    groupSel.value = 'All';
+                    status.textContent = '✅ تم التحميل: ' + chs.length + ' قناة';
+                    status.className = 'status ok';
+                    count.textContent = chs.length + ' قناة';
+                    toastMsg('✅ تم تحميل ' + chs.length + ' قناة');
                 } catch(err) {
-                    showToast('❌ ' + err.message, 'error');
+                    toastMsg('❌ ' + err.message, true);
                 }
             };
             reader.readAsText(file);
@@ -1339,42 +798,30 @@
     }
 
     // ===== VIDEO EVENTS =====
-    video.addEventListener('timeupdate', () => {
-        if (video.duration) {
-            progressSlider.value = Math.min((video.currentTime / video.duration) * 1000, 1000);
-        }
-    });
-
     video.addEventListener('play', () => {
-        state.isPlaying = true;
+        S.playing = true;
         playBtn.textContent = '⏸';
         playBtn.classList.add('playing');
-        placeholder.style.display = 'none';
-        loadingOverlay.classList.remove('active');
+        ph.style.display = 'none';
+        loader.classList.remove('active');
     });
 
     video.addEventListener('pause', () => {
-        state.isPlaying = false;
+        S.playing = false;
         playBtn.textContent = '▶';
         playBtn.classList.remove('playing');
     });
 
     video.addEventListener('ended', () => {
-        state.isPlaying = false;
+        S.playing = false;
         playBtn.textContent = '▶';
         playBtn.classList.remove('playing');
-        playNext();
+        nextCh();
     });
 
     video.addEventListener('error', () => {
-        loadingOverlay.classList.remove('active');
-        showToast('⚠️ مشكلة في التشغيل', 'error');
-    });
-
-    progressSlider.addEventListener('input', (e) => {
-        if (video.duration) {
-            video.currentTime = (e.target.value / 1000) * video.duration;
-        }
+        loader.classList.remove('active');
+        toastMsg('⚠️ مشكلة في التشغيل', true);
     });
 
     // ===== KEYBOARD =====
@@ -1383,23 +830,20 @@
         switch(e.key) {
             case ' ': e.preventDefault(); togglePlay(); break;
             case 's': case 'S': stopPlay(); break;
-            case 'ArrowRight': playNext(); break;
-            case 'ArrowLeft': playPrev(); break;
-            case 'ArrowUp': volSlider.value = Math.min(parseInt(volSlider.value) + 10, 200); setVolume(volSlider.value); break;
-            case 'ArrowDown': volSlider.value = Math.max(parseInt(volSlider.value) - 10, 0); setVolume(volSlider.value); break;
+            case 'ArrowRight': nextCh(); break;
+            case 'ArrowLeft': prevCh(); break;
+            case 'ArrowUp': volSlider.value = Math.min(parseInt(volSlider.value) + 10, 200); setVol(volSlider.value); break;
+            case 'ArrowDown': volSlider.value = Math.max(parseInt(volSlider.value) - 10, 0); setVol(volSlider.value); break;
             case 'm': case 'M': toggleMute(); break;
-            case 'f': case 'F': toggleFullscreen(); break;
-            case 'Escape': if (modalOverlay.classList.contains('active')) closeModal(); break;
+            case 'f': case 'F': toggleFS(); break;
+            case 'Escape': if (modal.classList.contains('show')) closeModal(); break;
         }
     });
 
     // ===== EVENTS =====
     loadBtn.addEventListener('click', () => {
-        const sel = serverSelect.value;
-        if (!sel || sel === '-- لا يوجد --') {
-            showToast('❌ لا يوجد سيرفر', 'error');
-            return;
-        }
+        let sel = serverSel.value;
+        if (!sel || sel === '-- لا يوجد --') { toastMsg('❌ لا يوجد سيرفر', true); return; }
         loadChannels(sel);
     });
 
@@ -1408,57 +852,57 @@
     settingsBtn.addEventListener('click', openSettings);
 
     // Add manage button
-    const manageBtn = document.createElement('button');
-    manageBtn.className = 'action-btn full';
-    manageBtn.textContent = '⚙️ إدارة السيرفرات';
-    manageBtn.style.marginTop = '4px';
-    manageBtn.addEventListener('click', openManageServers);
-    document.querySelector('.btn-row').appendChild(manageBtn);
+    let mgr = document.createElement('button');
+    mgr.className = 'btn full';
+    mgr.textContent = '⚙️ إدارة السيرفرات';
+    mgr.style.marginTop = '4px';
+    mgr.addEventListener('click', openManage);
+    document.querySelector('.row').appendChild(mgr);
 
     playBtn.addEventListener('click', togglePlay);
     stopBtn.addEventListener('click', stopPlay);
-    prevBtn.addEventListener('click', playPrev);
-    nextBtn.addEventListener('click', playNext);
+    prevBtn.addEventListener('click', prevCh);
+    nextBtn.addEventListener('click', nextCh);
     muteBtn.addEventListener('click', toggleMute);
-    fullscreenBtn.addEventListener('click', toggleFullscreen);
-    volSlider.addEventListener('input', (e) => setVolume(e.target.value));
+    fsBtn.addEventListener('click', toggleFS);
+    volSlider.addEventListener('input', (e) => setVol(e.target.value));
     favBtn.addEventListener('click', toggleFavView);
 
     searchInput.addEventListener('input', (e) => {
-        state.search = e.target.value;
-        renderChannels();
+        S.search = e.target.value;
+        render();
     });
 
-    groupSelect.addEventListener('change', (e) => {
-        state.currentGroup = e.target.value;
-        renderChannels();
+    groupSel.addEventListener('change', (e) => {
+        S.group = e.target.value;
+        render();
     });
 
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) closeModal();
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
     });
 
-    // Context menu on channels
-    channelList.addEventListener('contextmenu', (e) => {
-        const item = e.target.closest('.channel-item');
+    // Context menu
+    list.addEventListener('contextmenu', (e) => {
+        let item = e.target.closest('.item');
         if (!item) return;
-        const index = parseInt(item.dataset.index);
-        const ch = state.filtered[index];
+        let idx = parseInt(item.dataset.index);
+        let ch = S.filtered[idx];
         if (!ch) return;
         e.preventDefault();
-        const isFav = state.favorites.has(ch.url);
-        const menu = [
-            { label: '▶ تشغيل', action: () => playChannel(index) },
-            { label: isFav ? '⭐ إزالة مفضلة' : '⭐ إضافة مفضلة', action: () => toggleFavorite(index) },
-            { label: '📋 نسخ الرابط', action: () => { navigator.clipboard.writeText(ch.url).then(() => showToast('📋 تم النسخ')); } }
+        let fav = S.favs.has(ch.url);
+        let menu = [
+            { label: '▶ تشغيل', action: () => playChannel(idx) },
+            { label: fav ? '⭐ إزالة مفضلة' : '⭐ إضافة مفضلة', action: () => toggleFav(idx) },
+            { label: '📋 نسخ الرابط', action: () => { navigator.clipboard.writeText(ch.url).then(() => toastMsg('📋 تم النسخ')); } }
         ];
         let html = menu.map((m, i) =>
-            `<div class="action-btn" style="width:100%;text-align:right;padding:6px 12px;margin:2px 0;border-radius:4px;border:1px solid #1e242c;cursor:pointer;" data-action="${i}">${m.label}</div>`
+            `<div class="btn" style="width:100%;text-align:right;padding:4px 10px;margin:2px 0;border-radius:4px;border:1px solid #1e242c;cursor:pointer;" data-act="${i}">${m.label}</div>`
         ).join('');
-        html += `<div class="modal-btns"><button class="action-btn" onclick="closeModal()">إغلاق</button></div>`;
-        openModal('📺 القناة: ' + ch.name, html);
-        modalBody.querySelectorAll('[data-action]').forEach((btn, i) => {
-            btn.addEventListener('click', () => { menu[i].action(); closeModal(); });
+        html += `<div class="btns"><button class="btn" onclick="closeModal()">إغلاق</button></div>`;
+        openModal('📺 ' + ch.name, html);
+        modalBody.querySelectorAll('[data-act]').forEach((b, i) => {
+            b.addEventListener('click', () => { menu[i].action(); closeModal(); });
         });
     });
 
@@ -1466,71 +910,86 @@
     document.addEventListener('dragover', (e) => e.preventDefault());
     document.addEventListener('drop', (e) => {
         e.preventDefault();
-        const files = e.dataTransfer.files;
+        let files = e.dataTransfer.files;
         if (files.length > 0 && files[0].name.match(/\.m3u8?$/i)) {
-            const reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = (ev) => {
                 try {
-                    const text = ev.target.result;
-                    const chs = parseM3U(text);
+                    let text = ev.target.result;
+                    let chs = parseM3U(text);
                     if (chs.length === 0) throw new Error('لا توجد قنوات');
-                    state.channels = chs;
-                    state.filtered = [...chs];
-                    state.currentIndex = -1;
-                    renderChannels();
-                    const groups = new Set();
-                    for (const ch of chs) {
-                        if (ch.group) groups.add(ch.group);
-                    }
-                    groupSelect.innerHTML = '<option value="All">📂 كل المجموعات</option>';
-                    for (const g of [...groups].sort()) {
-                        const opt = document.createElement('option');
+                    S.channels = chs;
+                    S.filtered = [...chs];
+                    S.idx = -1;
+                    S.loaded = true;
+                    render();
+                    let groups = new Set();
+                    for (let ch of chs) if (ch.group) groups.add(ch.group);
+                    groupSel.innerHTML = '<option value="All">📂 الكل</option>';
+                    for (let g of [...groups].sort()) {
+                        let opt = document.createElement('option');
                         opt.value = g;
                         opt.textContent = g;
-                        groupSelect.appendChild(opt);
+                        groupSel.appendChild(opt);
                     }
-                    state.currentGroup = 'All';
-                    groupSelect.value = 'All';
-                    statusText.textContent = `✅ تم التحميل: ${chs.length} قناة`;
-                    statusText.className = 'status-text success';
-                    countLabel.textContent = chs.length + ' قناة';
-                    showToast(`✅ تم تحميل ${chs.length} قناة`);
+                    S.group = 'All';
+                    groupSel.value = 'All';
+                    status.textContent = '✅ تم التحميل: ' + chs.length + ' قناة';
+                    status.className = 'status ok';
+                    count.textContent = chs.length + ' قناة';
+                    toastMsg('✅ تم تحميل ' + chs.length + ' قناة');
                 } catch(err) {
-                    showToast('❌ ' + err.message, 'error');
+                    toastMsg('❌ ' + err.message, true);
                 }
             };
             reader.readAsText(files[0]);
-            showToast('📁 جاري التحميل...');
+            toastMsg('📁 جاري التحميل...');
         }
     });
 
+    // ===== PROGRESS SLIDER =====
+    let progSlider = document.createElement('input');
+    progSlider.type = 'range';
+    progSlider.style.cssText = 'width:100%;height:4px;background:#333;-webkit-appearance:none;border-radius:2px;margin-bottom:4px;';
+    progSlider.id = 'progSlider';
+    progSlider.min = 0;
+    progSlider.max = 1000;
+    progSlider.value = 0;
+    document.querySelector('.controls').prepend(progSlider);
+
+    video.addEventListener('timeupdate', () => {
+        if (video.duration) {
+            progSlider.value = Math.min((video.currentTime / video.duration) * 1000, 1000);
+        }
+    });
+
+    progSlider.addEventListener('input', (e) => {
+        if (video.duration) {
+            video.currentTime = (e.target.value / 1000) * video.duration;
+        }
+    });
+
+    // ===== MAKE FUNCTIONS GLOBAL =====
+    window.closeModal = closeModal;
+    window.toastMsg = toastMsg;
+
     // ===== INIT =====
     function init() {
-        loadData();
+        loadStorage();
         refreshServers();
-        setVolume(state.settings.volume || 100);
+        setVol(S.vol || 100);
 
-        // Select the MOUSE AI server
-        const mouseServer = Object.keys(state.servers).find(k => k.includes('MOUSE AI'));
-        if (mouseServer) {
-            serverSelect.value = mouseServer;
-        } else {
-            const first = Object.keys(state.servers)[0];
-            if (first) serverSelect.value = first;
+        // Select MOUSE AI server
+        let mouse = Object.keys(S.servers).find(k => k.includes('MOUSE AI'));
+        if (mouse) serverSel.value = mouse;
+        else { let first = Object.keys(S.servers)[0]; if (first) serverSel.value = first; }
+
+        let sel = serverSel.value;
+        if (sel && sel !== '-- لا يوجد --') {
+            setTimeout(() => loadChannels(sel), 600);
         }
 
-        if (state.settings.autoLoad !== false) {
-            const selected = serverSelect.value;
-            if (selected && selected !== '-- لا يوجد --') {
-                setTimeout(() => loadChannels(selected), 600);
-            }
-        }
-
-        // Make functions global
-        window.closeModal = closeModal;
-        window.showToast = showToast;
-
-        console.log('🐭 MOUSE AI IPTV جاهز مع سيرفر شهار');
+        console.log('🐭 MOUSE AI IPTV جاهز');
     }
 
     document.addEventListener('DOMContentLoaded', init);
