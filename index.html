@@ -4,144 +4,104 @@
     <meta charset="UTF-8">
     <title>🐭 MOUSE AI IPTV</title>
     <style>
-        body { 
-            background: #0a0c0f; 
-            color: #fff; 
-            font-family: Arial; 
-            margin: 0; 
-            padding: 10px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .header {
-            background: linear-gradient(90deg, #ff0000, #00ff88, #ffffff, #ff0000);
-            background-size: 300% 100%;
-            animation: move 3s linear infinite;
-            padding: 15px;
-            text-align: center;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        @keyframes move { 0% { background-position: 0% 0%; } 100% { background-position: 300% 0%; } }
-        .header h1 { margin: 0; color: #000; font-size: 28px; text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        body { background: #0a0c0f; color: #fff; font-family: Arial; margin: 0; padding: 10px; height: 100vh; display: flex; flex-direction: column; }
+        .header { background: linear-gradient(90deg, #ff0000, #00ff88, #ffffff, #ff0000); background-size: 300% 100%; animation: m 3s linear infinite; padding: 12px; text-align: center; border-radius: 10px; margin-bottom: 8px; }
+        @keyframes m { 0% { background-position: 0% 0%; } 100% { background-position: 300% 0%; } }
+        .header h1 { margin: 0; color: #000; font-size: 26px; }
         .header small { color: #000; font-weight: bold; }
-        
         .main { display: flex; flex: 1; gap: 10px; min-height: 0; }
-        
         .video-box { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 10px; border: 3px solid #00ff88; overflow: hidden; }
-        #video { width: 100%; flex: 1; background: #000; }
-        .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; color: #5a6470; }
-        .placeholder h2 { color: #00ff88; font-size: 30px; animation: pulse 2s ease infinite; }
-        @keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
-        .video-wrap { position: relative; flex: 1; display: flex; background: #000; }
-        .video-wrap .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
-        .video-wrap .placeholder h2 { color: #00ff88; font-size: 30px; animation: pulse 2s ease infinite; }
+        .wrap { position: relative; flex: 1; display: flex; background: #000; }
         #video { width: 100%; flex: 1; }
-        
-        .controls { padding: 8px; background: #111; border-radius: 8px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
-        .controls button { background: #1a1a1a; border: 2px solid #00ff88; color: #00ff88; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .ph { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+        .ph h2 { color: #00ff88; font-size: 28px; animation: p 2s ease infinite; }
+        @keyframes p { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .loader { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; flex-direction: column; z-index: 20; color: #00ff88; }
+        .loader.active { display: flex !important; }
+        .loader .sp { width: 30px; height: 30px; border: 3px solid #1a1a1a; border-top-color: #00ff88; border-radius: 50%; animation: sp 0.8s linear infinite; }
+        @keyframes sp { to { transform: rotate(360deg); } }
+        .controls { padding: 6px 10px; background: #111; border-radius: 8px; margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+        .controls button { background: #1a1a1a; border: 2px solid #00ff88; color: #00ff88; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
         .controls button:hover { background: #00ff88; color: #000; }
-        .controls button.red { border-color: #ff2a2a; color: #ff2a2a; }
-        .controls button.red:hover { background: #ff2a2a; color: #fff; }
-        .controls button.play { background: #ff2a2a; border-color: #ff2a2a; color: #fff; font-size: 16px; padding: 6px 18px; }
-        .controls button.play.playing { background: #00ff88; border-color: #00ff88; color: #000; }
-        .controls input[type="range"] { width: 80px; height: 4px; background: #333; -webkit-appearance: none; border-radius: 2px; }
+        .controls button.r { border-color: #ff2a2a; color: #ff2a2a; }
+        .controls button.r:hover { background: #ff2a2a; color: #fff; }
+        .controls button.p { background: #ff2a2a; border-color: #ff2a2a; color: #fff; font-size: 15px; padding: 5px 16px; }
+        .controls button.p.playing { background: #00ff88; border-color: #00ff88; color: #000; }
+        .controls input[type="range"] { width: 70px; height: 4px; background: #333; -webkit-appearance: none; border-radius: 2px; }
         .controls input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #00ff88; border-radius: 50%; cursor: pointer; }
-        .info { text-align: center; color: #8b95a5; font-size: 13px; padding: 4px; min-height: 22px; font-weight: bold; }
+        #progSlider { width: 100%; height: 3px; background: #333; -webkit-appearance: none; border-radius: 2px; margin-bottom: 2px; }
+        #progSlider::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: #00ff88; border-radius: 50%; cursor: pointer; }
+        .info { text-align: center; color: #8b95a5; font-size: 12px; padding: 2px; min-height: 18px; font-weight: bold; }
         .info.active { color: #00ff88; }
         
-        .channels { width: 360px; min-width: 260px; display: flex; flex-direction: column; background: #111; border-radius: 10px; border: 1px solid #1e242c; padding: 10px; overflow: hidden; }
-        .channels .title { color: #00ff88; font-weight: bold; text-align: center; margin-bottom: 6px; font-size: 15px; }
-        .channels select, .channels input { width: 100%; padding: 6px 10px; background: #1a1a1a; border: 2px solid #1e242c; border-radius: 6px; color: #fff; font-size: 13px; outline: none; margin-bottom: 4px; }
+        .channels { width: 360px; min-width: 250px; display: flex; flex-direction: column; background: #111; border-radius: 10px; border: 1px solid #1e242c; padding: 8px; overflow: hidden; }
+        .channels .title { color: #00ff88; font-weight: bold; text-align: center; font-size: 14px; margin-bottom: 4px; }
+        .channels select, .channels input { width: 100%; padding: 5px 10px; background: #1a1a1a; border: 2px solid #1e242c; border-radius: 6px; color: #fff; font-size: 12px; outline: none; margin-bottom: 4px; }
         .channels select:focus, .channels input:focus { border-color: #00ff88; }
         .channels .row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
         .channels .row .full { grid-column: 1 / -1; }
-        .channels .btn { padding: 6px 10px; border-radius: 6px; border: 2px solid #1e242c; background: #1a1a1a; color: #fff; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; transition: 0.2s; }
+        .channels .btn { padding: 5px 8px; border-radius: 6px; border: 2px solid #1e242c; background: #1a1a1a; color: #fff; font-weight: bold; font-size: 11px; cursor: pointer; text-align: center; transition: 0.2s; }
         .channels .btn:hover { border-color: #00ff88; }
-        .channels .btn.green { border-color: #00ff88; color: #00ff88; }
-        .channels .btn.green:hover { background: #00ff88; color: #000; }
+        .channels .btn.g { border-color: #00ff88; color: #00ff88; }
+        .channels .btn.g:hover { background: #00ff88; color: #000; }
         .channels .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .progress { height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin: 4px 0; display: none; }
-        .progress.active { display: block; }
-        .progress .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff2a2a, #00ff88, #fff); background-size: 300% 100%; animation: move 2s linear infinite; }
-        
-        .status { text-align: center; color: #8b95a5; font-size: 12px; min-height: 18px; font-weight: bold; }
+        .prog { height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin: 3px 0; display: none; }
+        .prog.active { display: block; }
+        .prog .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff2a2a, #00ff88, #fff); background-size: 300% 100%; animation: m 2s linear infinite; }
+        .status { text-align: center; color: #8b95a5; font-size: 11px; min-height: 16px; font-weight: bold; }
         .status.ok { color: #00ff88; }
         .status.err { color: #ff2a2a; }
-        
-        .list { flex: 1; overflow-y: auto; background: #0a0c0f; border-radius: 6px; padding: 4px; min-height: 120px; border: 1px solid #1e242c; }
-        .item { padding: 6px 10px; border-bottom: 1px solid #1e242c; border-radius: 4px; margin: 2px 0; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+        .list { flex: 1; overflow-y: auto; background: #0a0c0f; border-radius: 6px; padding: 3px; min-height: 100px; border: 1px solid #1e242c; }
+        .item { padding: 5px 8px; border-bottom: 1px solid #1e242c; border-radius: 4px; margin: 1px 0; cursor: pointer; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
         .item:hover { background: #1a1a1a; }
         .item.active { background: #00ff88; color: #000; font-weight: bold; }
-        .item .tag { font-size: 10px; color: #5a6470; background: #1a1a1a; padding: 0 8px; border-radius: 8px; }
+        .item .tag { font-size: 9px; color: #5a6470; background: #1a1a1a; padding: 0 6px; border-radius: 6px; }
         .item.active .tag { background: rgba(0,0,0,0.2); color: #000; }
-        .count { text-align: center; color: #5a6470; font-size: 11px; padding: 4px 0; font-weight: bold; }
-        
-        .bottom { display: flex; gap: 4px; margin-top: 4px; }
-        .bottom .btn { flex: 1; font-size: 11px; padding: 4px 6px; }
+        .count { text-align: center; color: #5a6470; font-size: 10px; padding: 3px 0; font-weight: bold; }
+        .bottom { display: flex; gap: 4px; margin-top: 3px; }
+        .bottom .btn { flex: 1; font-size: 10px; padding: 3px 5px; }
         .bottom .btn.fav-on { background: #00ff88; color: #000; border-color: #00ff88; }
-        
-        .x { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 10px; background: #000; border: 2px solid #fff; border-radius: 20px; color: #fff; font-weight: bold; font-size: 11px; text-decoration: none; margin-top: 4px; transition: 0.2s; }
+        .x { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 3px 8px; background: #000; border: 2px solid #fff; border-radius: 16px; color: #fff; font-weight: bold; font-size: 10px; text-decoration: none; margin-top: 3px; transition: 0.2s; }
         .x:hover { background: #fff; color: #000; }
-        .x svg { width: 14px; height: 14px; fill: currentColor; }
-        
-        .footer { text-align: center; color: #5a6470; font-size: 9px; padding: 4px 0; }
+        .x svg { width: 12px; height: 12px; fill: currentColor; }
+        .footer { text-align: center; color: #5a6470; font-size: 8px; padding: 2px 0; }
         .footer a { color: #00ff88; text-decoration: none; }
-        
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: #111; border: 2px solid #00ff88; border-radius: 8px; padding: 8px 20px; color: #fff; font-weight: bold; font-size: 13px; z-index: 999; opacity: 0; transition: 0.3s; pointer-events: none; }
+        .toast { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%) translateY(60px); background: #111; border: 2px solid #00ff88; border-radius: 8px; padding: 6px 16px; color: #fff; font-weight: bold; font-size: 12px; z-index: 999; opacity: 0; transition: 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         .toast.err { border-color: #ff2a2a; }
-        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; justify-content: center; align-items: center; }
         .modal.show { display: flex; }
-        .modal .box { background: #111; border: 2px solid #00ff88; border-radius: 10px; padding: 20px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; }
-        .modal .box h2 { color: #00ff88; text-align: center; margin-bottom: 12px; }
-        .modal .box input, .modal .box textarea { width: 100%; padding: 8px 12px; background: #0a0c0f; border: 2px solid #1e242c; border-radius: 6px; color: #fff; font-size: 13px; outline: none; margin-bottom: 8px; }
+        .modal .box { background: #111; border: 2px solid #00ff88; border-radius: 10px; padding: 16px; max-width: 450px; width: 95%; max-height: 90vh; overflow-y: auto; }
+        .modal .box h2 { color: #00ff88; text-align: center; font-size: 18px; margin-bottom: 10px; }
+        .modal .box input, .modal .box textarea { width: 100%; padding: 6px 10px; background: #0a0c0f; border: 2px solid #1e242c; border-radius: 6px; color: #fff; font-size: 12px; outline: none; margin-bottom: 6px; }
         .modal .box input:focus, .modal .box textarea:focus { border-color: #00ff88; }
-        .modal .box textarea { min-height: 100px; font-family: monospace; }
-        .modal .box label { color: #00ff88; font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px; }
-        .modal .box .btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
-        .modal .box .btns .btn { min-width: 70px; padding: 8px 16px; }
-        
-        @media (max-width: 700px) {
-            .main { flex-direction: column; }
-            .channels { width: 100%; min-width: 0; max-height: 50vh; }
-        }
+        .modal .box textarea { min-height: 80px; font-family: monospace; font-size: 11px; }
+        .modal .box label { color: #00ff88; font-weight: bold; font-size: 12px; display: block; margin-bottom: 3px; }
+        .modal .box .btns { display: flex; gap: 6px; justify-content: flex-end; margin-top: 8px; }
+        .modal .box .btns .btn { min-width: 60px; padding: 6px 14px; font-size: 12px; }
+        @media (max-width: 700px) { .main { flex-direction: column; } .channels { width: 100%; min-width: 0; max-height: 45vh; } }
     </style>
 </head>
 <body>
 
 <div class="header">
     <h1>🐭 MOUSE AI IPTV</h1>
-    <small>⚡ شهار IPTV - PRO ULTIMATE</small>
+    <small>⚡ شهار IPTV - PRO</small>
 </div>
 
 <div class="main">
     <!-- VIDEO -->
     <div class="video-box">
-        <div class="video-wrap">
+        <div class="wrap">
             <video id="video" controls playsinline></video>
-            <div class="placeholder" id="ph">
-                <h2>🐭 MOUSE AI</h2>
-                <p>🎬 اختر قناة</p>
-            </div>
-            <div id="loader" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:20;color:#00ff88;">
-                <div style="width:30px;height:30px;border:3px solid #1a1a1a;border-top-color:#00ff88;border-radius:50%;animation:sp 0.8s linear infinite;"></div>
-                <span style="margin-top:8px;">جاري التحميل...</span>
-            </div>
-            <style>
-                #loader { display: none; }
-                #loader.active { display: flex !important; }
-                @keyframes sp { to { transform: rotate(360deg); } }
-            </style>
+            <div class="ph" id="ph"><h2>🐭 MOUSE AI</h2><p>🎬 اختر قناة</p></div>
+            <div class="loader" id="loader"><div class="sp"></div><span style="margin-top:6px;">جاري التحميل...</span></div>
         </div>
-        
+        <input type="range" id="progSlider" min="0" max="1000" value="0">
         <div class="controls">
             <button id="prev">⏮</button>
-            <button class="play" id="play">▶</button>
-            <button class="red" id="stop">⏹</button>
+            <button class="p" id="play">▶</button>
+            <button class="r" id="stop">⏹</button>
             <button id="next">⏭</button>
             <span style="flex:1"></span>
             <button id="mute">🔊</button>
@@ -156,15 +116,15 @@
         <div class="title">📡 سيرفر شهار</div>
         <select id="server"></select>
         <div class="row">
-            <button class="btn green" id="load">📡 تحميل</button>
+            <button class="btn g" id="load">📡 تحميل</button>
             <button class="btn" id="file">📁 ملف</button>
-            <button class="btn green full" id="add">➕ إضافة</button>
+            <button class="btn g full" id="add">➕ إضافة</button>
         </div>
-        <div class="progress" id="prog"><div class="fill" id="fill"></div></div>
+        <div class="prog" id="prog"><div class="fill" id="fill"></div></div>
         <div class="status" id="status">🚀 اضغط تحميل</div>
         <select id="group"><option value="All">📂 الكل</option></select>
         <input type="text" id="search" placeholder="🔍 بحث...">
-        <div class="list" id="list"><div style="text-align:center;padding:20px;color:#5a6470;">📺 لا توجد قنوات</div></div>
+        <div class="list" id="list"><div style="text-align:center;padding:20px;color:#5a6470;font-size:13px;">📺 لا توجد قنوات</div></div>
         <div class="count" id="count">0 قناة</div>
         <div class="bottom">
             <button class="btn" id="fav">⭐ المفضلة</button>
@@ -179,12 +139,11 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
 <div class="modal" id="modal"><div class="box" id="modalBox"><h2 id="modalTitle">🐭</h2><div id="modalBody"></div></div></div>
 
 <script>
 // ============================================================
-// 🐭 MOUSE AI IPTV - كود بسيط جداً يشتغل مباشرة
+// 🐭 MOUSE AI IPTV - مع حل HTTP 403 عبر Proxy
 // ============================================================
 
 (function() {
@@ -195,6 +154,15 @@
         name: '🐭 MOUSE AI IPTV - شهار',
         url: 'http://81.31.194.66:8080/get.php?username=pro4451769801014&password=f734a8f19cf5&type=m3u_plus&output=ts'
     };
+
+    // ===== PROXY لحل 403 =====
+    const PROXY = 'https://corsproxy.io/?';
+    // proxies أخرى في حالة فشل الأولى
+    const PROXIES = [
+        'https://corsproxy.io/?',
+        'https://api.allorigins.win/raw?url=',
+        'https://cors-anywhere.herokuapp.com/'
+    ];
 
     // ===== STATE =====
     let S = {
@@ -209,7 +177,8 @@
         favView: false,
         group: 'All',
         search: '',
-        loaded: false
+        loaded: false,
+        proxyIndex: 0
     };
 
     // ===== DOM =====
@@ -237,6 +206,7 @@
     const count = document.getElementById('count');
     const favBtn = document.getElementById('fav');
     const settingsBtn = document.getElementById('settings');
+    const progSlider = document.getElementById('progSlider');
     const toast = document.getElementById('toast');
     const modal = document.getElementById('modal');
     const modalBox = document.getElementById('modalBox');
@@ -245,30 +215,14 @@
 
     // ===== STORAGE =====
     function loadStorage() {
-        try {
-            let s = localStorage.getItem('m_settings');
-            if (s) S.vol = JSON.parse(s).vol || 100;
-        } catch(e) {}
-        try {
-            let f = localStorage.getItem('m_favs');
-            if (f) S.favs = new Set(JSON.parse(f));
-        } catch(e) {}
+        try { let s = localStorage.getItem('m_settings'); if (s) S.vol = JSON.parse(s).vol || 100; } catch(e) {}
+        try { let f = localStorage.getItem('m_favs'); if (f) S.favs = new Set(JSON.parse(f)); } catch(e) {}
         try {
             let sv = localStorage.getItem('m_servers');
-            if (sv) {
-                S.servers = JSON.parse(sv);
-            } else {
-                S.servers = {};
-                S.servers[SHAHAR.name] = SHAHAR.url;
-                saveServers();
-            }
-        } catch(e) {
-            S.servers = {};
-            S.servers[SHAHAR.name] = SHAHAR.url;
-            saveServers();
-        }
+            if (sv) { S.servers = JSON.parse(sv); }
+            else { S.servers = {}; S.servers[SHAHAR.name] = SHAHAR.url; saveServers(); }
+        } catch(e) { S.servers = {}; S.servers[SHAHAR.name] = SHAHAR.url; saveServers(); }
     }
-
     function saveVol() { try { localStorage.setItem('m_settings', JSON.stringify({vol: S.vol})); } catch(e) {} }
     function saveFavs() { try { localStorage.setItem('m_favs', JSON.stringify([...S.favs])); } catch(e) {} }
     function saveServers() { try { localStorage.setItem('m_servers', JSON.stringify(S.servers)); } catch(e) {} }
@@ -344,19 +298,23 @@
         status.textContent = '🔄 جاري الاتصال...';
         status.className = 'status';
         loader.classList.add('active');
+        S.proxyIndex = 0;
 
-        const ctrl = new AbortController();
-        const tm = setTimeout(() => ctrl.abort(), 45000);
+        // استخدام الوكيل لحل 403
+        loadWithProxy(url);
+    }
 
-        fetch(url, {
-            signal: ctrl.signal,
+    function loadWithProxy(url) {
+        let proxyUrl = PROXIES[S.proxyIndex] + encodeURIComponent(url);
+        status.textContent = '🔄 عبر Proxy ' + (S.proxyIndex + 1) + '...';
+        
+        fetch(proxyUrl, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': '*/*'
             }
         })
         .then(res => {
-            clearTimeout(tm);
             if (!res.ok) throw new Error('HTTP ' + res.status);
             fill.style.width = '40%';
             status.textContent = '📥 جاري القراءة...';
@@ -366,38 +324,39 @@
             fill.style.width = '60%';
             status.textContent = '🔍 جاري التحليل...';
             if (!text || text.length < 10) throw new Error('استجابة فارغة');
-            if (text.includes('<!DOCTYPE') || text.includes('<html')) throw new Error('تم استقبال HTML');
+            // Check if we got HTML or error
+            if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                throw new Error('تم استقبال HTML - قد يكون الوكيل محظور');
+            }
+            // Check for error message
+            if (text.includes('error') || text.includes('Error') || text.includes('blocked')) {
+                throw new Error('الوكيل محظور');
+            }
             let chs = parseM3U(text);
             fill.style.width = '90%';
             if (chs.length === 0) throw new Error('لا توجد قنوات');
             onLoaded(chs);
         })
         .catch(err => {
-            clearTimeout(tm);
-            S.loading = false;
-            loadBtn.disabled = false;
-            loadBtn.textContent = '📡 تحميل';
-            prog.classList.remove('active');
-            loader.classList.remove('active');
-            let msg = err.message;
-            if (err.name === 'AbortError') msg = '⏱️ انتهت المهلة';
-            else if (msg.includes('403')) msg = '⛔ ممنوع الوصول';
-            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة';
-            status.textContent = '❌ ' + msg;
-            status.className = 'status err';
-            toastMsg('❌ ' + msg, true);
-            console.error(err);
-            // Try proxy
-            tryProxy(url);
+            S.proxyIndex++;
+            if (S.proxyIndex < PROXIES.length) {
+                status.textContent = '🔄 تغيير الوكيل...';
+                toastMsg('🔄 تغيير الوكيل...');
+                loadWithProxy(url);
+            } else {
+                // جرب بدون وكيل كحل أخير
+                loadDirect(url);
+            }
         });
     }
 
-    function tryProxy(url) {
-        status.textContent = '🔄 محاولة عبر وكيل...';
-        toastMsg('🔄 محاولة عبر وكيل...');
-        let proxy = 'https://cors-anywhere.herokuapp.com/' + url;
-        fetch(proxy, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    function loadDirect(url) {
+        status.textContent = '🔄 محاولة مباشرة...';
+        fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': '*/*'
+            }
         })
         .then(res => {
             if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -407,7 +366,7 @@
             let chs = parseM3U(text);
             if (chs.length === 0) throw new Error('لا توجد قنوات');
             onLoaded(chs);
-            toastMsg('✅ تم التحميل عبر الوكيل');
+            toastMsg('✅ تم التحميل مباشرة');
         })
         .catch(err => {
             S.loading = false;
@@ -415,9 +374,13 @@
             loadBtn.textContent = '📡 تحميل';
             prog.classList.remove('active');
             loader.classList.remove('active');
-            status.textContent = '❌ فشل: ' + err.message;
+            let msg = err.message;
+            if (msg.includes('403')) msg = '⛔ ممنوع (403) - جرب سيرفر آخر';
+            else if (msg.includes('Failed to fetch')) msg = '🌐 خطأ في الشبكة';
+            status.textContent = '❌ ' + msg;
             status.className = 'status err';
-            toastMsg('❌ فشل التحميل', true);
+            toastMsg('❌ ' + msg, true);
+            console.error(err);
         });
     }
 
@@ -433,11 +396,8 @@
         fill.style.width = '100%';
         loader.classList.remove('active');
 
-        // Groups
         let groups = new Set();
-        for (let ch of chs) {
-            if (ch.group) groups.add(ch.group);
-        }
+        for (let ch of chs) if (ch.group) groups.add(ch.group);
         groupSel.innerHTML = '<option value="All">📂 الكل</option>';
         for (let g of [...groups].sort()) {
             let opt = document.createElement('option');
@@ -454,7 +414,6 @@
         count.textContent = chs.length + ' قناة';
         toastMsg('✅ تم تحميل ' + chs.length + ' قناة');
 
-        // Auto play first
         if (chs.length > 0) {
             setTimeout(() => {
                 let first = list.querySelector('.item');
@@ -477,7 +436,7 @@
 
         list.innerHTML = '';
         if (filtered.length === 0) {
-            list.innerHTML = '<div style="text-align:center;padding:20px;color:#5a6470;">📺 لا توجد قنوات</div>';
+            list.innerHTML = '<div style="text-align:center;padding:20px;color:#5a6470;font-size:13px;">📺 لا توجد قنوات</div>';
             count.textContent = '0 قناة';
             return;
         }
@@ -531,8 +490,8 @@
                 loader.classList.remove('active');
                 console.warn(err);
                 toastMsg('❌ لا يمكن تشغيل هذه القناة', true);
-                // Try proxy
-                let proxy = 'https://cors-anywhere.herokuapp.com/' + ch.url;
+                // Try with proxy
+                let proxy = 'https://corsproxy.io/?' + encodeURIComponent(ch.url);
                 video.src = proxy;
                 video.load();
                 video.play().catch(() => {});
@@ -574,9 +533,9 @@
         playBtn.classList.remove('playing');
         info.textContent = '⏹️ تم الإيقاف';
         info.className = 'info';
-        document.getElementById('progressSlider')?.remove();
         ph.style.display = 'block';
         video.src = '';
+        progSlider.value = 0;
     }
 
     function nextCh() {
@@ -661,7 +620,7 @@
             <input type="text" id="nsUrl" placeholder="http://..." value="http://">
             <div class="btns">
                 <button class="btn" onclick="closeModal()">إلغاء</button>
-                <button class="btn green" id="nsSave">💾 حفظ</button>
+                <button class="btn g" id="nsSave">💾 حفظ</button>
             </div>
         `);
         document.getElementById('nsSave').addEventListener('click', () => {
@@ -686,7 +645,7 @@
             <span id="volDisp" style="color:#00ff88;font-weight:bold;">${S.vol || 100}%</span>
             <div class="btns">
                 <button class="btn" onclick="closeModal()">إلغاء</button>
-                <button class="btn green" id="saveSet">💾 حفظ</button>
+                <button class="btn g" id="saveSet">💾 حفظ</button>
             </div>
         `);
         let vs = document.getElementById('volSet');
@@ -702,16 +661,16 @@
 
     function openManage() {
         let names = Object.keys(S.servers);
-        let html = `<div style="margin-bottom:8px;color:#8b95a5;">${names.length} سيرفر(ات)</div>`;
+        let html = `<div style="margin-bottom:6px;color:#8b95a5;font-size:12px;">${names.length} سيرفر(ات)</div>`;
         for (let name of names) {
             let url = S.servers[name];
             html += `
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#0a0c0f;border-radius:4px;margin-bottom:4px;border:1px solid #1e242c;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#0a0c0f;border-radius:4px;margin-bottom:3px;border:1px solid #1e242c;">
                     <div style="flex:1;overflow:hidden;">
-                        <div style="color:#00ff88;font-weight:bold;">${name}</div>
-                        <div style="font-size:10px;color:#5a6470;word-break:break-all;">${url.substring(0, 40)}...</div>
+                        <div style="color:#00ff88;font-weight:bold;font-size:12px;">${name}</div>
+                        <div style="font-size:9px;color:#5a6470;word-break:break-all;">${url.substring(0, 40)}...</div>
                     </div>
-                    <button class="btn red" style="border-color:#ff2a2a;color:#ff2a2a;padding:2px 10px;font-size:11px;" data-name="${name}">🗑️</button>
+                    <button class="btn" style="border-color:#ff2a2a;color:#ff2a2a;padding:2px 8px;font-size:10px;" data-name="${name}">🗑️</button>
                 </div>
             `;
         }
@@ -798,6 +757,12 @@
     }
 
     // ===== VIDEO EVENTS =====
+    video.addEventListener('timeupdate', () => {
+        if (video.duration) {
+            progSlider.value = Math.min((video.currentTime / video.duration) * 1000, 1000);
+        }
+    });
+
     video.addEventListener('play', () => {
         S.playing = true;
         playBtn.textContent = '⏸';
@@ -822,6 +787,12 @@
     video.addEventListener('error', () => {
         loader.classList.remove('active');
         toastMsg('⚠️ مشكلة في التشغيل', true);
+    });
+
+    progSlider.addEventListener('input', (e) => {
+        if (video.duration) {
+            video.currentTime = (e.target.value / 1000) * video.duration;
+        }
     });
 
     // ===== KEYBOARD =====
@@ -851,11 +822,10 @@
     addBtn.addEventListener('click', openAddServer);
     settingsBtn.addEventListener('click', openSettings);
 
-    // Add manage button
     let mgr = document.createElement('button');
     mgr.className = 'btn full';
     mgr.textContent = '⚙️ إدارة السيرفرات';
-    mgr.style.marginTop = '4px';
+    mgr.style.marginTop = '3px';
     mgr.addEventListener('click', openManage);
     document.querySelector('.row').appendChild(mgr);
 
@@ -897,7 +867,7 @@
             { label: '📋 نسخ الرابط', action: () => { navigator.clipboard.writeText(ch.url).then(() => toastMsg('📋 تم النسخ')); } }
         ];
         let html = menu.map((m, i) =>
-            `<div class="btn" style="width:100%;text-align:right;padding:4px 10px;margin:2px 0;border-radius:4px;border:1px solid #1e242c;cursor:pointer;" data-act="${i}">${m.label}</div>`
+            `<div class="btn" style="width:100%;text-align:right;padding:3px 8px;margin:2px 0;border-radius:4px;border:1px solid #1e242c;cursor:pointer;" data-act="${i}">${m.label}</div>`
         ).join('');
         html += `<div class="btns"><button class="btn" onclick="closeModal()">إغلاق</button></div>`;
         openModal('📺 ' + ch.name, html);
@@ -947,29 +917,7 @@
         }
     });
 
-    // ===== PROGRESS SLIDER =====
-    let progSlider = document.createElement('input');
-    progSlider.type = 'range';
-    progSlider.style.cssText = 'width:100%;height:4px;background:#333;-webkit-appearance:none;border-radius:2px;margin-bottom:4px;';
-    progSlider.id = 'progSlider';
-    progSlider.min = 0;
-    progSlider.max = 1000;
-    progSlider.value = 0;
-    document.querySelector('.controls').prepend(progSlider);
-
-    video.addEventListener('timeupdate', () => {
-        if (video.duration) {
-            progSlider.value = Math.min((video.currentTime / video.duration) * 1000, 1000);
-        }
-    });
-
-    progSlider.addEventListener('input', (e) => {
-        if (video.duration) {
-            video.currentTime = (e.target.value / 1000) * video.duration;
-        }
-    });
-
-    // ===== MAKE FUNCTIONS GLOBAL =====
+    // ===== MAKE GLOBAL =====
     window.closeModal = closeModal;
     window.toastMsg = toastMsg;
 
@@ -979,17 +927,16 @@
         refreshServers();
         setVol(S.vol || 100);
 
-        // Select MOUSE AI server
         let mouse = Object.keys(S.servers).find(k => k.includes('MOUSE AI'));
         if (mouse) serverSel.value = mouse;
         else { let first = Object.keys(S.servers)[0]; if (first) serverSel.value = first; }
 
         let sel = serverSel.value;
         if (sel && sel !== '-- لا يوجد --') {
-            setTimeout(() => loadChannels(sel), 600);
+            setTimeout(() => loadChannels(sel), 700);
         }
 
-        console.log('🐭 MOUSE AI IPTV جاهز');
+        console.log('🐭 MOUSE AI IPTV جاهز - مع Proxy لحل 403');
     }
 
     document.addEventListener('DOMContentLoaded', init);
